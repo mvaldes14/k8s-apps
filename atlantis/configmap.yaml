@@ -1,0 +1,90 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: atlantis-cm 
+  namespace: atlantis
+data:
+  values.yaml: |
+    orgAllowlist: github.com/mvaldes14/terraform
+    image:
+      repository: ghcr.io/runatlantis/atlantis
+      pullPolicy: Always
+    allowForkPRs: false
+    allowDraftPRs: false
+    hidePrevPlanComments: false
+    hideUnchangedPlanComments: false
+    disableApply: false
+    disableApplyAll: false
+    disableRepoLocking: false
+    enableDiffMarkdownFormat: false
+    livenessProbe:
+      enabled: true
+      periodSeconds: 60
+      initialDelaySeconds: 5
+      timeoutSeconds: 5
+      successThreshold: 1
+      failureThreshold: 5
+      scheme: HTTP
+    readinessProbe:
+      enabled: true
+      periodSeconds: 60
+      initialDelaySeconds: 5
+      timeoutSeconds: 5
+      successThreshold: 1
+      failureThreshold: 5
+      scheme: HTTP
+    service:
+      type: ClusterIP
+      port: 80
+      nodePort: null
+      targetPort: 4141
+      loadBalancerIP: null
+    statefulSet:
+      securityContext:
+        fsGroup: 1000
+        runAsUser: 100
+        fsGroupChangePolicy: "OnRootMismatch"
+      priorityClassName: ""
+      shareProcessNamespace: false
+    resources:
+      requests:
+        memory: 1Gi
+        cpu: 100m
+      limits:
+        memory: 1Gi
+        cpu: 100m
+    atlantisDataDirectory: /atlantis-data
+    volumeClaim:
+      enabled: true
+      dataStorage: 5Gi
+    replicaCount: 1
+    test:
+      enabled: true
+      image: bats/bats
+      imageTag: 1.9.0
+    serviceAccount:
+      create: true
+      mount: true
+    environment:
+      ATLANTIS_TFE_LOCAL_EXECUTION_MODE: false
+      ATLANTIS_REPO_ALLOWLIST: github.com/mvaldes14/terraform
+      ATLANTIS_DEFAULT_TF_VERSION: v1.6.6
+    environmentSecrets:
+       - name: ATLANTIS_TFE_TOKEN
+         secretKeyRef:
+           name: atlantis-tokens
+           key: tfe-token
+       - name: ATLANTIS_GH_USER
+         secretKeyRef:
+           name: atlantis-tokens
+           key: gh-user
+       - name: ATLANTIS_GH_TOKEN
+         secretKeyRef:
+           name: atlantis-tokens
+           key: gh-token
+       - name: ATLANTIS_GH_WEBHOOK_SECRET
+         secretKeyRef:
+           name: atlantis-tokens
+           key: gh-webhook-secret
+    hostNetwork: false
+     

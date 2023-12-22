@@ -1,0 +1,78 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloudflared
+  namespace: cloudflared
+spec:
+  selector:
+    matchLabels:
+      app: cloudflared
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: cloudflared
+    spec:
+      containers:
+        - name: cloudflared
+          image: cloudflare/cloudflared:2022.3.0
+          args:
+            - tunnel
+            - --config
+            - /etc/cloudflared/config/config.yaml
+            - run
+          livenessProbe:
+            httpGet:
+              path: /ready
+              port: 2000
+            failureThreshold: 1
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          volumeMounts:
+            - name: config
+              mountPath: /etc/cloudflared/config
+              readOnly: true
+            - name: creds
+              mountPath: /etc/cloudflared/creds/tunnel.json
+              subPath: tunnel.json
+              readOnly: true
+            - name: cert
+              mountPath: /etc/cloudflared/creds/cert.pem
+              subPath: cert.pem
+              readOnly: true
+      volumes:
+        - name: creds
+          secret:
+            secretName: tunnel-credentials
+        - name: config
+          configMap:
+            name: cloudflared
+            items:
+              - key: config.yaml
+                path: config.yaml
+        - name: cert
+          secret:
+            secretName: tunnel-cert
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cloudflared
+  namespace: cloudflared
+data:
+  config.yaml: |-
+    tunnel: daf39100-197b-4d41-9bfd-a0b28e309d03
+    credentials-file: /etc/cloudflared/creds/tunnel.json
+    metrics: 0.0.0.0:2000
+    no-autoupdate: true
+    ingress:
+    - hostname: k8s.mvaldes.dev
+      service: http://nginx-service.default:80
+    - hostname: atlantis.mvaldes.dev
+      service: http://atlantis-atlantis-release.atlantis:80
+    - hostname: wiki.mvaldes.dev
+      service: http://wiki-wiki-release.wiki:80
+    - hostname: uptime.mvaldes.dev
+      service: http://uptime-uptime-release-uptime-kuma.uptime:80
+    - service: http_status:404
