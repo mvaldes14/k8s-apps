@@ -21,11 +21,6 @@
 # Go workspace file
 go.work
 
-# All K8s secret files
-secret*
+flake.lock
 
-# this is cause the helm chart doesn't support passing sslmode
-wikijs/configmap.yaml
-
-# flux telegram token
-fluxcd/notification-token.yaml
+.direnv/*

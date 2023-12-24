@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: telegram-token
+    namespace: flux-system
+type: Opaque
+data:
+    token: ENC[AES256_GCM,data:PlIcJGB+c9A8iDtCMS8bocX0nDziVNARB+rz5Vt+/fGCnUa3SyB2/86SszIAryhAn89a7CM+DL7Bpgp62eXr1Q==,iv:zbRKN0R+GQCER97V8IWGOHCOQCnFMaepR91DNCB1Yck=,tag:yItxIBPkehBZd3MKrYjE0g==,type:str]
+sops:
+    kms: []
+    gcp_kms: []
+    azure_kv: []
+    hc_vault: []
+    age:
+        - recipient: age1u50tag47wnmuxsspneyd3cs8vrnk4pqzwq99aat29rluqdev5cls2yzjgj
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSA0b3pOR255anlId3JMMTRI
+            S3dtOG9IeGpYcEtKc0RLa2pOMUJ2TE9CMEZZCjZaK3llVzhkNStTa1cvTjhOWmdX
+            L3FoMXcxQmZLRklRU0phQTExeXd0T1UKLS0tIGRsVDZNWmt0WUtGallzMmhwYmhH
+            MjBKWFFPOEkwaFNURjZLMTBoRExSMkkK/+H6ha7iJPJYsyGJmZYaGKafBphcTqkU
+            t07l6vy4Vq4Ix9lkUS1/Af9kVLRn3HtBXBLCAzlEbNmTx1mHnl8UNQ==
+            -----END AGE ENCRYPTED FILE-----
+    lastmodified: "2023-12-24T04:41:04Z"
+    mac: ENC[AES256_GCM,data:OcF6GQzu37tLs5X65QfhIK0Zk0tFMaH78fa/+9WAm2aHO1QIPW6PyhWUTG5LyOkWCTPDkU0pE7kN33bYEJv5eSfRDD2YDtcQvPGpiEmP4l43ZYigoyyEIKegb+Mk86sXTMimvvp9yIk6sk9NuXAWXOW7LmobWUb4sNUn+FJLPXk=,iv:k/Onnm7innyjmpUj5Nqf8MirC1mbCpgq41yTuzZ5sSs=,tag:Ih/OKC2rJ7ZEH0iDLDPY/A==,type:str]
+    pgp: []
+    encrypted_regex: ^(data|stringData)$
+    version: 3.8.1
