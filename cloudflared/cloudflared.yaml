@@ -47,6 +47,7 @@ spec:
             secretName: cloudflared-secrets
             items:
               - key: tunnel.json
+                path: tunnel.json
         - name: config
           configMap:
             name: cloudflared
@@ -58,3 +59,4 @@ spec:
             secretName: cloudflared-secrets 
             items:
               - key: cert.pem
+                path: cert.pem
