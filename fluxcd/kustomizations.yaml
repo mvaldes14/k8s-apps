@@ -56,7 +56,7 @@ spec:
     name: homelab-repository 
   path: "./cloudflared"
   prune: true
-  timeout: 1m
+  timeout: 3m
   decryption:
     provider: sops
     secretRef:
