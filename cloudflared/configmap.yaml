@@ -18,4 +18,6 @@ data:
       service: http://wiki-wiki-release.wiki:80
     - hostname: uptime.mvaldes.dev
       service: http://uptime-uptime-release-uptime-kuma.uptime:80
+    - hostname: draw.mvaldes.dev
+      service: http://excalidraw-service.excalidraw:80
     - service: http_status:404

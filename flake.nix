@@ -12,6 +12,7 @@
         buildInputs = with pkgs; [
          age
          sops
+         fluxcd
         ];
       };
     };

@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: excalidraw-server
+  namespace: excalidraw
+spec:
+  selector:
+    matchLabels:
+      app: excalidraw
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: excalidraw
+    spec:
+      containers:
+      - name: excalidraw-worker
+        image: docker.io/excalidraw/excalidraw:latest
+        imagePullPolicy: IfNotPresent
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            cpu: 100m
+            memory: 100Mi
+        livenessProbe:
+          tcpSocket:
+            port: 80
+          initialDelaySeconds: 5
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 3
+          periodSeconds: 10
+        ports:
+        - containerPort:  80
+          name: http
+      restartPolicy: Always
+---
+
