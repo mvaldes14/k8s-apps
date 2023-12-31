@@ -28,3 +28,6 @@ spec:
         name: uptime-helm
       version: 1.3.3
   interval: 1m0s
+  values:
+    volume:
+      storageClassName: nfs-k8s

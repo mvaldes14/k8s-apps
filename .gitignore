@@ -21,6 +21,4 @@
 # Go workspace file
 go.work
 
-flake.lock
-
 .direnv/*
