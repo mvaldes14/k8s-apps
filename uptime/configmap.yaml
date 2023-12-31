@@ -1,4 +1,3 @@
-kind: # https://kubernetes.io/docs/concepts/configuration/configmap/
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -12,4 +11,3 @@ data:
       size: 4Gi
       storageClassName: nfs-k8s
 ---
-
