@@ -1,0 +1,15 @@
+kind: # https://kubernetes.io/docs/concepts/configuration/configmap/
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: uptime-cm 
+  namespace: uptime 
+data:
+  values.yaml: |
+    volume:
+      enabled: true
+      accessMode: ReadWriteOnce
+      size: 4Gi
+      storageClassName: nfs-k8s
+---
+
