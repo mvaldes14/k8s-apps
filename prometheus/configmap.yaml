@@ -329,6 +329,8 @@ data:
                 target_label: node
     networkPolicy:
       enabled: false
+    alertmanager:
+      enabled: false
     kube-state-metrics:
       enabled: true
     prometheus-node-exporter:
