@@ -57,6 +57,7 @@ data:
     volumeClaim:
       enabled: true
       dataStorage: 5Gi
+      storageClassName: nfs-k8s
     replicaCount: 1
     test:
       enabled: true
