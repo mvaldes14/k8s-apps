@@ -9,5 +9,5 @@ data:
       enabled: true
       accessMode: ReadWriteOnce
       size: 4Gi
-      storageClassName: nfs-k8s
+      storageClassName: "nfs-k8s"
 ---

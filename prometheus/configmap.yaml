@@ -329,15 +329,6 @@ data:
                 target_label: node
     networkPolicy:
       enabled: false
-    alertmanager:
-      enabled: true
-      persistence:
-        size: 2Gi
-      podSecurityContext:
-        runAsUser: 65534
-        runAsNonRoot: true
-        runAsGroup: 65534
-        fsGroup: 65534
     kube-state-metrics:
       enabled: true
     prometheus-node-exporter:
