@@ -8,7 +8,6 @@ data:
     image:
       repository: louislam/uptime-kuma
       pullPolicy: IfNotPresent
-      tag: "1.23.10-debian"
     useDeploy: true 
     serviceAccount:
       create: false
