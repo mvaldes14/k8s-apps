@@ -6,8 +6,9 @@ metadata:
 data:
   values.yaml: |
     image:
-      repository: louislam/uptime-kuma
+      repository: ghcr.io/k3rnelpan1c-dev/uptime-kuma
       pullPolicy: IfNotPresent
+      tag: 1.23.7
     useDeploy: true 
     serviceAccount:
       create: false
