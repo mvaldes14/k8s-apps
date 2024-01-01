@@ -11,3 +11,18 @@ volumeBindingMode: Immediate
 mountOptions:
   - soft 
   - nfsvers=3
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: nfs-k8s-keep
+provisioner: nfs.csi.k8s.io
+parameters:
+  server: 192.168.1.21
+  share: /k8s
+reclaimPolicy: Retain
+volumeBindingMode: Immediate
+mountOptions:
+  - soft 
+  - nfsvers=3
+

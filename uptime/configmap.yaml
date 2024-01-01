@@ -6,35 +6,40 @@ metadata:
 data:
   values.yaml: |
     image:
-      repository: ghcr.io/k3rnelpan1c-dev/uptime-kuma
+      registry: "quay.io"
+      repository: "k3rnel-pan1c/uptime-kuma"
       pullPolicy: IfNotPresent
-      tag: 1.23.7
-    useDeploy: true 
+    statefulSet:
+      labels: {}
+      annotations: {}
     serviceAccount:
-      create: false
-    podEnv:
-      - name: "UPTIME_KUMA_PORT"
-        value: "3001"
+      create: true
+      annotations: {}
+      name: ""
+    livenessProbe:
+      exec:
+        command:
+          - extra/healthcheck
+    readinessProbe:
+      httpGet:
+        path: /
+        port: http
+        scheme: HTTP
     service:
       type: ClusterIP
-      port: 3001
+      port: 80
     ingress:
       enabled: false
-    livenessProbe:
-      enabled: true
-      timeoutSeconds: 2
-      initialDelaySeconds: 15
-    readinessProbe:
-      enabled: true
-      initialDelaySeconds: 5
-    volume:
-      enabled: true
-      accessMode: ReadWriteOnce
-      size: 4Gi
-      storageClassName: "nfs-k8s"
-    strategy:
-      type: Recreate
+    persistence:
+      enabled: false
+      sizeLimit: 4Gi
+      storageClass: "nfs-k8s-keep"
     serviceMonitor:
       enabled: false
-    dnsPolicy: ""
+    testPod:
+      image: docker.io/busybox@sha256:3fbc632167424a6d997e74f52b878d7cc478225cffac6bc977eedfe51c7f4e79
+      annotations: {}
+    extraCertificates:
+      enabled: false
+      cacerts: ""
 ---
