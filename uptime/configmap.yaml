@@ -5,9 +5,36 @@ metadata:
   namespace: uptime 
 data:
   values.yaml: |
+    image:
+      repository: louislam/uptime-kuma
+      pullPolicy: IfNotPresent
+      tag: "1.23.10-debian"
+    useDeploy: true 
+    serviceAccount:
+      create: false
+    podEnv:
+      - name: "UPTIME_KUMA_PORT"
+        value: "3001"
+    service:
+      type: ClusterIP
+      port: 3001
+    ingress:
+      enabled: false
+    livenessProbe:
+      enabled: true
+      timeoutSeconds: 2
+      initialDelaySeconds: 15
+    readinessProbe:
+      enabled: true
+      initialDelaySeconds: 5
     volume:
       enabled: true
       accessMode: ReadWriteOnce
       size: 4Gi
       storageClassName: "nfs-k8s"
+    strategy:
+      type: Recreate
+    serviceMonitor:
+      enabled: false
+    dnsPolicy: ""
 ---
