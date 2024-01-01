@@ -31,7 +31,7 @@ data:
     ingress:
       enabled: false
     persistence:
-      enabled: false
+      enabled: true 
       sizeLimit: 4Gi
       storageClass: "nfs-k8s-keep"
     serviceMonitor:
