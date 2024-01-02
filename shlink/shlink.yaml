@@ -32,6 +32,8 @@ spec:
         env:
         - name: DEFAULT_DOMAIN
           value: links.mvaldes.dev
+        - name: SHELL_VERBOSITY 
+          value: 3
         - name: DB_DRIVER
           value: postgres
         - name: DB_NAME
