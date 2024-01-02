@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shlink-deploy
+  namespace: shlink 
+spec:
+  selector:
+    matchLabels:
+      app: shlink-deploy
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app:  shlink-deploy
+    spec:
+      containers:
+      - name:  shlink-pod
+        image:  shlinkio/shlink:stable
+        imagePullPolicy: IfNotPresent
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            cpu: 100m
+            memory: 100Mi
+        env:
+        - name: DEFAULT_DOMAIN
+          value: links.mvaldes.dev
+        - name: DB_DRIVER
+          value: postgres
+        - name: DB_NAME
+          value: postgres
+        - name: DB_USER
+          value: postgres
+        - name: DB_HOST 
+          value: db.wjfvumsnjpzqnlnqglzm.supabase.co
+        - name: GEOLITE_LICENSE_KEY
+          valueFrom:
+            secretKeyRef:
+              name: shlink-secrets
+              key: geo_license
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: shlink-secrets
+              key: db_password
+        ports:
+        - containerPort:  8080
+          name: shlink-deploy 
+      restartPolicy: Always
+---
+
