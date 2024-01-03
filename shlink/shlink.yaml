@@ -37,7 +37,7 @@ spec:
         - name: DB_DRIVER
           value: postgres
         - name: DB_NAME
-          value: postgres
+          value: shlink 
         - name: DB_USER
           value: postgres
         - name: DB_HOST 
