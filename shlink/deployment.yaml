@@ -1,0 +1,94 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shlink-api
+  namespace: shlink 
+spec:
+  selector:
+    matchLabels:
+      app: shlink-api
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: shlink-api
+    spec:
+      containers:
+        - name: shlink-api
+          image: shlinkio/shlink:3.7.3
+          resources:
+            requests:
+              memory: 128Mi
+              cpu: 100m
+          env:
+            - name: SHELL_VERBOSITY
+              value: "3"
+            - name: DEFAULT_DOMAIN
+              value: links.mvaldes.dev
+            - name: USE_HTTPS
+              value: "true"
+            - name: DB_DRIVER
+              value: postgres
+            - name: DB_HOST
+              value: postgres-svc.db
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_USER
+              value: "postgres"
+          envFrom:
+            - secretRef:
+                name: shlink-api-secret
+          ports:
+            - name: http
+              containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /rest/health
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            failureThreshold: 5
+            timeoutSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /rest/health
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shlink-web
+  namespace: shlink 
+  labels:
+    app:  shlink-web
+spec:
+  selector:
+    matchLabels:
+      app: shlink-web
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app:  shlink-web
+    spec:
+      containers:
+      - name:  shlink-web
+        image:  shlinkio/shlink-web-client
+        imagePullPolicy: IfNotPresent
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            cpu: 100m
+            memory: 100Mi
+        ports:
+        - name: http
+          containerPort: 80
+      restartPolicy: Always
+---
+
