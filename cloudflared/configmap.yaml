@@ -20,4 +20,6 @@ data:
       service: http://uptime-uptime-release-uptime-kuma.uptime:80
     - hostname: draw.mvaldes.dev
       service: http://excalidraw-service.excalidraw:80
+    - hostname: links.mvaldes.dev
+      service: http://shlink-svc-api.shlink:80
     - service: http_status:404
