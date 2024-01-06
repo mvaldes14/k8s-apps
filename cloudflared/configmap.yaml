@@ -10,12 +10,8 @@ data:
     metrics: 0.0.0.0:2000
     no-autoupdate: true
     ingress:
-    - hostname: k8s.mvaldes.dev
-      service: http://nginx-service.default:80
     - hostname: atlantis.mvaldes.dev
       service: http://atlantis-atlantis-release.atlantis:80
-    - hostname: wiki.mvaldes.dev
-      service: http://wiki-wiki-release.wiki:80
     - hostname: uptime.mvaldes.dev
       service: http://uptime-uptime-release-uptime-kuma.uptime:80
     - hostname: draw.mvaldes.dev
