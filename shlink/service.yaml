@@ -4,7 +4,6 @@ metadata:
   name: shlink-svc-web
   namespace: shlink
 spec:
-  type: NodePort
   selector:
     app: shlink-web
   ports:

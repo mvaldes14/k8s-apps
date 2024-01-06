@@ -1,0 +1,14 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: shlink-ingressroute
+  namespace: shlink
+spec:
+  entryPoints:
+    - web
+  routes:
+    - kind: Rule
+      match: Host(`links.local.net`)
+      services:
+        - name: shlink-svc-web
+          port: 80
