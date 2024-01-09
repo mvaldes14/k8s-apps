@@ -25,5 +25,8 @@ patches:
       - op: replace
         path: /spec/ports/0/name
         value: transmission-port
+      - op: replace
+        path: /spec/selector/app
+        value: transmission 
     target:
       kind: Service 

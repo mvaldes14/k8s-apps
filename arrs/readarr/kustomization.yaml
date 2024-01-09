@@ -18,12 +18,15 @@ patches:
   - patch: |-
       - op: replace
         path: /spec/template/spec/containers/0/name
-        value: bazarr-pod
+        value: readarr-pod
     target:
       kind: Deployment
   - patch: |-
       - op: replace
         path: /spec/ports/0/name
-        value: bazarr-port
+        value: readarr-port 
+      - op: replace
+        path: /spec/selector/app
+        value: readarr
     target:
       kind: Service 
