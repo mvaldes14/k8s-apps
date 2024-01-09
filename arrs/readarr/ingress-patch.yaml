@@ -8,8 +8,8 @@ spec:
     - web 
   routes:
     - kind: Rule
-      match: Host(`bazarr.local.net`)
+      match: Host(`readarr.local.net`)
       services:
-        - name: bazarr-svc
+        - name: readarr-svc
           port: 80
 
