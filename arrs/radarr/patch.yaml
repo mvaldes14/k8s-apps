@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: arr-pod
-        image: linuxserver/radarrr
+        image: linuxserver/radarr
         ports:
         - containerPort: 7878 
           name: http
