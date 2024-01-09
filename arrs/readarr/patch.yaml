@@ -16,7 +16,7 @@ spec:
       - name: arr-pod
         image: linuxserver/bazarr
         ports:
-        - containerPort: 6767
+        - containerPort: 8787
           name: http
       volumes:
       - name: config
