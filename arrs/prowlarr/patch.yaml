@@ -15,9 +15,9 @@ spec:
       containers:
       - name: arr-pod
         image: hotio/prowlarr:testing
-      ports:
-      - containerPort: 9696
-        name: http
+        ports:
+        - containerPort: 9696
+          name: http
     volumes:
       - name: config
         persistentVolumeClaim:

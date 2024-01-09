@@ -15,9 +15,9 @@ spec:
       containers:
       - name:  arr-pod
         image: linuxserver/sonarr
-      ports:
-      - containerPort: 7878
-        name: http
+        ports:
+        - containerPort: 7878
+          name: http
     volumes:
       - name: config
         persistentVolumeClaim:
