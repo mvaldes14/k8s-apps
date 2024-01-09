@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deploy
+  namespace: arr
+spec:
+  selector:
+    matchLabels:
+      app: bazarr
+  template:
+    metadata:
+      labels:
+        app: bazarr
+    spec:
+      containers:
+      - name: arr-pod
+        image: linuxserver/bazarr
+        ports:
+        - containerPort: 6767
+          name: http
+      volumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: bazarr-pvc
+---

@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deploy
+  namespace: arr
+spec:
+  selector:
+    matchLabels:
+      app: radarr 
+  template:
+    metadata:
+      labels:
+        app: radarr
+    spec:
+      containers:
+      - name: arr-pod
+        image: linuxserver/radarrr
+        ports:
+        - containerPort: 7878 
+          name: http
+      volumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: radarr-pvc

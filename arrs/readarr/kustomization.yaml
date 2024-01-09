@@ -1,0 +1,29 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+metadata:
+  name: readarr-ks
+
+namePrefix: readarr-
+
+resources:
+- ../base
+
+patches:
+  - path: patch.yaml
+    target:
+      kind: Deployment
+  - path: ingress-patch.yaml
+    target:
+      kind: IngressRoute
+  - patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/name
+        value: bazarr-pod
+    target:
+      kind: Deployment
+  - patch: |-
+      - op: replace
+        path: /spec/ports/0/name
+        value: bazarr-port
+    target:
+      kind: Service 

@@ -1,0 +1,15 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: ingressroute
+  namespace: arr
+spec:
+  entryPoints:
+    - web 
+  routes:
+    - kind: Rule
+      match: Host(`transmission.local.net`)
+      services:
+        - name: transmission-svc 
+          port: 80
+

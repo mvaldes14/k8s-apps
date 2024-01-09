@@ -1,0 +1,14 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: ing
+  namespace: arr
+spec:
+  entryPoints:
+    - web 
+  routes:
+    - kind: Rule
+      match: Host(`heus.local.net`)
+      services:
+        - name: prometheus-prometheus-release-server
+          port: 80
