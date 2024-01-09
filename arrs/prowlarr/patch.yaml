@@ -18,7 +18,7 @@ spec:
         ports:
         - containerPort: 9696
           name: http
-    volumes:
-      - name: config
-        persistentVolumeClaim:
-          claimName: prowlarr-pvc
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: prowlarr-pvc

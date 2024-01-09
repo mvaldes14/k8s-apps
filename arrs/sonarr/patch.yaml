@@ -18,7 +18,7 @@ spec:
         ports:
         - containerPort: 7878
           name: http
-    volumes:
-      - name: config
-        persistentVolumeClaim:
-          claimName: sonarr-pvc
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: sonarr-pvc
