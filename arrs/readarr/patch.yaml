@@ -6,20 +6,20 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: bazarr
+      app: readarr 
   template:
     metadata:
       labels:
-        app: bazarr
+        app: readarr
     spec:
       containers:
       - name: arr-pod
-        image: linuxserver/bazarr
+        image: ghcr.io/hotio/readarr
         ports:
         - containerPort: 8787
           name: http
       volumes:
       - name: config
         persistentVolumeClaim:
-          claimName: bazarr-pvc
+          claimName: readarr-pvc
 ---
