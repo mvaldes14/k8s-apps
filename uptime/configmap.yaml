@@ -6,8 +6,8 @@ metadata:
 data:
   values.yaml: |
     image:
-      registry: "quay.io"
-      repository: "k3rnel-pan1c/uptime-kuma"
+      registry: "registry.hub.docker"
+      repository: "louislam/uptime-kuma:1"
       pullPolicy: IfNotPresent
     statefulSet:
       labels: {}
