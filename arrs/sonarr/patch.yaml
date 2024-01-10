@@ -18,7 +18,23 @@ spec:
         ports:
         - containerPort: 8989
           name: http
+        volumeMounts:
+        - name: shows
+          mountPath: /shows
+        - name: anime 
+          mountPath: /anime
+        - name: downloads
+          mountPath: /downloads
       volumes:
         - name: config
           persistentVolumeClaim:
             claimName: sonarr-pvc
+        - name: shows
+          hostPath:
+            path: /mnt/nas/Series
+        - name: anime 
+          hostPath:
+            path: /mnt/nas/Anime
+        - name: downloads 
+          hostPath:
+            path: /mnt/downloads
