@@ -18,7 +18,18 @@ spec:
         ports:
         - containerPort: 7878 
           name: http
+        volumeMounts:
+        - name: movies 
+          mountPath: /movies
+        - name: downloads
+          mountPath: /downloads
       volumes:
-      - name: config
-        persistentVolumeClaim:
-          claimName: radarr-pvc
+        - name: movies 
+          hostPath:
+            path: /mnt/nas/Movies
+        - name: downloads 
+          hostPath:
+            path: /mnt/downloads
+        - name: config
+          persistentVolumeClaim:
+            claimName: radarr-pvc

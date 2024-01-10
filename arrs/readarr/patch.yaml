@@ -18,8 +18,14 @@ spec:
         ports:
         - containerPort: 8787
           name: http
+        volumeMounts:
+        - name: downloads
+          mountPath: /downloads
       volumes:
       - name: config
         persistentVolumeClaim:
           claimName: readarr-pvc
+      - name: downloads 
+        hostPath:
+          path: /mnt/downloads
 ---

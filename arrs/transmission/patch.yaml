@@ -18,7 +18,18 @@ spec:
         ports:
         - containerPort: 9091
           name: http
+        volumeMounts:
+        - name: downloads
+          mountPath: /downloads
+        - name: watch
+          mountPath: /watch
       volumes:
         - name: config
           persistentVolumeClaim:
             claimName: transmission-pvc
+        - name: downloads 
+          hostPath:
+            path: /mnt/downloads
+        - name: watch
+          hostPath:
+            path: /mnt/downloads
