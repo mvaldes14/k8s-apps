@@ -19,7 +19,7 @@ data:
       # -- replicas for the lsp smart assistant (not required but useful for the web IDE)
       lspReplicas: 1
       # -- replicas for the multiplayer containers used by the app (ee only and ignored if enterprise not enabled)
-      multiplayerReplicas: 1
+      multiplayerReplicas: 0
       # -- name of the secret storing the database URI, take precedence over databaseUrl.
       databaseUrlSecretName: "windmill-secret"
       # -- name of the key in secret storing the database URI. The default key of the url is 'url'
@@ -61,6 +61,7 @@ data:
       multiplayer:
         tag: "latest"
         autoscaling:
+          enabled: false
     ingress:
       enabled: false 
     enterprise:

@@ -18,4 +18,6 @@ data:
       service: http://excalidraw-service.excalidraw:80
     - hostname: links.mvaldes.dev
       service: http://shlink-svc-api.shlink:80
+    - hostname: windmill.mvaldes.dev
+      service: http://windmill-app.windmill:8000
     - service: http_status:404
