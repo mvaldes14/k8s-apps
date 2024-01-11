@@ -1,0 +1,72 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: windmill-cm 
+  namespace: windmill 
+data:
+  values.yaml: |
+    postgresql:
+    enabled: false 
+    minio:
+      enabled: false
+    windmill:
+      # -- windmill app image tag, will use the App version if not defined
+      tag: ""
+      # -- windmill image tag, will use the Acorresponding ee or ce image from ghcr if not defined. Do not include tag in the image name.
+      image: ""
+      # -- replica for the application app
+      appReplicas: 1
+      # -- replicas for the lsp smart assistant (not required but useful for the web IDE)
+      lspReplicas: 1
+      # -- replicas for the multiplayer containers used by the app (ee only and ignored if enterprise not enabled)
+      multiplayerReplicas: 1
+      # -- name of the secret storing the database URI, take precedence over databaseUrl.
+      databaseUrlSecretName: "windmill-secret"
+      # -- name of the key in secret storing the database URI. The default key of the url is 'url'
+      databaseUrlSecretKey: url
+      # -- domain as shown in browser. url of ths service is at: {baseProtocol}://{baseDomain}
+      baseDomain: windmill.mvaldes.dev 
+      # -- protocol as shown in browser, change to https etc based on your endpoint/ingress configuration, this variable and `baseDomain` are used as part of the BASE_URL environment variable in app and worker container
+      baseProtocol: https
+      # -- domain to use for the cookies. Use it if windmill is hosted on a subdomain and you need to share the cookies with the hub for instance
+      cookieDomain: ""
+      # -- pass the index url to pip for private registries
+      pipIndexUrl: ""
+      # -- pass the extra index url to pip for private registries
+      pipExtraIndexUrl: ""
+      # -- pass the trusted host to pip for private registries
+      pipTrustedHost: ""
+      # -- pass the npm for private registries
+      npmConfigRegistry: ""
+      # -- send instance events to a webhook. Can be hooked back to windmill
+      instanceEventsWebhook: ""
+      # -- mount the docker socket inside the container to be able to run docker command as docker client to the host docker daemon
+      exposeHostDocker: false
+      # -- rust log level, set to debug for more information etc, sets RUST_LOG environment variable in app and worker container
+      rustLog: info
+      workerGroups:
+        - name: "default"
+          replicas: 2
+        - name: "native"
+          replicas: 2
+        - name: "gpu"
+          replicas: 0
+      app:
+        autoscaling:
+          enabled: false
+      lsp:
+        tag: "latest"
+        autoscaling:
+          enabled: false
+      multiplayer:
+        tag: "latest"
+        autoscaling:
+    ingress:
+      enabled: false 
+    enterprise:
+      enabled: false
+    serviceAccount:
+      create: true
+  
+---
+  
