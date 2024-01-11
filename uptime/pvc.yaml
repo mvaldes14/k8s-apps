@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: uptime-pvc
+  namespace: uptime
+spec:
+  storageClassName: "nfs-k8s-keep"
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 2Gi
+

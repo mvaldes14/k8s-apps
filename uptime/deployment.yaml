@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: uptime-deploy
+  namespace: uptime
+spec:
+  selector:
+    matchLabels:
+      app: uptime
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: uptime
+    spec:
+      containers:
+      - name:  uptime-pod
+        image:  louislam/uptime-kuma:1
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          tcpSocket:
+            port: 3001
+          initialDelaySeconds: 5
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 3
+          periodSeconds: 10
+        ports:
+        - containerPort: 3001
+          name:  uptime-port
+        volumeMounts:
+        - name: uptime-storage 
+          mountPath: /app/data
+      volumes:
+        - name: uptime-storage 
+          persistentVolumeClaim:
+            claimName: uptime-pvc 
+      restartPolicy: Always

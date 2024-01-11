@@ -13,7 +13,7 @@ data:
     - hostname: atlantis.mvaldes.dev
       service: http://atlantis-atlantis-release.atlantis:80
     - hostname: uptime.mvaldes.dev
-      service: http://uptime-uptime-release-uptime-kuma.uptime:80
+      service: http://uptime-svc.uptime:80
     - hostname: draw.mvaldes.dev
       service: http://excalidraw-service.excalidraw:80
     - hostname: links.mvaldes.dev
