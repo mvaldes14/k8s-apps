@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: twitch-bot 
+  namespace: bots
+spec:
+  selector:
+    matchLabels:
+      app: twitch-bot
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: twitch-bot
+    spec:
+      containers:
+      - name: twtich-bot
+        image:  rorix/twitch-bot:latest
+        imagePullPolicy: IfNotPresent
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            cpu: 100m
+            memory: 100Mi
+        env:
+        - name: DOPPLER_TOKEN
+          valueFrom:
+            secretKeyRef:
+                name: twitch-bot-secrets
+                key: DOPPLER_TOKEN 
+      restartPolicy: Always
+---

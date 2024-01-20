@@ -68,6 +68,5 @@ data:
       enabled: false
     serviceAccount:
       create: true
-  
 ---
   
