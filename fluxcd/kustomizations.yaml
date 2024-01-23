@@ -226,4 +226,4 @@ spec:
     name: homelab-repository
   path: "./elastic"
   prune: true
-  timeout: 2m
+  timeout: 1m
