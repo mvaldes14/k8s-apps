@@ -4,7 +4,7 @@ metadata:
   name: kibana-release 
   namespace: elastic 
 spec:
-  targetNamespace: elastic 
+  targetNamespace: elastic
   chart:
     spec:
       chart: kibana
@@ -16,4 +16,4 @@ spec:
   interval: 1m0s
   valuesFrom:
     - kind: ConfigMap
-      name: elastic-cm 
+      name: kibana-cm
