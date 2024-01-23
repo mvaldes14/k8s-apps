@@ -6,9 +6,9 @@ metadata:
 data:
   values.yaml: |
     elasticsearchHosts: "https://elasticsearch-master:9200"
-    elasticsearchCertificateSecret: elasticsearch-master-certs
+    elasticsearchCertificateSecret: homelab-master-certs
     elasticsearchCertificateAuthoritiesFile: ca.crt
-    elasticsearchCredentialSecret: elasticsearch-master-credentials
+    elasticsearchCredentialSecret: homelab-master-credentials
 
     replicas: 1
 
