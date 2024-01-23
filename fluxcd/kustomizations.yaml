@@ -240,4 +240,4 @@ spec:
     name: homelab-repository
   path: "./kibana"
   prune: true
-  timeout: 1m
+  timeout: 2m
