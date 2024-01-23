@@ -5,10 +5,10 @@ metadata:
   namespace: elastic 
 data:
   values.yaml: |
-    elasticsearchHosts: "https://elasticsearch-master:9200"
-    elasticsearchCertificateSecret: homelab-master-certs
+    elasticsearchHosts: "https://homelab-nodes:9200"
+    elasticsearchCertificateSecret: homelab-nodes-certs
     elasticsearchCertificateAuthoritiesFile: ca.crt
-    elasticsearchCredentialSecret: homelab-master-credentials
+    elasticsearchCredentialSecret: homelab-nodes-credentials
 
     replicas: 1
 
