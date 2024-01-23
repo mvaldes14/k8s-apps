@@ -8,7 +8,7 @@ data:
     elasticsearchHosts: "https://elasticsearch-master:9200"
     elasticsearchCertificateSecret: elasticsearch-master-certs
     elasticsearchCertificateAuthoritiesFile: ca.crt
-    elasticsearchCredentialSecret: elasticsearch-master-credentials   elasticsearchCredentialSecret: homelab-nodes-credentials
+    elasticsearchCredentialSecret: elasticsearch-master-credentials   
 
     replicas: 1
 
@@ -18,8 +18,6 @@ data:
     extraEnvs:
       - name: "NODE_OPTIONS"
         value: "--max-old-space-size=1800"
-    #  - name: MY_ENVIRONMENT_VAR
-    #    value: the_value_goes_here
 
     # Allows you to load environment variables from kubernetes secret or config map
     envFrom: []
