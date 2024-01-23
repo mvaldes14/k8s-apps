@@ -227,3 +227,17 @@ spec:
   path: "./elastic"
   prune: true
   timeout: 1m
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: kibana-flux 
+  namespace: flux-system
+spec:
+  interval: 10m
+  sourceRef:
+    kind: GitRepository
+    name: homelab-repository
+  path: "./kibana"
+  prune: true
+  timeout: 1m
