@@ -22,7 +22,7 @@ data:
       - ingest
       - transform
 
-    replicas: 3
+    replicas: 4
     minimumMasterNodes: 2
 
     esMajorVersion: ""
