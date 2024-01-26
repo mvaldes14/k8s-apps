@@ -20,7 +20,7 @@ data:
       - master
       - data
       - ingest
-      - transform
+      - remote_cluster_client
 
     replicas: 4
     minimumMasterNodes: 2
