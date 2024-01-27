@@ -1,19 +1,11 @@
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
-kind: HelmRelease
+apiVersion: kibana.k8s.elastic.co/v1
+kind: Kibana
 metadata:
-  name: kibana-release 
-  namespace: elastic 
+  name: kibana
+  namespace: kibana
 spec:
-  targetNamespace: elastic
-  chart:
-    spec:
-      chart: kibana
-      reconcileStrategy: ChartVersion
-      sourceRef:
-        kind: HelmRepository
-        name: elastic-helm
-      version: 8.5.1
-  interval: 1m0s
-  valuesFrom:
-    - kind: ConfigMap
-      name: kibana-cm
+  version: 8.12.0
+  count: 1
+  elasticsearchRef:
+    name: homelab 
+    namespace: elastic 
