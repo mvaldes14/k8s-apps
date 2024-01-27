@@ -8,7 +8,6 @@ spec:
   nodeSets:
   - name: elastic 
     count: 4
-    volumeClaimDeletePolicy: DeleteOnScaledownOnly
     volumeClaimTemplates:
     - metadata:
         name: elasticsearch-data
