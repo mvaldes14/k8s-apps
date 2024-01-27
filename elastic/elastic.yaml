@@ -17,7 +17,7 @@ spec:
         resources:
           requests:
             storage: 3Gi
-          storageClassName: nfs-k8s-keep
+        storageClassName: nfs-k8s-keep
     config:
       node.store.allow_mmap: false
       node.roles: ["master", "data", "ingest", "transform"]
