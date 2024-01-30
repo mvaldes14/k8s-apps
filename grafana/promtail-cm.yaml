@@ -2,8 +2,8 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: myconfig
-  namespace: default
+  name: promtail-cm 
+  namespace: grafana 
 data:
   values.yaml: |
     daemonset:
