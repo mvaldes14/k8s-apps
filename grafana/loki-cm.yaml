@@ -682,7 +682,7 @@ data:
       # The Loki canary pushes logs to and queries from this loki installation to test
       # that it's working correctly
       lokiCanary:
-        enabled: true
+        enabled: false 
         # -- The name of the label to look for at loki when doing the checks.
         labelname: pod
         # -- Additional annotations for the `loki-canary` Daemonset
@@ -730,7 +730,7 @@ data:
     # Configuration for the write pod(s)
     write:
       # -- Number of replicas for the write
-      replicas: 3
+      replicas: 1
       autoscaling:
         # -- Enable autoscaling for the write.
         enabled: false
