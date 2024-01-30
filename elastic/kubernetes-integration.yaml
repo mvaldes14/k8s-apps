@@ -2,12 +2,10 @@ apiVersion: agent.k8s.elastic.co/v1alpha1
 kind: Agent
 metadata:
   name: elastic-agent
-  namespace: elastic
 spec:
   version: 8.11.1
   elasticsearchRefs:
-  - name: homelab
-    namespace: elastic
+  - name: elasticsearch
   daemonSet:
     podTemplate:
       spec:
@@ -282,7 +280,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: elastic-agent
-  namespace: elastic 
+  namespace: default
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -291,9 +289,31 @@ metadata:
 subjects:
 - kind: ServiceAccount
   name: elastic-agent
-  namespace: elastic 
+  namespace: default
 roleRef:
   kind: ClusterRole
   name: elastic-agent
   apiGroup: rbac.authorization.k8s.io
 ---
+apiVersion: elasticsearch.k8s.elastic.co/v1
+kind: Elasticsearch
+metadata:
+  name: elasticsearch
+spec:
+  version: 8.11.1
+  nodeSets:
+  - name: default
+    count: 3
+    config:
+      node.store.allow_mmap: false
+---
+apiVersion: kibana.k8s.elastic.co/v1
+kind: Kibana
+metadata:
+  name: kibana
+spec:
+  version: 8.11.1
+  count: 1
+  elasticsearchRef:
+    name: elasticsearch
+...

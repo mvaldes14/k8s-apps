@@ -22,4 +22,6 @@ data:
       service: http://windmill-app.windmill:8000
     - hostname: kibana.mvaldes.dev
       service: https://kibana-kb-http.elastic:5601
+      originRequest:
+        noTLSVerify: true
     - service: http_status:404
