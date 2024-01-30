@@ -9,3 +9,42 @@ spec:
   elasticsearchRef:
     name: homelab 
     namespace: elastic 
+  config:
+    xpack.fleet.agents.elasticsearch.hosts: ["https://homelab-es-http.elastic:9200"]
+    xpack.fleet.agents.fleet_server.hosts: ["https://fleet-server-agent-http.elastic:8220"]
+    xpack.fleet.packages:
+      - name: system
+        version: latest
+      - name: elastic_agent
+        version: latest
+      - name: fleet_server
+        version: latest
+      - name: kubernetes
+        version: latest
+    xpack.fleet.agentPolicies:
+      - name: Fleet Server on ECK policy
+        id: eck-fleet-server
+        namespace: default
+        monitoring_enabled:
+          - logs
+          - metrics
+        unenroll_timeout: 900
+        package_policies:
+        - name: fleet_server-1
+          id: fleet_server-1
+          package:
+            name: fleet_server
+      - name: Homelab Policy
+        id: homelab-policy 
+        namespace: default
+        monitoring_enabled:
+          - logs
+          - metrics
+        unenroll_timeout: 900
+        package_policies:
+        - package:
+            name: system
+          name: system-1
+        - package:
+            name: kubernetes
+          name: kubernetes-1

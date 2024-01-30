@@ -3,14 +3,13 @@ apiVersion: agent.k8s.elastic.co/v1alpha1
 kind: Agent
 metadata:
   name: fleet-server
-  namespace: elastic
 spec:
-  version: 8.12.0
+  version: 8.11.1
   kibanaRef:
     name: kibana
     namespace: elastic
   elasticsearchRefs:
-  - name: homelab
+  - name: elasticsearch
     namespace: elastic
   mode: fleet
   fleetServerEnabled: true
@@ -28,21 +27,19 @@ apiVersion: agent.k8s.elastic.co/v1alpha1
 kind: Agent
 metadata: 
   name: elastic-agent
-  namespace: elastic
 spec:
-  version: 8.12.0
+  version: 8.11.1
   kibanaRef:
     name: kibana
-    namespace: elastic
   fleetServerRef: 
     name: fleet-server
-    namespace: elastic
   mode: fleet
-  policyID: homelab-policy 
+  policyID: eck-agent
   daemonSet:
     podTemplate:
       spec:
         serviceAccountName: elastic-agent
+        hostNetwork: true
         dnsPolicy: ClusterFirstWithHostNet
         automountServiceAccountToken: true
         securityContext:
@@ -52,7 +49,6 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: fleet-server
-  namespace: elastic
 rules:
 - apiGroups: [""]
   resources:
@@ -89,17 +85,16 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: fleet-server
-  namespace: elastic
+  namespace: elastic 
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: fleet-server
-  namespace: elastic
 subjects:
 - kind: ServiceAccount
   name: fleet-server
-  namespace: default
+  namespace: elastic 
 roleRef:
   kind: ClusterRole
   name: fleet-server
@@ -109,7 +104,6 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: elastic-agent
-  namespace: elastic
 rules:
 - apiGroups: [""]
   resources:
@@ -176,12 +170,12 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: elastic-agent
-  namespace: elastic 
 subjects:
 - kind: ServiceAccount
   name: elastic-agent
-  namespace: default
+  namespace: elastic 
 roleRef:
   kind: ClusterRole
   name: elastic-agent
   apiGroup: rbac.authorization.k8s.io
+...
