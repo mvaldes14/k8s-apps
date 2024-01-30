@@ -8,6 +8,16 @@ spec:
   nodeSets:
   - name: elastic 
     count: 4
+    volumeClaimTemplates:
+    - metadata:
+        name: elasticsearch-data
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 3Gi
+        storageClassName: nfs-k8s-keep
     config:
       xpack.ml.enabled: false
 

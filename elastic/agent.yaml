@@ -6,7 +6,8 @@ metadata:
 spec:
   version: 8.11.1
   elasticsearchRefs:
-  - name: elasticsearch
+  - name: homelab
+    namespace: elastic
   daemonSet:
     podTemplate:
       spec:
