@@ -682,7 +682,8 @@ data:
       # The Loki canary pushes logs to and queries from this loki installation to test
       # that it's working correctly
       lokiCanary:
-        enabled: false 
+        enabled: true
+        replicas: 1
     # Configuration for the write pod(s)
     write:
       # -- Number of replicas for the write
