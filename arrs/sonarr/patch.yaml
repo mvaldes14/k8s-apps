@@ -15,6 +15,7 @@ spec:
       containers:
       - name:  arr-pod
         image: linuxserver/sonarr
+        nodeSelector: azero
         ports:
         - containerPort: 8989
           name: http
@@ -25,10 +26,12 @@ spec:
           mountPath: /anime
         - name: downloads
           mountPath: /downloads
+        - name: config
+          mountPath: /config
       volumes:
         - name: config
-          persistentVolumeClaim:
-            claimName: sonarr-pvc
+          hostPath:
+            path: /opt/mediaservices/sonarr
         - name: shows
           hostPath:
             path: /mnt/nas/Series
