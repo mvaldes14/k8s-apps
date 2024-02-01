@@ -19,7 +19,7 @@ spec:
     replicas: 1
     podTemplate:
       spec:
-        serviceAccountName: fleet-server
+        serviceAccountName: elastic-agent
         automountServiceAccountToken: true
         securityContext:
           runAsUser: 0
@@ -43,73 +43,19 @@ spec:
     podTemplate:
       spec:
         serviceAccountName: elastic-agent
+        hostNetwork: true
         dnsPolicy: ClusterFirstWithHostNet
         automountServiceAccountToken: true
         securityContext:
           runAsUser: 0
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  name: fleet-server
-  namespace: elastic
-rules:
-- apiGroups: [""]
-  resources:
-  - pods
-  - namespaces
-  - nodes
-  verbs:
-  - get
-  - watch
-  - list
-- apiGroups: ["apps"]
-  resources:
-    - replicasets
-  verbs:
-    - get
-    - watch
-    - list
-- apiGroups: ["batch"]
-  resources:
-    - jobs
-  verbs:
-    - get
-    - watch
-    - list
-- apiGroups: ["coordination.k8s.io"]
-  resources:
-  - leases
-  verbs:
-  - get
-  - create
-  - update
----
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: fleet-server
-  namespace: elastic
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: fleet-server
-  namespace: elastic
-subjects:
-- kind: ServiceAccount
-  name: fleet-server
-  namespace: default
-roleRef:
-  kind: ClusterRole
-  name: fleet-server
-  apiGroup: rbac.authorization.k8s.io
+        volumes:
+        - name: agent-data
+          emptyDir: {}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: elastic-agent
-  namespace: elastic
 rules:
 - apiGroups: [""]
   resources:
@@ -176,11 +122,10 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: elastic-agent
-  namespace: elastic 
 subjects:
 - kind: ServiceAccount
   name: elastic-agent
-  namespace: default
+  namespace: elastic 
 roleRef:
   kind: ClusterRole
   name: elastic-agent
