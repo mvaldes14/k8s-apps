@@ -13,6 +13,7 @@ spec:
       labels:
         app: arr
     spec:
+      nodeName: azero
       containers:
       - name: arr-pod
         imagePullPolicy: IfNotPresent

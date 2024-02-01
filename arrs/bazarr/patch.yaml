@@ -27,10 +27,12 @@ spec:
           mountPath: /anime
         - name: downloads
           mountPath: /downloads
+        - name: config 
+          mountPath: /config
       volumes:
       - name: config
-        persistentVolumeClaim:
-          claimName: bazarr-pvc
+        hostPath:
+          path: /opt/mediaservices/bazarr
       - name: movies 
         hostPath:
           path: /mnt/nas/Movies

@@ -18,7 +18,10 @@ spec:
         ports:
         - containerPort: 9696
           name: http
+        volumeMounts:
+        - name: config 
+          mountPath: /config
       volumes:
         - name: config
-          persistentVolumeClaim:
-            claimName: prowlarr-pvc
+          hostPath:
+            path: /opt/mediaservices/prowlarr

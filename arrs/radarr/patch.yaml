@@ -23,6 +23,8 @@ spec:
           mountPath: /movies
         - name: downloads
           mountPath: /downloads
+        - name: config 
+          mountPath: /config
       volumes:
         - name: movies 
           hostPath:
@@ -31,5 +33,5 @@ spec:
           hostPath:
             path: /mnt/downloads
         - name: config
-          persistentVolumeClaim:
-            claimName: radarr-pvc
+          hostPath:
+            path: /opt/mediaservices/radarr

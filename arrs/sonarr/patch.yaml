@@ -15,7 +15,6 @@ spec:
       containers:
       - name:  arr-pod
         image: linuxserver/sonarr
-        nodeSelector: azero
         ports:
         - containerPort: 8989
           name: http

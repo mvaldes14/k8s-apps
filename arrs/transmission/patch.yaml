@@ -24,9 +24,6 @@ spec:
         - name: watch
           mountPath: /watch
       volumes:
-        - name: config
-          persistentVolumeClaim:
-            claimName: transmission-pvc
         - name: downloads 
           hostPath:
             path: /mnt/downloads

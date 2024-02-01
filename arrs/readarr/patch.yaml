@@ -21,10 +21,12 @@ spec:
         volumeMounts:
         - name: downloads
           mountPath: /downloads
+        - name: config 
+          mountPath: /config
       volumes:
       - name: config
-        persistentVolumeClaim:
-          claimName: readarr-pvc
+        hostPath:
+          path: /opt/mediaservices/readarr
       - name: downloads 
         hostPath:
           path: /mnt/downloads
