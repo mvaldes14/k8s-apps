@@ -22,8 +22,3 @@ data:
       existingSecret: "grafana-secret"
       userKey: admin-user
       passwordKey: admin-password
-
-    # extra plugins to install
-    plugins:
-      - grafana-github-datasource
-      - marcusolsson-json-datasource
