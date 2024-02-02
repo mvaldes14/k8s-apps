@@ -12,7 +12,6 @@ spec:
       labels:
         app: sonarr
     spec:
-      hostNetwork: true
       containers:
       - name:  arr-pod
         image: linuxserver/sonarr
