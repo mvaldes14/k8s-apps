@@ -15,14 +15,13 @@ data:
       replicas: 1
       persistence:
         volumeClaimsEnabled: true
-        dataVolumeParameters:
-          emptyDir: {}
         enableStatefulSetAutoDeletePVC: false
         size: 5Gi
         storageClass: nfs-k8s-keep 
     read:
       replicas: 1
       persistence:
+        volumeClaimsEnabled: true
         enableStatefulSetAutoDeletePVC: true
         size: 5Gi
         storageClass: nfs-k8s-keep 
