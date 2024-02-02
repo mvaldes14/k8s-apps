@@ -36,4 +36,5 @@ data:
     singleBinary:
       replicas: 0
     gateway:
-      enabled: false 
+      enabled: true 
+      replicas: 1
