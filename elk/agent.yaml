@@ -46,11 +46,13 @@ spec:
         automountServiceAccountToken: true
         securityContext:
           runAsUser: 0
-        volumeMounts:
-          - name: container-logs
-            mountPath: /var/lib/containers
-          - name: system-logs
-            mountPath: /var/log/
+        containers:
+        - name: agent
+          volumeMounts:
+            - name: container-logs
+              mountPath: /var/lib/containers
+            - name: system-logs
+              mountPath: /var/log/
         volumes:
         - name: agent-data
           emptyDir: {}
