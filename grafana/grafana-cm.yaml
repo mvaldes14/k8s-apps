@@ -26,4 +26,4 @@ data:
     # extra plugins to install
     plugins:
     - github
-    - marcusolsson-json-datasource
+    #- marcusolsson-json-datasource
