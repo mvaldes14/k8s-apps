@@ -31,7 +31,7 @@ data:
       logFormat: logfmt
       serverPort: 3101
       clients:
-        - url: http://loki-backend/loki/api/v1/push
+        - url: http://loki-write/loki/api/v1/push
       positions:
         filename: /run/promtail/positions.yaml
       enableTracing: false
