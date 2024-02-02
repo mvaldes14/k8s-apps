@@ -37,4 +37,4 @@ data:
       replicas: 0
     gateway:
       enabled: true 
-      replicas: 1
+      replicas: 2
