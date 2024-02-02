@@ -3,7 +3,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: promtail-cm 
-  namespace: grafana 
+  namespace: loki 
 data:
   values.yaml: |
     daemonset:
