@@ -25,5 +25,5 @@ data:
 
     # extra plugins to install
     plugins:
-    - github
-    #- marcusolsson-json-datasource
+    - grafana-github-datasource
+    - marcusolsson-json-datasource
