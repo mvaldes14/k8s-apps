@@ -7,33 +7,34 @@ data:
   values.yaml: |
     loki:
       auth_enabled: false 
+    monitoring:
       lokiCanary:
         enabled: true
         replicas: 1
-      write:
-        replicas: 1
-        persistence:
-          volumeClaimsEnabled: true
-          dataVolumeParameters:
-            emptyDir: {}
-          enableStatefulSetAutoDeletePVC: false
-          size: 5Gi
-          storageClass: nfs-k8s-keep 
-      read:
-        replicas: 1
-        persistence:
-          enableStatefulSetAutoDeletePVC: true
-          size: 5Gi
-          storageClass: nfs-k8s-keep 
-      backend:
-        replicas: 1
-        persistence:
-          volumeClaimsEnabled: true
-          enableStatefulSetAutoDeletePVC: true
-          size: 5Gi
-          storageClass: nfs-k8s-keep 
-      # Configuration for the single binary node(s)
-      singleBinary:
-        replicas: 0
-      gateway:
-        enabled: false 
+    write:
+      replicas: 1
+      persistence:
+        volumeClaimsEnabled: true
+        dataVolumeParameters:
+          emptyDir: {}
+        enableStatefulSetAutoDeletePVC: false
+        size: 5Gi
+        storageClass: nfs-k8s-keep 
+    read:
+      replicas: 1
+      persistence:
+        enableStatefulSetAutoDeletePVC: true
+        size: 5Gi
+        storageClass: nfs-k8s-keep 
+    backend:
+      replicas: 1
+      persistence:
+        volumeClaimsEnabled: true
+        enableStatefulSetAutoDeletePVC: true
+        size: 5Gi
+        storageClass: nfs-k8s-keep 
+    # Configuration for the single binary node(s)
+    singleBinary:
+      replicas: 0
+    gateway:
+      enabled: false 
