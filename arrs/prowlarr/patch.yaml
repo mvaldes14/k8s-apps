@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: arr-pod
-        image: hotio/prowlarr:develop
+        image: hotio/prowlarr:release
         ports:
         - containerPort: 9696
           name: http
