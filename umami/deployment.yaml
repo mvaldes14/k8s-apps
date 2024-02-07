@@ -16,7 +16,7 @@ spec:
         app: umami
     spec:
       containers:
-        - name:
+        - name: umami-pod
           image: ghcr.io/umami-software/umami:postgresql-latest
           imagePullPolicy: IfNotPresent
           env:
