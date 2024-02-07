@@ -1,8 +1,13 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cronjobs
+---
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
   name: meal-notifier 
-  namespace: default
+  namespace: cronjobs 
 spec:
   schedule: "0 7 * * 1-5"
   jobTemplate:
