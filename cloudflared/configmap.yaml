@@ -22,6 +22,8 @@ data:
       service: http://windmill-app.windmill:8000
     - hostname: grafana.mvaldes.dev
       service: http://grafana-grafana-release.grafana
+    - hostname: umami.mvaldes.dev
+      service: http://umami-svc.umami
     - hostname: kibana.mvaldes.dev
       service: https://kibana-kb-http.elastic:5601
       originRequest:
