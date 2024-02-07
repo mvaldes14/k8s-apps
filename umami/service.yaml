@@ -6,9 +6,8 @@ metadata:
 spec:
   selector:
     app: umami
+  type: ClusterIP
   ports:
-    type: ClusterIP
+  - protocol: TCP
     port: 80
-    targetPort: 3000
----
-
+    targetPort: http 
