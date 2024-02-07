@@ -4,15 +4,19 @@ metadata:
   name: meal-notifier 
   namespace: default
 spec:
-  schedule: "*/1 * * * *"
+  schedule: "0 7 * * 1-5"
   jobTemplate:
     spec:
       template:
         spec:
           containers:
-          - name: jobname
-            image: busybox
-            args: ['/bin/sh', '-c', 'date; echo Hello from the Kubernetes cluster']
+          - name: meal-notifier
+            image: rorix/meal-notifier:latest
+            env:
+            - name: DOPPLER_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: cronjob-secrets
+                  key: DOPPLER_TOKEN
           restartPolicy: OnFailure
 ---
-
