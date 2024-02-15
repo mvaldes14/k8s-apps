@@ -300,7 +300,7 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: ollama-flux
-  namespace: ollama-system
+  namespace: flux-system 
 spec:
   interval: 10m
   sourceRef:
