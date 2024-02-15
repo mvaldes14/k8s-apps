@@ -42,8 +42,14 @@ spec:
           successThreshold: 1
           failureThreshold: 3
           periodSeconds: 10
+        volumeMounts:
+        - name: ollama-volume
+          mountPath: "/root/.ollama"
         ports:
         - containerPort:  11434
           name: http 
       restartPolicy: Always
-
+      volumes:
+      - name: ollama-volume
+        hostPath:
+          path: /opt/ollama
