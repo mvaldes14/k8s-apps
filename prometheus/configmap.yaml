@@ -333,6 +333,8 @@ data:
       enabled: false
     kube-state-metrics:
       enabled: true
+    prometheus-pushgateway:
+      enabled: false
     prometheus-node-exporter:
       enabled: true
       rbac:
@@ -343,4 +345,3 @@ data:
           create: true
         podSecurityPolicy:
           enabled: false
----
