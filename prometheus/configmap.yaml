@@ -47,7 +47,7 @@ data:
           - ReadWriteOnce
         mountPath: /data
         size: 8Gi
-        storageClass: nfs-k8s-keep
+        storageClass: nfs-k8s
       replicaCount: 1
       tcpSocketProbeEnabled: false
       probeScheme: HTTP
