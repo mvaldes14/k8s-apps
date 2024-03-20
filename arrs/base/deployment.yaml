@@ -13,18 +13,19 @@ spec:
       labels:
         app: arr
     spec:
-      nodeName: azero
+      nodeName: eva02
       hostNetwork: true
       containers:
-      - name: arr-pod
-        imagePullPolicy: IfNotPresent
-        env:
-        - name: PUID
-          value: "1000"
-        - name: PGID
-          value: "1000"
-        volumeMounts:
-          - name: config
-            mountPath: /config
+        - name: arr-pod
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+          volumeMounts:
+            - name: config
+              mountPath: /config
       restartPolicy: Always
 ---
+
