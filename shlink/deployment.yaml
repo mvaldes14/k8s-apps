@@ -1,9 +1,8 @@
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: shlink-api
-  namespace: shlink 
+  namespace: shlink
 spec:
   selector:
     matchLabels:
@@ -35,7 +34,7 @@ spec:
             - name: DB_PORT
               value: "5432"
             - name: DB_USER
-              value: "postgres"
+              value: "admin"
           envFrom:
             - secretRef:
                 name: shlink-api-secret
@@ -62,9 +61,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: shlink-web
-  namespace: shlink 
+  namespace: shlink
   labels:
-    app:  shlink-web
+    app: shlink-web
 spec:
   selector:
     matchLabels:
@@ -73,22 +72,22 @@ spec:
   template:
     metadata:
       labels:
-        app:  shlink-web
+        app: shlink-web
     spec:
       containers:
-      - name:  shlink-web
-        image:  shlinkio/shlink-web-client
-        imagePullPolicy: IfNotPresent
-        resources:
-          requests:
-            cpu: 100m
-            memory: 100Mi
-          limits:
-            cpu: 100m
-            memory: 100Mi
-        ports:
-        - name: http
-          containerPort: 80
+        - name: shlink-web
+          image: shlinkio/shlink-web-client
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              cpu: 100m
+              memory: 100Mi
+            limits:
+              cpu: 100m
+              memory: 100Mi
+          ports:
+            - name: http
+              containerPort: 80
       restartPolicy: Always
 ---
 

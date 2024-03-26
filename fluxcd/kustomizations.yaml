@@ -1,13 +1,13 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: uptime-flux 
+  name: uptime-flux
   namespace: flux-system
 spec:
   interval: 10m
   sourceRef:
     kind: GitRepository
-    name: homelab-repository 
+    name: homelab-repository
   path: "./uptime"
   prune: true
   timeout: 1m
@@ -15,13 +15,13 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: atlantis-flux 
+  name: atlantis-flux
   namespace: flux-system
 spec:
   interval: 10m
   sourceRef:
     kind: GitRepository
-    name: homelab-repository 
+    name: homelab-repository
   path: "./atlantis"
   prune: true
   timeout: 1m
@@ -33,13 +33,13 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: prometheus-flux 
+  name: prometheus-flux
   namespace: flux-system
 spec:
   interval: 10m
   sourceRef:
     kind: GitRepository
-    name: homelab-repository 
+    name: homelab-repository
   path: "./prometheus"
   prune: true
   timeout: 1m
@@ -47,13 +47,13 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: cloudflared-flux 
+  name: cloudflared-flux
   namespace: flux-system
 spec:
   interval: 10m
   sourceRef:
     kind: GitRepository
-    name: homelab-repository 
+    name: homelab-repository
   path: "./cloudflared"
   prune: true
   timeout: 3m
@@ -164,6 +164,8 @@ spec:
   prune: true
   timeout: 1m
 ---
+
+
 # apiVersion: kustomize.toolkit.fluxcd.io/v1
 # kind: Kustomization
 # metadata:
@@ -178,6 +180,8 @@ spec:
 #   prune: true
 #   timeout: 1m
 ---
+
+
 # apiVersion: kustomize.toolkit.fluxcd.io/v1
 # kind: Kustomization
 # metadata:
@@ -196,42 +200,46 @@ spec:
 #     secretRef:
 #       name: sops-age
 ---
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
-  name: bots-flux 
-  namespace: flux-system
-spec:
-  interval: 10m
-  sourceRef:
-    kind: GitRepository
-    name: homelab-repository
-  path: "./bots"
-  prune: true
-  timeout: 1m
-  decryption:
-    provider: sops
-    secretRef:
-      name: sops-age
+
+
+# apiVersion: kustomize.toolkit.fluxcd.io/v1
+# kind: Kustomization
+# metadata:
+#   name: bots-flux 
+#   namespace: flux-system
+# spec:
+#   interval: 10m
+#   sourceRef:
+#     kind: GitRepository
+#     name: homelab-repository
+#   path: "./bots"
+#   prune: true
+#   timeout: 1m
+#   decryption:
+#     provider: sops
+#     secretRef:
+#       name: sops-age
+# ---
+# apiVersion: kustomize.toolkit.fluxcd.io/v1
+# kind: Kustomization
+# metadata:
+#   name: grafana-flux 
+#   namespace: flux-system
+# spec:
+#   interval: 10m
+#   sourceRef:
+#     kind: GitRepository
+#     name: homelab-repository
+#   path: "./grafana"
+#   prune: true
+#   timeout: 1m
+#   decryption:
+#     provider: sops
+#     secretRef:
+#       name: sops-age
 ---
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
-  name: grafana-flux 
-  namespace: flux-system
-spec:
-  interval: 10m
-  sourceRef:
-    kind: GitRepository
-    name: homelab-repository
-  path: "./grafana"
-  prune: true
-  timeout: 1m
-  decryption:
-    provider: sops
-    secretRef:
-      name: sops-age
----
+
+
 # apiVersion: kustomize.toolkit.fluxcd.io/v1
 # kind: Kustomization
 # metadata:
@@ -246,38 +254,38 @@ spec:
 #   prune: true
 #   timeout: 1m
 ---
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
-  name: elastic-flux 
-  namespace: flux-system
-spec:
-  interval: 10m
-  sourceRef:
-    kind: GitRepository
-    name: homelab-repository
-  path: "./elk"
-  prune: true
-  timeout: 1m
----
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
-  name: cronjob-flux
-  namespace: flux-system
-spec:
-  interval: 10m
-  sourceRef:
-    kind: GitRepository
-    name: homelab-repository
-  path: "./cronjobs"
-  prune: true
-  timeout: 1m
-  decryption:
-    provider: sops
-    secretRef:
-      name: sops-age
----
+# apiVersion: kustomize.toolkit.fluxcd.io/v1
+# kind: Kustomization
+# metadata:
+#   name: elastic-flux 
+#   namespace: flux-system
+# spec:
+#   interval: 10m
+#   sourceRef:
+#     kind: GitRepository
+#     name: homelab-repository
+#   path: "./elk"
+#   prune: true
+#   timeout: 1m
+# ---
+# apiVersion: kustomize.toolkit.fluxcd.io/v1
+# kind: Kustomization
+# metadata:
+#   name: cronjob-flux
+#   namespace: flux-system
+# spec:
+#   interval: 10m
+#   sourceRef:
+#     kind: GitRepository
+#     name: homelab-repository
+#   path: "./cronjobs"
+#   prune: true
+#   timeout: 1m
+#   decryption:
+#     provider: sops
+#     secretRef:
+#       name: sops-age
+# ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
