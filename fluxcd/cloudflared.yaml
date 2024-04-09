@@ -1,0 +1,17 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: cloudflared-flux
+  namespace: flux-system
+spec:
+  interval: 10m
+  sourceRef:
+    kind: GitRepository
+    name: homelab-repository
+  path: "./cloudflared"
+  prune: true
+  timeout: 3m
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-age
