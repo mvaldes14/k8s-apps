@@ -20,8 +20,6 @@ spec:
             - tunnel
             - --config
             - /etc/cloudflared/config/config.yaml
-            - --metrics
-            - 0.0.0.0:3001
             - run
           livenessProbe:
             httpGet:

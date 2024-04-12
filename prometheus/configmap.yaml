@@ -96,6 +96,10 @@ data:
             static_configs:
             - targets:
                 - 192.168.1.13:8082
+          - job_name: cloudflared
+            static_configs:
+            - targets:
+              - cloudflared-svc.cloudflared:2000
           - job_name: prometheus
             static_configs:
               - targets:
