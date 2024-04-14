@@ -107,7 +107,7 @@ data:
           - job_name: win
             static_configs:
               - targets:
-                - 192.168.1.206:9090
+                - 192.168.1.206:9182
           - job_name: 'kubernetes-apiservers'
             kubernetes_sd_configs:
               - role: endpoints
