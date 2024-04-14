@@ -99,11 +99,15 @@ data:
           - job_name: cloudflared
             static_configs:
             - targets:
-              - cloudflared-svc.cloudflared:2000
+              - cloudflared-svc.cloudflared
           - job_name: prometheus
             static_configs:
               - targets:
                 - localhost:9090
+          - job_name: win
+            static_configs:
+              - targets:
+                - 192.168.1.206:9090
           - job_name: 'kubernetes-apiservers'
             kubernetes_sd_configs:
               - role: endpoints
