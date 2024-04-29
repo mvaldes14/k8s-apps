@@ -16,7 +16,7 @@ spec:
       containers:
       - name: twtich-bot
         image:  rorix/twitch-bot:latest
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         resources:
           requests:
             cpu: 100m
