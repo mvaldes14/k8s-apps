@@ -26,8 +26,8 @@ data:
       service: http://umami-svc.umami
     - hostname: kibana.mvaldes.dev
       service: https://kibana-kb-http.elastic:5601
-    - hostname: bots.mvaldes.dev
-      service: https://twitch-svc.bot
       originRequest:
         noTLSVerify: true
+    - hostname: bots.mvaldes.dev
+      service: http://twitch-svc.bots
     - service: http_status:404
