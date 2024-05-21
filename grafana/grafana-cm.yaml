@@ -27,3 +27,4 @@ data:
     plugins:
     - grafana-github-datasource
     - marcusolsson-json-datasource
+    - magnesium-wordcloud-panel
