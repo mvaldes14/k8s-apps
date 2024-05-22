@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: twitch-bot 
+  name: twitch-bot
   namespace: bots
 spec:
   selector:
@@ -13,24 +13,32 @@ spec:
       labels:
         app: twitch-bot
     spec:
+      nodeName: eva01
       containers:
-      - name: twtich-bot
-        image:  rorix/twitch-bot:latest
-        imagePullPolicy: Always
-        resources:
-          requests:
-            cpu: 100m
-            memory: 100Mi
-          limits:
-            cpu: 100m
-            memory: 100Mi
-        env:
-        - name: DOPPLER_TOKEN
-          valueFrom:
-            secretKeyRef:
-                name: twitch-bot-secrets
-                key: DOPPLER_TOKEN 
-        ports:
-          - name: http
-            containerPort: 3000
+        - name: twtich-bot
+          image: rorix/twitch-bot:latest
+          imagePullPolicy: Always
+          resources:
+            requests:
+              cpu: 100m
+              memory: 100Mi
+            limits:
+              cpu: 100m
+              memory: 100Mi
+          env:
+            - name: DOPPLER_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: twitch-bot-secrets
+                  key: DOPPLER_TOKEN
+          ports:
+            - name: http
+              containerPort: 3000
+          volumeMounts:
+            - name: twitch
+              mountPath: /twitch
       restartPolicy: Always
+      volumes:
+        - name: twitch
+          hostPath:
+            path: /mnt/twitch
