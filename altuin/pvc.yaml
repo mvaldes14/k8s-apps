@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: atuin-pvc
+  namespace: atuin
+  labels:
+    app: atuin-pvc
+spec:
+  storageClassName: nfs-k8s-keep
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
