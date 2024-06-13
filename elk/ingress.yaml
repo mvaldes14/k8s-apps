@@ -1,0 +1,14 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: elasitc-ingressroute
+  namespace: elastic
+spec:
+  entryPoints:
+    - web
+  routes:
+    - kind: Rule
+      match: Host(`elastic.local.net`)
+      services:
+        - name: homelab-es-elastic
+          port: 9200
