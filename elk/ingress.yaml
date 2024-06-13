@@ -10,5 +10,5 @@ spec:
     - kind: Rule
       match: Host(`elastic.local.net`)
       services:
-        - name: homelab-es-elastic
+        - name: homelab-es-http
           port: 9200
