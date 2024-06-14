@@ -2,18 +2,13 @@ apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
   name: prometheus-ingressroute
-  namespace: prometheus 
+  namespace: prometheus
 spec:
   entryPoints:
-    - web 
+    - web
   routes:
     - kind: Rule
       match: Host(`prometheus.local.net`)
       services:
         - name: prometheus-prometheus-release-server
           port: 80
-    - kind: Rule
-      match: Host(`prometheus.local.net`) && PathPrefix(`/alertmanager`)
-      services:
-        - name: prometheus-prometheus-release-alertmanager
-          port: 9093 

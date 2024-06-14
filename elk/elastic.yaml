@@ -1,23 +1,29 @@
 apiVersion: elasticsearch.k8s.elastic.co/v1
 kind: Elasticsearch
 metadata:
-  name: homelab 
+  name: homelab
   namespace: elastic
 spec:
   version: 8.12.0
-  nodeSets:
-  - name: elastic 
-    count: 4
-    volumeClaimTemplates:
-    - metadata:
-        name: elasticsearch-data
+  http:
+    service:
       spec:
-        accessModes:
-        - ReadWriteOnce
-        resources:
-          requests:
-            storage: 3Gi
-        storageClassName: nfs-k8s-keep
-    config:
-      xpack.ml.enabled: false
-
+        type: ClusterIP
+    tls:
+      selfSignedCertificate:
+        disabled: true
+  nodeSets:
+    - name: elastic
+      count: 4
+      volumeClaimTemplates:
+        - metadata:
+            name: elasticsearch-data
+          spec:
+            accessModes:
+              - ReadWriteOnce
+            resources:
+              requests:
+                storage: 3Gi
+            storageClassName: nfs-k8s-keep
+      config:
+        xpack.ml.enabled: false
