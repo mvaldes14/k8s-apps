@@ -5,6 +5,12 @@ metadata:
   namespace: elastic
 spec:
   version: 8.14.0
+  http:
+    service:
+      spec:
+        type: ClusterIP
+      subjectAlternativeName:
+        dns: elastic.mvaldes.dev
   nodeSets:
     - name: elastic
       count: 4
