@@ -9,8 +9,9 @@ spec:
     service:
       spec:
         type: ClusterIP
-      subjectAlternativeName:
-        dns: elastic.mvaldes.dev
+      selfSignedCertificate:
+        subjectAlternativeName:
+          dns: elastic.mvaldes.dev
   nodeSets:
     - name: elastic
       count: 4
