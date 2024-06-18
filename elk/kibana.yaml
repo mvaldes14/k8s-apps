@@ -2,14 +2,15 @@ apiVersion: kibana.k8s.elastic.co/v1
 kind: Kibana
 metadata:
   name: kibana
-  namespace: elastic 
+  namespace: elastic
 spec:
-  version: 8.12.0
+  version: 8.14.0
   count: 1
   elasticsearchRef:
-    name: homelab 
-    namespace: elastic 
+    name: homelab
+    namespace: elastic
   config:
+    server.publicBaseUrl: https://kibana.mvaldes.dev
     xpack.fleet.agents.elasticsearch.hosts: ["https://homelab-es-http.elastic:9200"]
     xpack.fleet.agents.fleet_server.hosts: ["https://fleet-server-agent-http.elastic:8220"]
     xpack.fleet.packages:
@@ -30,21 +31,21 @@ spec:
           - metrics
         unenroll_timeout: 900
         package_policies:
-        - name: fleet_server-1
-          id: fleet_server-1
-          package:
-            name: fleet_server
+          - name: fleet_server-1
+            id: fleet_server-1
+            package:
+              name: fleet_server
       - name: Homelab Policy
-        id: homelab-policy 
+        id: homelab-policy
         namespace: default
         monitoring_enabled:
           - logs
           - metrics
         unenroll_timeout: 900
         package_policies:
-        - package:
-            name: system
-          name: system-1
-        - package:
-            name: kubernetes
-          name: kubernetes-1
+          - package:
+              name: system
+            name: system-1
+          - package:
+              name: kubernetes
+            name: kubernetes-1

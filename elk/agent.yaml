@@ -1,17 +1,16 @@
----
 apiVersion: agent.k8s.elastic.co/v1alpha1
 kind: Agent
 metadata:
   name: fleet-server
   namespace: elastic
 spec:
-  version: 8.12.0
+  version: 8.14.0
   kibanaRef:
     name: kibana
     namespace: elastic
   elasticsearchRefs:
-  - name: homelab
-    namespace: elastic
+    - name: homelab
+      namespace: elastic
   mode: fleet
   fleetServerEnabled: true
   policyID: eck-fleet-server
@@ -26,19 +25,19 @@ spec:
 ---
 apiVersion: agent.k8s.elastic.co/v1alpha1
 kind: Agent
-metadata: 
+metadata:
   name: elastic-agent
   namespace: elastic
 spec:
-  version: 8.12.0
+  version: 8.14.0
   kibanaRef:
     name: kibana
     namespace: elastic
-  fleetServerRef: 
+  fleetServerRef:
     name: fleet-server
     namespace: elastic
   mode: fleet
-  policyID: homelab-policy 
+  policyID: homelab-policy
   daemonSet:
     podTemplate:
       spec:
@@ -47,96 +46,96 @@ spec:
         securityContext:
           runAsUser: 0
         containers:
-        - name: agent
-          volumeMounts:
-            - name: container-logs
-              mountPath: /var/lib/containers
-            - name: system-logs
-              mountPath: /var/log/
+          - name: agent
+            volumeMounts:
+              - name: container-logs
+                mountPath: /var/lib/containers
+              - name: system-logs
+                mountPath: /var/log/
         volumes:
-        - name: agent-data
-          emptyDir: {}
-        - name: container-logs
-          hostPath:
-            path: /var/log/containers
-        - name: system-logs
-          hostPath:
-            path: /var/log/
+          - name: agent-data
+            emptyDir: {}
+          - name: container-logs
+            hostPath:
+              path: /var/log/containers
+          - name: system-logs
+            hostPath:
+              path: /var/log/
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: elastic-agent
 rules:
-- apiGroups: [""]
-  resources:
-  - pods
-  - nodes
-  - namespaces
-  - events
-  - services
-  - configmaps
-  verbs:
-  - get
-  - watch
-  - list
-- apiGroups: ["coordination.k8s.io"]
-  resources:
-  - leases
-  verbs:
-  - get
-  - create
-  - update
-- nonResourceURLs:
-  - "/metrics"
-  verbs:
-  - get
-- apiGroups: ["extensions"]
-  resources:
-    - replicasets
-  verbs: 
-  - "get"
-  - "list"
-  - "watch"
-- apiGroups:
-  - "apps"
-  resources:
-  - statefulsets
-  - deployments
-  - replicasets
-  verbs:
-  - "get"
-  - "list"
-  - "watch"
-- apiGroups:
-  - ""
-  resources:
-  - nodes/stats
-  verbs:
-  - get
-- apiGroups:
-  - "batch"
-  resources:
-  - jobs
-  verbs:
-  - "get"
-  - "list"
-  - "watch"
+  - apiGroups: [""]
+    resources:
+      - pods
+      - nodes
+      - namespaces
+      - events
+      - services
+      - configmaps
+    verbs:
+      - get
+      - watch
+      - list
+  - apiGroups: ["coordination.k8s.io"]
+    resources:
+      - leases
+    verbs:
+      - get
+      - create
+      - update
+  - nonResourceURLs:
+      - "/metrics"
+    verbs:
+      - get
+  - apiGroups: ["extensions"]
+    resources:
+      - replicasets
+    verbs:
+      - "get"
+      - "list"
+      - "watch"
+  - apiGroups:
+      - "apps"
+    resources:
+      - statefulsets
+      - deployments
+      - replicasets
+    verbs:
+      - "get"
+      - "list"
+      - "watch"
+  - apiGroups:
+      - ""
+    resources:
+      - nodes/stats
+    verbs:
+      - get
+  - apiGroups:
+      - "batch"
+    resources:
+      - jobs
+    verbs:
+      - "get"
+      - "list"
+      - "watch"
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: elastic-agent
-  namespace: elastic 
+  namespace: elastic
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: elastic-agent
 subjects:
-- kind: ServiceAccount
-  name: elastic-agent
-  namespace: elastic 
+  - kind: ServiceAccount
+    name: elastic-agent
+    namespace: elastic
 roleRef:
   kind: ClusterRole
   name: elastic-agent

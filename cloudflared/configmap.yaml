@@ -29,7 +29,7 @@ data:
       originRequest:
         noTLSVerify: true
     - hostname: elastic.mvaldes.dev
-      service: https://homelab-es-http.elastic:9200
+      service: http://homelab-es-http.elastic:9200
       originRequest:
         noTLSVerify: true
     - hostname: bots.mvaldes.dev
