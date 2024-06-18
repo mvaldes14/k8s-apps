@@ -12,7 +12,7 @@ spec:
     tls:
       selfSignedCertificate:
         subjectAltName:
-          dns: elastic.mvaldes.dev
+          - dns: elastic.mvaldes.dev
   nodeSets:
     - name: elastic
       count: 4
