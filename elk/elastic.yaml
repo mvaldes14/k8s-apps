@@ -4,7 +4,7 @@ metadata:
   name: homelab
   namespace: elastic
 spec:
-  version: 8.14.0
+  version: 8.12.0
   http:
     service:
       spec:
