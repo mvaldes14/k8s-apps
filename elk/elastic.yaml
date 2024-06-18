@@ -9,6 +9,7 @@ spec:
     service:
       spec:
         type: ClusterIP
+    tls:
       selfSignedCertificate:
         subjectAlternativeName:
           dns: elastic.mvaldes.dev
