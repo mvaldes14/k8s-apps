@@ -11,7 +11,7 @@ spec:
         type: ClusterIP
     tls:
       selfSignedCertificate:
-        subjectAltName:
+        subjectAltNames:
           - dns: elastic.mvaldes.dev
   nodeSets:
     - name: elastic
