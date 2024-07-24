@@ -1,12 +1,13 @@
+# https://kubernetes.io/docs/concepts/storage/persistent-volumes/
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: uptime-pvc
-  namespace: uptime
+  name: home-assistant-pvc
+  namespace: home-assistant
 spec:
   storageClassName: nfs-k8s-keep
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
   resources:
     requests:
       storage: 2Gi

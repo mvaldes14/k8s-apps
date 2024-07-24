@@ -34,4 +34,6 @@ data:
         noTLSVerify: true
     - hostname: bots.mvaldes.dev
       service: http://twitch-svc.bots
+    - hostname: hoa.mvaldes.devices:
+      service: http://home-assistant-svc.home-assistant
     - service: http_status:404

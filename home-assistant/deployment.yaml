@@ -1,0 +1,46 @@
+# https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: home-assistant
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: home-assistant-deploy
+  namespace: home-assistant
+spec:
+  selector:
+    matchLabels:
+      app: home-assistant
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: home-assistant
+    spec:
+      containers:
+        - name: home-assistant-pod
+          image: ghcr.io/home-assistant/home-assistant:stable
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            tcpSocket:
+              port: 8123
+            initialDelaySeconds: 5
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+            periodSeconds: 10
+          ports:
+            - containerPort: 8123
+              name: http
+          volumeMounts:
+            - name: config
+              mountPath: /config
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: home-assistant-pvc
+      restartPolicy: Always
+---
+
