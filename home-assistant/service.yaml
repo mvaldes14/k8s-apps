@@ -9,5 +9,5 @@ spec:
   type: ClusterIP
   ports:
     - protocol: TCP
-      port: 8123
+      port: 80
       targetPort: 8123
