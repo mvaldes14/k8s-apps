@@ -8,7 +8,7 @@ data:
     tunnel: daf39100-197b-4d41-9bfd-a0b28e309d03
     credentials-file: /etc/cloudflared/creds/tunnel.json
     metrics: 0.0.0.0:2000
-    no-autoupdate: true
+    no-autoupdate: false
     ingress:
     - hostname: atlantis.mvaldes.dev
       service: http://atlantis-atlantis-release.atlantis:80
@@ -34,6 +34,6 @@ data:
         noTLSVerify: true
     - hostname: bots.mvaldes.dev
       service: http://twitch-svc.bots
-    - hostname: hoa.mvaldes.devices:
+    - hostname: hoa.mvaldes.dev
       service: http://home-assistant-svc.home-assistant
     - service: http_status:404

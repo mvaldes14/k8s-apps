@@ -1,26 +1,25 @@
-# https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: home-assistant
+  name: hoa
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: home-assistant-deploy
-  namespace: home-assistant
+  name: hoa-deploy
+  namespace: hoa
 spec:
   selector:
     matchLabels:
-      app: home-assistant
+      app: hoa
   replicas: 1
   template:
     metadata:
       labels:
-        app: home-assistant
+        app: hoa
     spec:
       containers:
-        - name: home-assistant-pod
+        - name: hoa
           image: ghcr.io/home-assistant/home-assistant:stable
           imagePullPolicy: IfNotPresent
           livenessProbe:
@@ -33,7 +32,6 @@ spec:
             periodSeconds: 10
           ports:
             - containerPort: 8123
-              name: http
           volumeMounts:
             - name: config
               mountPath: /config
