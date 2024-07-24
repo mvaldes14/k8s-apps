@@ -4,10 +4,11 @@ metadata:
   name: postgres-pvc
   namespace: db
 spec:
-  storageClassName: "nfs-k8s-keep"
+  storageClassName: nfs-k8s-keep
   accessModes:
-  - ReadWriteMany
+    - ReadWriteMany
   resources:
     requests:
       storage: 5Gi
 ---
+
