@@ -35,5 +35,5 @@ data:
     - hostname: bots.mvaldes.dev
       service: http://twitch-svc.bots
     - hostname: hoa.mvaldes.dev
-      service: http://home-assistant-svc.home-assistant
+      service: http://hoa-svc.hoa:8123
     - service: http_status:404
