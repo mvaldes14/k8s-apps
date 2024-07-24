@@ -2,8 +2,8 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: home-assistant-pvc
-  namespace: home-assistant
+  name: hoa-pv
+  namespace: hoa
 spec:
   storageClassName: nfs-k8s-keep
   accessModes:
