@@ -28,9 +28,3 @@ data:
     - grafana-github-datasource
     - marcusolsson-json-datasource
     - magnesium-wordcloud-panel
-    - https://github.com/VictoriaMetrics/victorialogs-datasource/releases/download/v0.2.1/victorialogs-datasource-v0.2.1.zip;victorialogs-datasource
-
-    # For victoria-logs
-    grafana.ini:
-      plugins:
-        allow_loading_unsigned_plugins: victorialogs-datasource
