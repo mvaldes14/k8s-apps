@@ -27,7 +27,7 @@ spec:
             periodSeconds: 10
           env:
             - name: OLLAMA_BASE_URL
-              value: 'http://192.168.1.218' # Notice the use of double quotes for the value
+              value: 'http://192.168.1.218:11434' # Notice the use of double quotes for the value
           ports:
             - containerPort: 8080
           volumeMounts:
