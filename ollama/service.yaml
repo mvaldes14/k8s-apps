@@ -1,0 +1,14 @@
+# https://kubernetes.io/docs/concepts/services-networking/service/
+apiVersion: v1
+kind: Service
+metadata:
+  name: ollama-svc
+  namespace: ollama
+spec:
+  selector:
+    app: ollama-deploy
+  type: ClusterIP
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080

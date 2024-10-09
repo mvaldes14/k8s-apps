@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ollama-deploy
+  namespace: ollama
+spec:
+  selector:
+    matchLabels:
+      app: ollama-deploy
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ollama-deploy
+    spec:
+      containers:
+        - name: ollama-container
+          image: ghcr.io/open-webui/open-webui:main
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 5
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+            periodSeconds: 10
+          env:
+            - name: OLLAMA_BASE_URL
+              value: 'http://192.168.1.218' # Notice the use of double quotes for the value
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: ollama-pvc
+              mountPath: /app/backend/data
+      volumes:
+        - name: ollama-pvc
+          persistentVolumeClaim:
+            claimName: ollama-pvc # Notice the use of lowercase 'p' in persistentVolumeClaim
+      restartPolicy: Always
