@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: paperless-deploy
+  namespace: paperless
+spec:
+  selector:
+    matchLabels:
+      app: paperless-deploy
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: paperless-deploy
+    spec:
+      containers:
+        - name: paperless-pod
+          image: ghcr.io/paperless-ngx/paperless-ngx:latest
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            tcpSocket:
+              port: 8000
+            initialDelaySeconds: 5
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+            periodSeconds: 10
+          env:
+            - name: PAPERLESS_URL
+              value: http://paper.local.net
+            - name: PAPERLESS_TIME_ZONE
+              value: America/Los_Angeles
+            - name: PAPERLESS_DBHOST
+              value: postgress-svc.db
+            - name: PAPERLESS_DBNAME
+              value: paperless
+            - name: PAPERLESS_DBUSER
+              value: adming
+            - name: PAPERLESS_DBPASS
+              valueFrom:
+                secretRefKey:
+                  name: paperless-secret
+                  key: password
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: paperless-pvc
+              mountPath: /usr/src/paperless/data
+            - name: paperless-pvc
+              mountPath: /usr/src/paperless/media
+      volumes:
+        - name: paperless-pvc
+          persistenVolumeClaim:
+            claimName: paperless-pvc
+      restartPolicy: Always

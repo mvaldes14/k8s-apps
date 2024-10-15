@@ -1,0 +1,16 @@
+# https://kubernetes.io/docs/concepts/services-networking/service/
+apiVersion: v1
+kind: Service
+metadata:
+  name: paperless-svc
+  namespace: paperless
+spec:
+  selector:
+    app: paperless-deploy
+  type: ClusterIP
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8000
+---
+
