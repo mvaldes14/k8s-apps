@@ -35,7 +35,9 @@ spec:
             - name: PAPERLESS_DBNAME
               value: paperless
             - name: PAPERLESS_DBUSER
-              value: adming
+              value: admin
+            - name: PAPERLESS_REDIS
+              value: redis://redis-svc.db:6379
             - name: PAPERLESS_DBPASS
               valueFrom:
                 secretKeyRef:

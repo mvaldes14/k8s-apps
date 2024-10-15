@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-deploy
+  namespace: db
+spec:
+  selector:
+    matchLabels:
+      app: redis-deploy
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: redis-deploy
+    spec:
+      securityContext:
+        fsGroup: 1000
+      containers:
+        - name: redis-deploy
+          image: docker.io/bitnami/redis:6.2
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: ALLOW_EMPTY_PASSWORD
+              value: 'yes'
+          ports:
+            - containerPort: 6379
+          volumeMounts:
+            - name: redis-pvc
+              mountPath: /bitnami/redis/data
+      volumes:
+        - name: redis-pvc
+          persistentVolumeClaim:
+            claimName: redis-pvc
+      restartPolicy: Always
