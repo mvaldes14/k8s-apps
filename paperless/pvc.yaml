@@ -3,12 +3,10 @@ kind: PersistentVolumeClaim
 metadata:
   name: paperless-pvc
   namespace: paperless
--pvcspec:
+spec:
   storageClassName: nfs-k8s-keep
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
       storage: 2Gi
----
-
