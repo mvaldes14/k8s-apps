@@ -38,7 +38,7 @@ spec:
               value: adming
             - name: PAPERLESS_DBPASS
               valueFrom:
-                secretRefKey:
+                secretKeyRef:
                   name: paperless-secret
                   key: password
           ports:
