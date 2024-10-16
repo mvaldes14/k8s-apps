@@ -36,4 +36,6 @@ data:
       service: http://twitch-svc.bots
     - hostname: hoa.mvaldes.dev
       service: http://hoa-svc.hoa
+    - hostname: docs.mvaldes.dev
+      service: http://paperless-svc.paperless
     - service: http_status:404
