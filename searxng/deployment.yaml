@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: search-deploy
+  namespace: search
+spec:
+  selector:
+    matchLabels:
+      app: search-deploy
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: search-deploy
+    spec:
+      containers:
+        - name: search-deploy
+          image: searxng/searxng:latest
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 5
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+            periodSeconds: 10
+          env:
+            - name: BASE_URL
+              value: https://search.mvaldes.dev
+            - name: INSTANCE_NAME
+              value: search.mvaldes.dev
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: search-pvc
+              mountPath: /etc/searxng
+      volumes:
+        - name: search-pvc
+          persistentVolumeClaim:
+            claimName: search-pvc
+      restartPolicy: Always

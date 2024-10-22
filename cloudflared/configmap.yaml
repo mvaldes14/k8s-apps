@@ -38,4 +38,6 @@ data:
       service: http://hoa-svc.hoa
     - hostname: docs.mvaldes.dev
       service: http://paperless-svc.paperless
+    - hostname: search.mvaldes.dev
+      service: http://search-svc.search
     - service: http_status:404
