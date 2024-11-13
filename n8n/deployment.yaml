@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: n8n-deploy
+  namespace: n8n
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: n8n-deploy
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: n8n-deploy
+    spec:
+      initContainers:
+        - name: volume-permissions
+          image: busybox:1.36
+          command: ['sh', '-c', 'chown 1000:1000 /data']
+          volumeMounts:
+            - name: n8n-pvc
+              mountPath: /data
+      containers:
+        - image: n8nio/n8n
+          name: n8n
+          command:
+            - /bin/sh
+          args:
+            - -c
+            - sleep 5; n8n start
+          env:
+            - name: DB_TYPE
+              value: postgresdb
+            - name: DB_POSTGRESDB_HOST
+              value: postgres-svc.db
+            - name: DB_POSTGRESDB_PORT
+              value: '5432'
+            - name: DB_POSTGRESDB_DATABASE
+              value: n8n
+            - name: DB_POSTGRESDB_USER
+              value: admin
+            - name: DB_POSTGRESDB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: n8n-secret
+                  key: DB_PASSWORD
+            - name: N8N_PROTOCOL
+              value: http
+            - name: N8N_PORT
+              value: '5678'
+            - name: N8N_EDITOR_BASE_URL
+              value: https://automate.mvaldes.dev
+          ports:
+            - containerPort: 5678
+          volumeMounts:
+            - mountPath: /home/node/.n8n
+              name: n8n-pvc
+      restartPolicy: Always
+      volumes:
+        - name: n8n-pvc
+          persistentVolumeClaim:
+            claimName: n8n-pvc

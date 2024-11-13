@@ -40,4 +40,6 @@ data:
       service: http://paperless-svc.paperless
     - hostname: search.mvaldes.dev
       service: http://search-svc.search
+    - hostname: automate.mvaldes.dev
+      service: http://n8n-svc.n8n
     - service: http_status:404
