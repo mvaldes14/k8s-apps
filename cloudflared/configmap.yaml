@@ -18,22 +18,14 @@ data:
       service: http://excalidraw-service.excalidraw:80
     - hostname: links.mvaldes.dev
       service: http://shlink-svc-api.shlink:80
-    - hostname: windmill.mvaldes.dev
-      service: http://windmill-app.windmill:8000
     - hostname: grafana.mvaldes.dev
       service: http://grafana-grafana-release.grafana
     - hostname: umami.mvaldes.dev
       service: http://umami-svc.umami
-    - hostname: kibana.mvaldes.dev
-      service: https://kibana-kb-http.elastic:5601
-      originRequest:
-        noTLSVerify: true
-    - hostname: elastic.mvaldes.dev
-      service: https://homelab-es-http.elastic:9200
-      originRequest:
-        noTLSVerify: true
     - hostname: bots.mvaldes.dev
       service: http://twitch-svc.bots
+    - hostname: hoa-ws.mvaldes.dev
+      service: ws://hoa-svc.hoa:80
     - hostname: hoa.mvaldes.dev
       service: http://hoa-svc.hoa
     - hostname: docs.mvaldes.dev

@@ -40,5 +40,3 @@ spec:
           persistentVolumeClaim:
             claimName: hoa-pvc
       restartPolicy: Always
----
-
