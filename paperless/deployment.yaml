@@ -52,6 +52,6 @@ spec:
               mountPath: /usr/src/paperless/media
       volumes:
         - name: paperless-pvc
-          persistenVolumeClaim:
+          persistentVolumeClaim:
             claimName: paperless-pvc
       restartPolicy: Always
