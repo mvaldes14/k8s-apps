@@ -53,8 +53,8 @@ spec:
       volumes:
         - name: paperless-pvc-data
           persistentVolumeClaim:
-            claimName: paperless-pvc
+            claimName: paperless-pvc-data
         - name: paperless-pvc-media
           persistentVolumeClaim:
-            claimName: paperless-pvc
+            claimName: paperless-pvc-media
       restartPolicy: Always
