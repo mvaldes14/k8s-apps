@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: atlantis-cm 
+  name: atlantis-cm
   namespace: atlantis
 data:
   values.yaml: |
@@ -67,7 +67,7 @@ data:
       create: true
       mount: true
     environment:
-      ATLANTIS_TFE_LOCAL_EXECUTION_MODE: false
+      ATLANTIS_TFE_LOCAL_EXECUTION_MODE: true
       ATLANTIS_REPO_ALLOWLIST: github.com/mvaldes14/terraform
     environmentSecrets:
        - name: ATLANTIS_TFE_TOKEN
