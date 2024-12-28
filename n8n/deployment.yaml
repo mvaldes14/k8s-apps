@@ -52,6 +52,10 @@ spec:
               value: '5678'
             - name: N8N_EDITOR_BASE_URL
               value: https://automate.mvaldes.dev
+            - name: N8N_HOST
+              value: automate.mvaldes.dev
+            - name: WEBHOOK_URL
+              value: https://automate.mvaldes.dev/api
           ports:
             - containerPort: 5678
           volumeMounts:
