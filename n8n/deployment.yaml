@@ -54,6 +54,10 @@ spec:
               value: https://automate.mvaldes.dev
             - name: N8N_HOST
               value: automate.mvaldes.dev
+            - name: N8N_PROTOCOL
+              value: https
+            - name: WEBHOOK_URL
+              value: https://automate.mvaldes.dev/webhook
           ports:
             - containerPort: 5678
           volumeMounts:
