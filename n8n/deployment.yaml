@@ -46,10 +46,8 @@ spec:
                 secretKeyRef:
                   name: n8n-secret
                   key: DB_PASSWORD
-            - name: N8N_PROTOCOL
-              value: http
             - name: N8N_PORT
-              value: '5678'
+              value: '443'
             - name: N8N_EDITOR_BASE_URL
               value: https://automate.mvaldes.dev
             - name: N8N_HOST
