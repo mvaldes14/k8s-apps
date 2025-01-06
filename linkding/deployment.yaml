@@ -1,0 +1,34 @@
+# https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: linkding-deploy
+  namespace: linkding 
+  labels:
+    app: linkding-deploy
+spec:
+  selector:
+    matchLabels:
+      app: linkding-deploy
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: linkding-deploy
+    spec:
+      containers:
+      - name: 
+        image:  sissbruecker/linkding:latest
+        imagePullPolicy: 
+        ports:
+        - containerPort: 9090
+          name: 
+        volumeMounts:
+        - name: linkding-pvc 
+          mountPath: /etc/linkding/data 
+      volumes:
+        - name: linkding-pvc 
+          persistenVolumeClaim:
+            claimName: linkding-pvc
+      restartPolicy: Always
+
