@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: myjob
+  namespace: default
+spec:
+  selector:
+    app: myjob
+  type: 
+  ports:
+  - name: myjob
+    protocol: 
+    port: 80
+    targetPort: 5000
