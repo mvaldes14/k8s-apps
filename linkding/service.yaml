@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: linkding-svc 
+  namespace: linkding 
+spec:
+  selector:
+    app: linkding-deploy
+  type: 
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 9090
