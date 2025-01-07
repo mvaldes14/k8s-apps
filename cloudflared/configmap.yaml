@@ -34,4 +34,6 @@ data:
       service: http://search-svc.search
     - hostname: automate.mvaldes.dev
       service: http://n8n-svc.n8n
+    - hostname: bookmarks.mvaldes.dev
+      service: http://linkding-svc.linkding
     - service: http_status:404
