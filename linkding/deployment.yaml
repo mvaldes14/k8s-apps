@@ -16,7 +16,7 @@ spec:
         app: linkding-deploy
     spec:
       containers:
-      - name: 
+      - name: linkding-deploy
         image:  sissbruecker/linkding:latest
         imagePullPolicy: 
         ports:
