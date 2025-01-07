@@ -6,7 +6,7 @@ metadata:
 spec:
   selector:
     app: linkding-deploy
-  type: 
+  type: ClusterIP
   ports:
   - protocol: TCP
     port: 80

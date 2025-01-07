@@ -1,4 +1,3 @@
-# https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -22,7 +21,6 @@ spec:
         imagePullPolicy: 
         ports:
         - containerPort: 9090
-          name: 
         volumeMounts:
         - name: linkding-pvc 
           mountPath: /etc/linkding/data 
