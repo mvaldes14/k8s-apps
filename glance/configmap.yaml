@@ -54,7 +54,7 @@ data:
               collapse-after: 3
               cache: 3h
               feeds:
-              - url: https://vercel.com/atom.xml
-              - url: https://blog.cloudflare.com/rss.xml
-              - url: https://netflixtechblog.com/rss.xml
-              - url: https://www.uber.com/blog/rss.xml
+              - url: https://vercel.com/atom
+              - url: https://blog.cloudflare.com/rss
+              - url: https://netflixtechblog.com/rss
+              - url: https://www.uber.com/blog/rss
