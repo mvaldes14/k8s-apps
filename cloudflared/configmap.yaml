@@ -11,13 +11,13 @@ data:
     no-autoupdate: false
     ingress:
     - hostname: atlantis.mvaldes.dev
-      service: http://atlantis-atlantis-release.atlantis:80
+      service: http://atlantis-atlantis-release.atlantis
     - hostname: uptime.mvaldes.dev
-      service: http://uptime-svc.uptime:80
+      service: http://uptime-svc.uptime
     - hostname: draw.mvaldes.dev
-      service: http://excalidraw-service.excalidraw:80
+      service: http://excalidraw-service.excalidraw
     - hostname: links.mvaldes.dev
-      service: http://shlink-svc-api.shlink:80
+      service: http://shlink-svc-api.shlink
     - hostname: grafana.mvaldes.dev
       service: http://grafana-grafana-release.grafana
     - hostname: umami.mvaldes.dev
