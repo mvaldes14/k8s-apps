@@ -24,16 +24,13 @@ data:
             - type: twitch-channels
               channels:
                 - theprimeagen
-                - thealf4stream
+                - thealtf4stream
                 - teej_dv
                 - thedojomx
                 - typecraft
                 - gentleman_programming
-
         - size: full
           widgets:
-            - type: hacker-news
-
             - type: videos
               channels:
                 - UClFSU9_bUb4Rc6OYfTt5SPw # PDS
@@ -47,20 +44,17 @@ data:
                 subreddit: selfhosted
               - type: reddit
                 subreddit: neovim
-
+            - type: hacker-news
     - name: RSS
       columns:
         - size: full
           widgets:
             - type: rss
-              limit: 20
+              limit: 50
               collapse-after: 3
               cache: 3h
               feeds:
-                - url: https://ciechanow.ski/atom.xml
-                - url: https://www.joshwcomeau.com/rss.xml
-                  title: Josh Comeau
-                - url: https://samwho.dev/rss.xml
-                - url: https://awesomekling.github.io/feed.xml
-                - url: https://ishadeed.com/feed.xml
-                  title: Ahmad Shadeed
+              - https://vercel.com/atom.xml
+              - https://blog.cloudflare.com/rss.xml
+              - https://netflixtechblog.com/rss.xml
+              - https://www.uber.com/blog/rss.xml
