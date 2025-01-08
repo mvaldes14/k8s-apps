@@ -5,6 +5,14 @@ metadata:
   namespace: glance
 data:
   glance.yml: |-
+    theme:
+      background-color: 232 23 18
+      contrast-multiplier: 1.2
+      primary-color: 220 83 75
+      positive-color: 105 48 72
+      negative-color: 351 74 73
+    branding:
+      logo-url: https://s3.mvaldes.dev/blog/logo.png
     pages:
     - name: Home
       columns:
@@ -33,9 +41,12 @@ data:
                 - UCsBjURrPoezykLs9EqgamOA # Fireship
                 - UCWQaM7SpSECp9FELz-cHzuQ # DreamsofCode
                 - UCd3dNckv1Za2coSaHGHl5aA # TJDV
-
-            - type: reddit
-              subreddit: selfhosted
+            - type: group
+              widgets:
+              - type: reddit
+                subreddit: selfhosted
+              - type: reddit
+                subreddit: neovim
 
     - name: RSS
       columns:
