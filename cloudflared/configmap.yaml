@@ -36,4 +36,6 @@ data:
       service: http://n8n-svc.n8n
     - hostname: bookmarks.mvaldes.dev
       service: http://linkding-svc.linkding
+    - hostname: home.mvaldes.dev
+      service: http://glance-svc.glance
     - service: http_status:404

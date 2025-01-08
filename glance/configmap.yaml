@@ -10,6 +10,37 @@ data:
       columns:
         - size: small
           widgets:
+            - type: weather
+              units: metric
+              location: Minneapolis, United States 
+            - type: twitch-channels
+              channels:
+                - theprimeagen
+                - thealf4stream
+                - teej_dv
+                - thedojomx
+                - typecraft
+                - gentleman_programming
+
+        - size: full
+          widgets:
+            - type: hacker-news
+
+            - type: videos
+              channels:
+                - UClFSU9_bUb4Rc6OYfTt5SPw # PDS
+                - UCMAMBNg2JIJznIWATvDXiKg # DOJOMX
+                - UCsBjURrPoezykLs9EqgamOA # Fireship
+                - UCWQaM7SpSECp9FELz-cHzuQ # DreamsofCode
+                - UCd3dNckv1Za2coSaHGHl5aA # TJDV
+
+            - type: reddit
+              subreddit: selfhosted
+
+    - name: RSS
+      columns:
+        - size: full
+          widgets:
             - type: rss
               limit: 20
               collapse-after: 3
@@ -22,49 +53,3 @@ data:
                 - url: https://awesomekling.github.io/feed.xml
                 - url: https://ishadeed.com/feed.xml
                   title: Ahmad Shadeed
-
-            - type: twitch-channels
-              channels:
-                - theprimeagen
-                - cohhcarnage
-                - christitustech
-                - blurbs
-                - asmongold
-                - jembawls
-
-        - size: full
-          widgets:
-            - type: hacker-news
-
-            - type: videos
-              channels:
-                - UCR-DXc1voovS8nhAvccRZhg # Jeff Geerling
-                - UCv6J_jJa8GJqFwQNgNrMuww # ServeTheHome
-                - UCOk-gHyjcWZNj3Br4oxwh0A # Techno Tim
-
-            - type: reddit
-              subreddit: selfhosted
-
-        - size: small
-          widgets:
-            - type: weather
-              location: London, United Kingdom
-
-            - type: markets
-              markets:
-                - symbol: SPY
-                  name: S&P 500
-                - symbol: BTC-USD
-                  name: Bitcoin
-                - symbol: NVDA
-                  name: NVIDIA
-                - symbol: AAPL
-                  name: Apple
-                - symbol: MSFT
-                  name: Microsoft
-                - symbol: GOOGL
-                  name: Google
-                - symbol: AMD
-                  name: AMD
-                - symbol: RDDT
-                  name: Reddit
