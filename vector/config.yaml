@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: vector-config
+  namespace: logs
+data:
+  agent.yaml: |
+    data_dir: /vector-data-dir
+    api:
+      enabled: true
+      address: 127.0.0.1:8686
+      playground: false
+    sources:
+      kubernetes_logs:
+        type: kubernetes_logs
+      internal_logs:
+        type: internal_logs
+    sinks:
+      stdout:
+        type: console
+        inputs: [internal_logs, kubernetes_logs]
+        encoding:
+          codec: json
