@@ -2,14 +2,14 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: grafana-cm 
+  name: grafana-cm
   namespace: grafana
 data:
   values.yaml: |
     persistence:
       type: pvc
       enabled: true
-      storageClassName: nfs-k8s-keep 
+      storageClassName: nfs-k8s-keep
       accessModes:
         - ReadWriteOnce
       size: 5Gi
@@ -28,3 +28,7 @@ data:
     - grafana-github-datasource
     - marcusolsson-json-datasource
     - magnesium-wordcloud-panel
+
+    # ini
+    grafana.ini:
+      allow_loading_unsigned_plugins: victoriametrics-logs-datasource
