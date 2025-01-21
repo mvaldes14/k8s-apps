@@ -7,18 +7,18 @@ apiVersion: source.toolkit.fluxcd.io/v1beta2
 kind: HelmRepository
 metadata:
   name: grafana-helm
-  namespace: grafana 
+  namespace: grafana
 spec:
   interval: 1m0s
-  url:  https://grafana.github.io/helm-charts
+  url: https://grafana.github.io/helm-charts
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: grafana-release 
-  namespace: grafana 
+  name: grafana-release
+  namespace: grafana
 spec:
-  targetNamespace: grafana 
+  targetNamespace: grafana
   chart:
     spec:
       chart: grafana
@@ -26,8 +26,8 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: grafana-helm
-      version: 7.2.5
+      version: 8.8.4
   interval: 1m0s
   valuesFrom:
     - kind: ConfigMap
-      name: grafana-cm 
+      name: grafana-cm
