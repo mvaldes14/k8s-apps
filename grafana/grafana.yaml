@@ -30,4 +30,4 @@ spec:
   interval: 1m0s
   valuesFrom:
     - kind: ConfigMap
-      name: configmap
+      name: grafana-cm
