@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: grafana-cm
+  name: grafana-cm-new
   namespace: grafana
 data:
   values.yaml: |
