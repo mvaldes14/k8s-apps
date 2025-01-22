@@ -15,9 +15,27 @@ data:
         type: kubernetes_logs
       internal_logs:
         type: internal_logs
+    transforms:
+      parser:
+        type: remap
+        inputs: [kubernetes_logs]
+        source: |
+          .log = parse_json(.message) ?? .message
+          del(.message)
     sinks:
-      stdout:
-        type: console
-        inputs: [internal_logs, kubernetes_logs]
-        encoding:
-          codec: json
+      victorialogs:
+        type: elasticsearch
+        endpoints:
+        - http://victorialogs-svc.logs:9428/insert/elasticsearch/
+        healthcheck:
+          enabled: false
+        inputs:
+        - parser
+        api_version: v8
+        mode: bulk
+        compression: gzip
+        request:
+          headers:
+            VL-Msg-Field: log
+            VL-Time-Field: timestamp
+            VL-Stream-Fields: stream,kubernetes.pod_name,kubernetes.container_name

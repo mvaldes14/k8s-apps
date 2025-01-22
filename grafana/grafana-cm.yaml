@@ -26,8 +26,8 @@ data:
     # extra plugins to install
     plugins:
     - grafana-github-datasource
-    - marcusolsson-json-datasource
     - magnesium-wordcloud-panel
+    - yesoreyeram-infinity-datasource
 
     # ini
     grafana.ini:

@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: victorialogs-pvc
+  namespace: logs
+spec:
+  storageClassName: 'nfs-k8s-keep'
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi

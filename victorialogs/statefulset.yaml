@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: victorialogs-deploy
+  namespace: logs
+  labels:
+    app: victorialogs-deploy
+spec:
+  selector:
+    matchLabels:
+      app: victorialogs-deploy
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: victorialogs-deploy
+    spec:
+      containers:
+        - name: victorialogs-pod
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+          image: victoriametrics/victoria-logs:v1.5.0-victorialogs
+          imagePullPolicy: IfNotPresent
+          args:
+            - --envflag.enable
+            - --envflag.prefix=VM_
+            - --httpListenAddr=:9428
+            - --loggerFormat=json
+            - --retentionPeriod=30d
+            - --storageDataPath=/storage
+          ports:
+            - name: http
+              containerPort: 9428
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: http
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 15
+            timeoutSeconds: 5
+          livenessProbe:
+            failureThreshold: 10
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            tcpSocket:
+              port: http
+            timeoutSeconds: 5
+          volumeMounts:
+            - name: victorialogs-pvc
+              mountPath: /storage
+      securityContext:
+        fsGroup: 2000
+        runAsNonRoot: true
+        runAsUser: 1000
+      terminationGracePeriodSeconds: 60
+      volumes:
+        - name: victorialogs-pvc
+          persistentVolumeClaim:
+            claimName: 'victorialogs-pvc'
