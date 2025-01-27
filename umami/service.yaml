@@ -8,6 +8,6 @@ spec:
     app: umami
   type: ClusterIP
   ports:
-  - protocol: TCP
-    port: 80
-    targetPort: http 
+    - protocol: TCP
+      port: 80
+      targetPort: 3000

@@ -34,7 +34,4 @@ spec:
                   key: APP_SECRET
           ports:
             - containerPort: 3000
-              name: http
       restartPolicy: Always
----
-
