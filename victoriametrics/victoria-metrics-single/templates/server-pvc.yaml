@@ -1,0 +1,34 @@
+{{- $app := .Values.server }}
+{{- $pvc := $app.persistentVolume }}
+{{- if $pvc.enabled -}}
+{{- if not $app.statefulSet.enabled -}}
+{{- if not $pvc.existingClaim -}}
+{{- $ctx := dict "helm" . "appKey" "server" }}
+{{- $fullname := include "vm.plain.fullname" $ctx }}
+{{- $ns := include "vm.namespace" $ctx }}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ $pvc.name | default $fullname }}
+  namespace: {{ $ns }}
+  {{- with $pvc.annotations  }}
+  annotations: {{ toYaml . | nindent 4 }}
+  {{- end }}
+  labels: {{ include "vm.labels" $ctx | nindent 4 }}
+spec:
+  {{- with $pvc.accessModes }}
+  accessModes: {{ toYaml . | nindent 4 }}
+  {{- end }}
+  resources:
+    requests:
+      storage: {{ $pvc.size }}
+  {{- with $pvc.storageClassName }}
+  storageClassName: {{ . }}
+  {{- end }}
+  {{- with $pvc.matchLabels }}
+  selector:
+    matchLabels: {{ toYaml . | nindent 6 }}
+  {{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
