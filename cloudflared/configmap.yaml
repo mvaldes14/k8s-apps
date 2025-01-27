@@ -5,10 +5,12 @@ metadata:
   namespace: cloudflared
 data:
   config.yaml: |-
-    tunnel: daf39100-197b-4d41-9bfd-a0b28e309d03
+    tunnel: 7bf04d4a-ba48-460e-b0e1-e6ae134b92d4
     credentials-file: /etc/cloudflared/creds/tunnel.json
     metrics: 0.0.0.0:2000
     no-autoupdate: false
+    originRequest:
+      connectionTimeout: 30s
     ingress:
     - hostname: atlantis.mvaldes.dev
       service: http://atlantis-atlantis-release.atlantis
