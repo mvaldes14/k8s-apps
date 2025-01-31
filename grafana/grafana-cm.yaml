@@ -28,7 +28,7 @@ data:
     - grafana-github-datasource
     - magnesium-wordcloud-panel
     - yesoreyeram-infinity-datasource
-    - https://github.com/VictoriaMetrics/victorialogs-datasource/releases/download/v0.13.1/victoriametrics-logs-datasource-v0.13.1.zip;victoriametrics-logs-datasource
+    - https://github.com/VictoriaMetrics/victorialogs-datasource/releases/download/v0.14.3/victoriametrics-logs-datasource-v0.14.3.zip;victoriametrics-logs-datasource
 
     # ini
     grafana.ini:
