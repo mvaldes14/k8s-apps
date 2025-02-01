@@ -7,7 +7,6 @@ data:
   scrape.yml: |
     global:
       scrape_interval: 30s
-
     scrape_configs:
     - job_name: vmagent
       static_configs:
@@ -248,3 +247,13 @@ data:
         source_labels:
         - __meta_kubernetes_pod_node_name
         target_label: node
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: victoriametrics-cm-static
+  namespace: metrics
+data:
+  prometheus.yml: "scrape_config:\n- job_name: eva01 \n  static_configs:\n  - targets:\n    - localhost:8429\n- job_name: pi \n  static_configs:\n  - targets:\n      - 192.168.1.13:9100\n- job_name: cloudflared\n  static_configs:\n  - targets:\n    - cloudflared-svc.cloudflared\n"
+---
+
