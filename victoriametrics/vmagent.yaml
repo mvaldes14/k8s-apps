@@ -1,0 +1,60 @@
+# Daemonset vmagent
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: vmagent
+  namespace: metrics
+  labels:
+    app: vmagent
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vmagent
+  template:
+    metadata:
+      labels:
+        app: vmagent
+    spec:
+      serviceAccountName: victoriametrics-service-account
+      containers:
+        - name: vmagent
+          image: victoriametrics/vmagent:v1.109.0
+          imagePullPolicy: IfNotPresent
+          workingDir: /
+          args:
+            - --envflag.enable
+            - --envflag.prefix=VM_
+            - --httpListenAddr=:8429
+            - --loggerFormat=json
+            - --promscrape.config=/config/scrape/scrape.yml
+            - --remoteWrite.tmpDataPath=/tmpData
+            - --remoteWrite.url=http://victoriametrics-svc:8428/api/v1/write
+          ports:
+            - name: http
+              containerPort: 8429
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 15
+          livenessProbe:
+            initialDelaySeconds: 5
+            periodSeconds: 15
+            tcpSocket:
+              port: http
+            timeoutSeconds: 5
+          volumeMounts:
+            - name: tmpdata
+              mountPath: /tmpData
+            - name: scrape-config
+              mountPath: /config/scrape
+      terminationGracePeriodSeconds: 30
+      volumes:
+        - name: tmpdata
+          emptyDir: {}
+        - name: scrape-config
+          configMap:
+            name: victoriametrics-cm

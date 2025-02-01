@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: victoriametrics-pvc
+  namespace: metrics
+  labels:
+    app: victoriametrics-pvc
+spec:
+  storageClassName: nfs-k8s-keep
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
