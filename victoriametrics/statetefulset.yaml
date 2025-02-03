@@ -27,8 +27,8 @@ spec:
             - --loggerFormat=json
             - --retentionPeriod=15d
             - --storageDataPath=/storage
-            - --promscrape.config=/prometheus.yml
-            - --promscrape.config.strictParse=false
+            - --promscrape.config=prometheus.yml
+            # - --promscrape.config.strictParse=false
           ports:
             - name: http
               containerPort: 8428
@@ -52,7 +52,7 @@ spec:
             - name: victoriametrics-pvc
               mountPath: /storage
             - name: victoriametrics-static
-              mountPath: /prometheus.yml
+              mountPath: prometheus.yml
               subPath: prometheus.yml
       volumes:
         - name: victoriametrics-pvc
