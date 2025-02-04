@@ -16,12 +16,15 @@ data:
       internal_logs:
         type: internal_logs
     transforms:
+      filter_vector:
+        type: filter
+        inputs: [kubernetes_logs]
+        condition: .kubernetes.container_name != "vector-agent"
       parser:
         type: remap
-        inputs: [kubernetes_logs]
+        inputs: [filter_vector]
         source: |
           .log = parse_json(.message) ?? .message
-          del(.message)
     sinks:
       victorialogs:
         type: elasticsearch
