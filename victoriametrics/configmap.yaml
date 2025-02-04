@@ -276,3 +276,7 @@ data:
       static_configs:
       - targets:
         - cloudflared-svc.cloudflared
+    - job_name: victorialogs
+      static_configs:
+      - targets:
+        - victorialogs-svc.logs:9428
