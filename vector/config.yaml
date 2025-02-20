@@ -39,6 +39,6 @@ data:
         compression: gzip
         request:
           headers:
-            VL-Msg-Field: log
+            VL-Msg-Field: log.msg,log.message,log
             VL-Time-Field: timestamp
             VL-Stream-Fields: stream,kubernetes.pod_name,kubernetes.container_name
