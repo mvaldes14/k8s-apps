@@ -36,4 +36,6 @@ data:
       service: http://search-svc.search
     - hostname: automate.mvaldes.dev
       service: http://n8n-svc.n8n
+    - hostname: mvaldes.dev
+      service: http://blog-svc.blog
     - service: http_status:404
