@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nocodb-deploy
+  namespace: nocodb
+  labels:
+    app: nocodb-deploy
+spec:
+  selector:
+    matchLabels:
+      app: nocodb-deploy
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: nocodb-deploy
+    spec:
+      containers:
+      - name: nocobdb-deploy
+        image: nocodb/nocodb:latest 
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: DB_HOST
+          valueFrom:
+            secretKeyRef:
+              name: nocodb-secret
+              key: DB_HOST
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - name: data
+          mountPath: /usr/app/data
+      volumes:
+        - name: data 
+          persistentVolumeClaim:
+            claimName: nocodb-pvc

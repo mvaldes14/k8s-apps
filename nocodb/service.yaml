@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nocodb-svc
+  namespace: nocodb 
+spec:
+  selector:
+    app: nocodb-deploy
+  type: ClusterIP
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080
