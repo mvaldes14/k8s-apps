@@ -1,0 +1,110 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: penpot-front-deploy 
+  namespace: penpot 
+  labels:
+    app: penpot-front-deploy 
+spec:
+  selector:
+    matchLabels:
+      app: penpot-front-deploy 
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: penpot-front-deploy 
+    spec:
+      containers:
+      - name: penpot-front-deploy
+        image: "penpotapp/frontend:${PENPOT_VERSION:-latest}"
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: PENPOT_FLAGS
+          value: disable-email-verification enable-smtp enable-prepl-server disable-secure-session-cookies
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: penpot-front-pvc 
+          mountPath: /opt/data/assets
+      volumes:
+        - name: volume
+          persistentVolumeClaim:
+            claimName: penpot-front-pvc
+      restartPolicy: Always
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myjob
+  namespace: default
+  labels:
+    app: myjob
+spec:
+  selector:
+    matchLabels:
+      app: myjob
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: myjob
+    spec:
+      containers:
+      - name: myjob
+        image: myjob:latest
+        imagePullPolicy: 
+        env:
+        - name: DB_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: myjob
+              key: DB_HOST
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: volume 
+          mountPath: /etc/localtime
+      volumes:
+        - name: volume
+          persistentVolumeClaim:
+            claimName: volume-pvc
+      restartPolicy: Always
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myjob
+  namespace: default
+  labels:
+    app: myjob
+spec:
+  selector:
+    matchLabels:
+      app: myjob
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: myjob
+    spec:
+      containers:
+      - name: myjob
+        image: myjob:latest
+        imagePullPolicy: 
+        env:
+        - name: DB_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: myjob
+              key: DB_HOST
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: volume 
+          mountPath: /etc/localtime
+      volumes:
+        - name: volume
+          persistentVolumeClaim:
+            claimName: volume-pvc
+      restartPolicy: Always
