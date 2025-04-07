@@ -38,6 +38,8 @@ data:
       service: http://n8n-svc.n8n
     - hostname: db.mvaldes.dev
       service: http://nocodb-svc.nocodb
+    - hostname: ai.mvaldes.dev
+      service: http://ollama-svc.ollama
     - hostname: mvaldes.dev
       service: http://blog-svc.blog
     - service: http_status:404
