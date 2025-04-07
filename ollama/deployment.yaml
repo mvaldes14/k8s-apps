@@ -16,7 +16,7 @@ spec:
       containers:
         - name: ollama-container
           image: ghcr.io/open-webui/open-webui:main
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           livenessProbe:
             tcpSocket:
               port: 8080
