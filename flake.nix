@@ -1,19 +1,36 @@
 {
-  description = "Tools for kubernetes";
+  description = "K8s Flake";
 
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-  outputs = { nixpkgs, self }:
-    let
-      system = "x86_64-linux";
-      pkgs = import nixpkgs { inherit system; config.allowUnfree = true; };
-    in
-    {
-      devShells.${system}.default = pkgs.mkShell {
-        buildInputs = with pkgs; [
-         age
-         sops
-         fluxcd
-        ];
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    flake-parts.url = "github:hercules-ci/flake-parts";
+  };
+
+  outputs = inputs @ {flake-parts, ...}:
+    flake-parts.lib.mkFlake {inherit inputs;} {
+      systems = ["x86_64-linux" "aarch64-linux" "aarch64-darwin"];
+
+      perSystem = {
+        pkgs,
+        system,
+        ...
+      }: let
+        inherit (pkgs) mkShell;
+      in {
+        devShells = {
+          default = mkShell {
+            buildInputs = with pkgs; [
+              kubectl
+              k9s
+            ];
+            shellHook = ''
+              Commands available:
+              - k8s
+              - k9s
+              - helm
+            '';
+          };
+        };
       };
     };
 }
