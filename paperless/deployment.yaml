@@ -38,6 +38,16 @@ spec:
               value: admin
             - name: PAPERLESS_REDIS
               value: redis://redis-svc.db:6379
+            - name: PAPERLESS_GMAIL_OAUTH_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: paperless-secret
+                  key: client-id
+            - name: PAPERLESS_GMAIL_OAUTH_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: paperless-secret
+                  key: client-secret
             - name: PAPERLESS_DBPASS
               valueFrom:
                 secretKeyRef:

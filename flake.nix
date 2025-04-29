@@ -22,6 +22,8 @@
             buildInputs = with pkgs; [
               kubectl
               k9s
+              fluxcd
+              sops
             ];
             shellHook = ''
               Commands available:
