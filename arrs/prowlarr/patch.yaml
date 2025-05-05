@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: arr-pod
-        image: ghcr.io/hotio/prowlarr:release
+        image: ghcr.io/hotio/prowlarr:nightly
         ports:
         - containerPort: 9696
           name: http
