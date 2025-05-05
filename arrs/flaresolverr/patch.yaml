@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: flaresolverr 
+  name: deploy
   namespace: arr
 spec:
   selector:
@@ -18,3 +18,10 @@ spec:
         ports:
         - containerPort: 8191
           name: http
+        volumeMounts:
+        - name: config 
+          mountPath: /config
+      volumes:
+        - name: config
+          hostPath:
+            path: /opt/mediaservices/prowlarr
