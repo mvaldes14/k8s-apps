@@ -1,0 +1,15 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: ingressroute
+  namespace: arr
+spec:
+  entryPoints:
+    - web 
+  routes:
+    - kind: Rule
+      match: Host(`flaresolverr.local.net`)
+      services:
+        - name: flaresolverr-svc
+          port: 80
+

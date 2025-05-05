@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flaresolverr 
+  namespace: arr
+spec:
+  selector:
+    matchLabels:
+      app: flaresolverr 
+  template:
+    metadata:
+      labels:
+        app: flaresolverr 
+    spec:
+      containers:
+      - name: arr-pod
+        image: ghcr.io/flaresolverr/flaresolverr:latest
+        ports:
+        - containerPort: 8191
+          name: http
