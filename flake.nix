@@ -21,6 +21,7 @@
           default = mkShell {
             buildInputs = with pkgs; [
               kubectl
+              sops
               k9s
               fluxcd
               sops
