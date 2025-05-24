@@ -280,3 +280,7 @@ data:
       static_configs:
       - targets:
         - victorialogs-svc.logs:9428
+    - job_name: twitch-bot
+      static_configs:
+      - targets:
+        - twitch-svc.bots:80
