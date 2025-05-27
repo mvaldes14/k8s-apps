@@ -1,4 +1,4 @@
-apiVersion: source.toolkit.fluxcd.io/v1beta2
+apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
 metadata:
   name: infisical-helm 
@@ -7,7 +7,7 @@ spec:
   interval: 10m0s
   url: https://dl.cloudsmith.io/public/infisical/helm-charts/helm/charts
 ---
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: infisical-release
@@ -16,7 +16,7 @@ spec:
   targetNamespace: infisical 
   chart:
     spec:
-      chart: infisical-helm-charts/infisical
+      chart: infisical
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
