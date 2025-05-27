@@ -10,8 +10,10 @@ spec:
   ports: 
   - protocol: TCP
     port: 9000 
+    name: http
     targetPort: 9000 
   - protocol: TCP
     port: 9001 
+    name: api
     targetPort: 9001
 
