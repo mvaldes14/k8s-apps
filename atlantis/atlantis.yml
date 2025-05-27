@@ -3,7 +3,7 @@ kind: Namespace
 metadata:
   name: atlantis
 ---
-apiVersion: source.toolkit.fluxcd.io/v1
+apiVersion: source.toolkit.fluxcd.io/v1beta2
 kind: HelmRepository
 metadata:
   name: atlantis-helm 
@@ -12,7 +12,7 @@ spec:
   interval: 10m0s
   url: https://runatlantis.github.io/helm-charts
 ---
-apiVersion: helm.toolkit.fluxcd.io/v2
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: atlantis-release
