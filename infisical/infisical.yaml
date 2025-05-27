@@ -24,5 +24,5 @@ spec:
       version: 0.4.2
   valuesFrom:
     - kind: ConfigMap
-      name: infisical-cm
+      name: infisical-cm 
   interval: 5m0s

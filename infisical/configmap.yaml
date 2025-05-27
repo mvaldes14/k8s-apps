@@ -25,7 +25,7 @@ data:
       image:
         repository: infisical/infisical
         # -- Specific version tag of the Infisical image. View the latest version here https://hub.docker.com/r/infisical/infisical
-        tag: "v0.93.1-postgres"
+        tag: "v0.131.0-postgres"
         pullPolicy: IfNotPresent
         imagePullSecrets: []
 
