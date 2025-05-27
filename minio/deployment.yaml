@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
-namespace: minio
 metadata:
+  namespace: minio
   name: minio-deploy
   labels:
     app: minio
