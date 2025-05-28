@@ -42,4 +42,6 @@ data:
       service: http://ollama-svc.ollama
     - hostname: mvaldes.dev
       service: http://blog-svc.blog
+    - hostname: about.mvaldes.dev
+      service: http://about-svc.blog
     - service: http_status:404
