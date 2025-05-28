@@ -6,10 +6,10 @@ metadata:
 data:
   values.yaml: |
     infisical:
-      enabled: true # -- Enable Infisical chart deployment
-      name: infisical # -- Sets the name of the deployment within this chart
+      enabled: true
+      name: infisical
 
-      autoDatabaseSchemaMigration: true
+      autoDatabaseSchemaMigration: false
       databaseSchemaMigrationJob:
         image:
           repository: ghcr.io/groundnuty/k8s-wait-for
@@ -24,12 +24,10 @@ data:
 
       image:
         repository: infisical/infisical
-        # -- Specific version tag of the Infisical image. View the latest version here https://hub.docker.com/r/infisical/infisical
         tag: "v0.131.0-postgres"
         pullPolicy: IfNotPresent
         imagePullSecrets: []
 
-      # -- Kubernetes Secret reference containing Infisical root credentials
       kubeSecretRef: "infisical-secrets"
 
       service:
@@ -45,31 +43,12 @@ data:
       enabled: false 
 
     postgresql:
-      # -- Enables an in-cluster PostgreSQL deployment. To achieve HA for Postgres, we recommend deploying https://github.com/zalando/postgres-operator instead.
       enabled: false 
-      name: "postgresql"
-      fullnameOverride: "postgresql"
-
-      auth:
-        username: infisical
-        password: root
-        database: infisicalDB
-
       useExistingPostgresSecret:
-        # -- Set to true if using an existing Kubernetes secret that contains PostgreSQL connection string
         enabled: true 
         existingConnectionStringSecret:
           name: "infisical-secrets"
-          key: "dburl"
+          key: "DB_CONNECTION_URI"
 
     redis:
-      enabled: true
-      name: "redis"
-      fullnameOverride: "redis"
-      cluster:
-        enabled: false
-      architecture: standalone
-      usePassword: true
-      auth:
-        password: "mysecretpassword"
-
+      enabled: false

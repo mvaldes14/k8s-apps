@@ -11,7 +11,7 @@ spec:
   path: "./infisical"
   prune: true
   timeout: 1m
-  # decryption:
-  #   provider: sops
-  #   secretRef:
-  #     name: sops-age
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-age
