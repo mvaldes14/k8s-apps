@@ -5,50 +5,38 @@ metadata:
   namespace: infisical 
 data:
   values.yaml: |
+    nameOverride: "infisical"
+    fullnameOverride: "infisical"
+
     infisical:
       enabled: true
       name: infisical
-
-      autoDatabaseSchemaMigration: false
-      databaseSchemaMigrationJob:
-        image:
-          repository: ghcr.io/groundnuty/k8s-wait-for
-          tag: no-root-v2.0
-          pullPolicy: IfNotPresent
-
-      serviceAccount:
-        create: true
-        name: infisical-sa 
-
-      replicaCount: 1
+      autoDatabaseSchemaMigration: true
+      fullnameOverride: ""
+      podAnnotations: {}
+      deploymentAnnotations: {}
+      replicaCount: 6
 
       image:
         repository: infisical/infisical
         tag: "v0.131.0-postgres"
         pullPolicy: IfNotPresent
-        imagePullSecrets: []
 
       kubeSecretRef: "infisical-secrets"
-
       service:
         type: ClusterIP
 
       resources:
         limits:
-          memory: 600Mi
+          memory: 210Mi
         requests:
-          cpu: 350m
+          cpu: 200m
 
     ingress:
       enabled: false 
 
     postgresql:
       enabled: false 
-      useExistingPostgresSecret:
-        enabled: true 
-        existingConnectionStringSecret:
-          name: "infisical-secrets"
-          key: "DB_CONNECTION_URI"
 
     redis:
-      enabled: false
+      enabled: false 
