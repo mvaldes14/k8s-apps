@@ -14,8 +14,6 @@ data:
     ingress:
     - hostname: atlantis.mvaldes.dev
       service: http://atlantis-atlantis-release.atlantis
-    - hostname: uptime.mvaldes.dev
-      service: http://uptime-svc.uptime
     - hostname: draw.mvaldes.dev
       service: http://excalidraw-service.excalidraw
     - hostname: links.mvaldes.dev
@@ -44,4 +42,6 @@ data:
       service: http://blog-svc.blog
     - hostname: about.mvaldes.dev
       service: http://about-svc.blog
+    - hostname: vault.mvaldes.dev
+      service: http://vault-vault-release-ui.vault:8200
     - service: http_status:404
