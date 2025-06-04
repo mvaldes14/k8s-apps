@@ -29,3 +29,6 @@ data:
     ui:
      enabled: true
      serviceType: ClusterIP
+    injector:
+      enabled: falseo
+
