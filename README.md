@@ -11,34 +11,35 @@ Kubernetes manifests for a homelab cluster deployed via GitOps with FluxCD.
 ### Monitoring & Observability
 - **Prometheus**: Metrics collection and alerting
 - **Grafana**: Visualization and dashboards
-- **ELK Stack**: Elasticsearch, Kibana, Elastic Agent
-- **Loki**: Log aggregation
 - **Vector**: Log collection and processing
-- **VictoriaMetrics**: Time series database
-- **Uptime Kuma**: Service monitoring
+- **VictoriaMetrics**: Time series database and monitoring
+- **VictoriaLogs**: Log aggregation and analysis
 
 ### Development & Automation
-- **N8N**: Workflow automation
-- **Atlantis**: Terraform automation
-- **Windmill**: Workflow engine
-- **Ollama**: Local LLM inference
+- **N8N**: Workflow automation platform
+- **Atlantis**: Terraform automation and PR workflows
+- **Ollama**: Local LLM inference server
+- **NocoDB**: No-code database platform
 
 ### Productivity & Tools
-- **Linkding**: Bookmark manager
 - **Searxng**: Privacy-focused search engine
-- **Excalidraw**: Collaborative whiteboarding
-- **Umami**: Privacy-focused analytics
-- **Shlink**: URL shortener
-- **Atuin**: Shell history sync
-- **Home Assistant**: Home automation
+- **Excalidraw**: Collaborative whiteboarding tool
+- **Umami**: Privacy-focused web analytics
+- **Shlink**: URL shortener service
+- **Atuin**: Shell history sync across devices
+- **Home Assistant**: Home automation platform
+- **Blog**: Personal blog application
+- **Bots**: Custom bot applications
 
-### Infrastructure
-- **MinIO**: S3-compatible object storage
-- **PostgreSQL**: Primary database
-- **Redis**: Caching and sessions
+### Infrastructure & Storage
+- **PostgreSQL**: Primary database server
+- **Redis**: Caching and session storage
 - **Cloudflared**: Secure tunnel to Cloudflare
 - **Traefik**: Reverse proxy and load balancer
-- **Infisical**: Secret management
+- **Vault**: Secret management and encryption
+
+### Scheduled Tasks
+- **CronJobs**: Automated tasks including meal notifications
 
 ## Setup
 
