@@ -13,7 +13,15 @@ spec:
       labels:
         app: arr
     spec:
-      nodeName: eva02
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                - key: kubernetes.io/hostname
+                  operator: In
+                  values:
+                    - eva02
       hostNetwork: true
       containers:
         - name: arr-pod
