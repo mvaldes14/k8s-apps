@@ -1,0 +1,37 @@
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageUpdateAutomation
+metadata:
+  name: bot-automation 
+  namespace: flux-system 
+spec:
+  interval: 10m
+  sourceRef:
+    kind: GitRepository
+    name: homelab-repository 
+  git:
+    commit:
+      author:
+        email: fluxcdbot@users.noreply.github.com
+        name: fluxcdbot
+      messageTemplate: |-
+        Automated image update
+      
+        Automation name: {{ .AutomationObject }}
+
+        Files:
+        {{ range $filename, $_ := .Changed.FileChanges -}}
+        - {{ $filename }}
+        {{ end -}}
+
+        Objects:
+        {{ range $resource, $changes := .Changed.Objects -}}
+        - {{ $resource.Kind }} {{ $resource.Name }}
+          Changes:
+        {{- range $_, $change := $changes }}
+            - {{ $change.OldValue }} -> {{ $change.NewValue }}
+        {{ end -}}
+        {{ end -}}
+    push:
+      branch: main
+  update:
+    path: ./bots
