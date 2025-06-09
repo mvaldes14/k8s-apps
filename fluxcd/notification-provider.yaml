@@ -1,11 +1,9 @@
 apiVersion: notification.toolkit.fluxcd.io/v1beta2
 kind: Provider
 metadata:
-  name: telegram
+  name: discord 
   namespace: flux-system
 spec:
-  type: telegram
-  address: https://api.telegram.org
-  channel: "1571728109"
+  type: discord 
   secretRef:
-    name: telegram-token
+    name: discord-webhook

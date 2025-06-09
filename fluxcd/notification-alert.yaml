@@ -1,15 +1,21 @@
 apiVersion: notification.toolkit.fluxcd.io/v1beta2
 kind: Alert
 metadata:
-  name: telegram
+  name: discord 
   namespace: flux-system 
 spec:
-  summary: "Notifications"
   providerRef:
-    name: telegram
-  eventSeverity: error
+    name: discord 
+  eventMetadata:
+    summary: "Cluster Event occured"
+    cluster: "homelab"
+  eventSeverity: info 
   eventSources:
     - kind: HelmRepository
       name: '*'
     - kind: HelmRelease
+      name: '*'
+    - kind: Kustomization 
+      name: '*'
+    - kind: GitRepository 
       name: '*'
