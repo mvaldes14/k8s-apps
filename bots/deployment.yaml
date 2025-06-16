@@ -16,7 +16,7 @@ spec:
       nodeName: eva01
       containers:
         - name: twtich-bot
-          image: rorix/twitch-bot:latest # {"${imagepolicy: "flux-system:podinfo"}
+          image: rorix/twitch-bot:latest # {"${imagepolicy": "flux-system:bot-automation"}
           imagePullPolicy: Always
           resources:
             requests:
