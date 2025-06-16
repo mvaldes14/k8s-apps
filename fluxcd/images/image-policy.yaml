@@ -8,5 +8,5 @@ spec:
     name: bot-repository 
   digestReflectionPolicy: IfNotPresent
   policy:
-    numerical:
+    alphabetical:
       order: asc
