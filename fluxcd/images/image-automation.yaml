@@ -21,4 +21,3 @@ spec:
     name: homelab-repository
   update:
     path: ./bots
-    strategy: Setters
