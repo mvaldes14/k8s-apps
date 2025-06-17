@@ -8,3 +8,5 @@ spec:
   ref:
     branch: main
   url: https://github.com/mvaldes14/k8s-apps
+  secretRef:
+    name: github-source-secret
