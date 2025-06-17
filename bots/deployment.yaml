@@ -16,7 +16,7 @@ spec:
       nodeName: eva01
       containers:
         - name: twtich-bot
-          image: rorix/twitch-bot:20250617-023440 # {"$imagepolicy": "flux-system:bot-policy"}
+          image: docker.io/rorix/twitch-bot:20250617-051438@sha256:20deb02b630fe16b7fc91f2bf50d4969975c9c845751307c1e52955355002afc # {"$imagepolicy": "flux-system:bot-policy"}
           imagePullPolicy: Always
           resources:
             requests:
