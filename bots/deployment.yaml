@@ -26,6 +26,8 @@ spec:
               cpu: 100m
               memory: 100Mi
           env:
+            - name: REDIS_URL
+              value: redis-svc.db:6379
             - name: DOPPLER_TOKEN
               valueFrom:
                 secretKeyRef:
