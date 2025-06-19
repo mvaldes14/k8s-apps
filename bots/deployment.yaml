@@ -13,34 +13,64 @@ spec:
       labels:
         app: twitch-bot
     spec:
-      nodeName: eva01
       containers:
         - name: twtich-bot
           image: docker.io/rorix/twitch-bot:20250617-051438@sha256:20deb02b630fe16b7fc91f2bf50d4969975c9c845751307c1e52955355002afc # {"$imagepolicy": "flux-system:bot-policy"}
           imagePullPolicy: Always
           resources:
             requests:
-              cpu: 100m
-              memory: 100Mi
+              cpu: 200m
+              memory: 200Mi
             limits:
-              cpu: 100m
-              memory: 100Mi
+              cpu: 200m
+              memory: 200Mi
           env:
-            - name: REDIS_URL
-              value: redis-svc.db:6379
-            - name: DOPPLER_TOKEN
+            - name: ADMIN_TOKEN
               valueFrom:
                 secretKeyRef:
-                  name: twitch-bot-secrets
-                  key: DOPPLER_TOKEN
+                  name: bots-secrets
+                  key: ADMIN_TOKEN
+            - name: DISCORD_WEBHOOK
+              valueFrom:
+                secretKeyRef:
+                  name: bots-secrets
+                  key: DISCORD_WEBHOOK
+            - name: REDIS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: bots-secrets
+                  key: REDIS_URL
+            - name: SPOTIFY_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: bots-secrets
+                  key: SPOTIFY_CLIENT_ID
+            - name: SPOTIFY_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: bots-secrets
+                  key: SPOTIFY_CLIENT_SECRET
+            - name: SPOTIFY_REFRESH_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: bots-secrets
+                  key: SPOTIFY_REFRESH_TOKEN
+            - name: TWITCH_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: bots-secrets
+                  key: TWITCH_CLIENT_ID
+            - name: TWITCH_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: bots-secrets
+                  key: TWITCH_CLIENT_SECRET
+            - name: TWITCH_REFRESH_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: bots-secrets
+                  key: TWITCH_REFRESH_TOKEN
           ports:
             - name: http
               containerPort: 3000
-          volumeMounts:
-            - name: twitch
-              mountPath: /twitch
       restartPolicy: Always
-      volumes:
-        - name: twitch
-          hostPath:
-            path: /mnt/twitch
