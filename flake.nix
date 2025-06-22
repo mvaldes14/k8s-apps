@@ -25,6 +25,7 @@
               k9s
               fluxcd
               sops
+              kn
             ];
             shellHook = ''
               Commands available:
