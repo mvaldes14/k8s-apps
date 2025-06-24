@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: twtich-bot
-          image: docker.io/rorix/twitch-bot:20250624-183754@sha256:30f3efa6732efc9e9629580c538805cd48e176b1361086057884142525f1530e # {"$imagepolicy": "flux-system:bot-policy"}
+          image: docker.io/rorix/twitch-bot:20250624-195150@sha256:9c70a776cff25aeb3f8d27c0b1978b326d28ba897902a3df79a4f99510d8c4b1 # {"$imagepolicy": "flux-system:bot-policy"}
           imagePullPolicy: Always
           resources:
             requests:
