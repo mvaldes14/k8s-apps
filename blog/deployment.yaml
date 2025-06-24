@@ -1,14 +1,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: blog 
+  name: blog
   namespace: blog
   labels:
-    app:  blog
+    app: blog
 spec:
   selector:
     matchLabels:
-      app:  blog
+      app: blog
   replicas: 1
   template:
     metadata:
@@ -17,8 +17,8 @@ spec:
     spec:
       containers:
       - name: blog
-        image: rorix/blog:latest # {"$imagepolicy" : "flux-system:blog-policy"}
-        imagePullPolicy: 
+        image: docker.io/rorix/blog:latest@sha256:91c82501a6df50d20e8862568157c054f44ef88a031e06f38fa7597d6e527e00 # {"$imagepolicy" : "flux-system:blog-policy"}
+        imagePullPolicy:
         resources:
           requests:
             cpu: 100m
@@ -44,11 +44,11 @@ metadata:
   name: about
   namespace: blog
   labels:
-    app:  about
+    app: about
 spec:
   selector:
     matchLabels:
-      app:  about
+      app: about
   replicas: 1
   template:
     metadata:
@@ -58,7 +58,7 @@ spec:
       containers:
       - name: about
         image: rorix/about:latest
-        imagePullPolicy: 
+        imagePullPolicy:
         resources:
           requests:
             cpu: 100m
@@ -77,4 +77,3 @@ spec:
         ports:
         - containerPort: 80
       restartPolicy: Always
-
