@@ -7,3 +7,13 @@ spec:
   image: docker.io/rorix/twitch-bot 
   interval: 5m
   provider: generic
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageRepository
+metadata:
+  name: blog-repository
+  namespace: flux-system
+spec:
+  image: docker.io/rorix/blog
+  interval: 5m
+  provider: generic

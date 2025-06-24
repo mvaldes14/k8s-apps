@@ -12,36 +12,49 @@ data:
     originRequest:
       connectionTimeout: 30s
     ingress:
+    - hostname: mvaldes.dev
+      service: http://about-svc.blog
+
+    - hostname: blog.mvaldes.dev
+      service: http://blog-svc.blog
+
     - hostname: atlantis.mvaldes.dev
       service: http://atlantis-atlantis-release.atlantis
+
     - hostname: draw.mvaldes.dev
       service: http://excalidraw-service.excalidraw
+
     - hostname: links.mvaldes.dev
       service: http://shlink-svc-api.shlink
+
     - hostname: grafana.mvaldes.dev
       service: http://grafana-grafana-release.grafana
+
     - hostname: umami.mvaldes.dev
       service: http://umami-svc.umami
+
     - hostname: bots.mvaldes.dev
       service: http://twitch-svc.bots
+
     - hostname: hoa-ws.mvaldes.dev
       service: ws://hoa-svc.hoa:80
+
     - hostname: hoa.mvaldes.dev
       service: http://hoa-svc.hoa
+
     - hostname: docs.mvaldes.dev
       service: http://paperless-svc.paperless
+
     - hostname: search.mvaldes.dev
       service: http://search-svc.search
+
     - hostname: automate.mvaldes.dev
       service: http://n8n-svc.n8n
+
     - hostname: db.mvaldes.dev
       service: http://nocodb-svc.nocodb
-    - hostname: ai.mvaldes.dev
-      service: http://ollama-svc.ollama
-    - hostname: mvaldes.dev
-      service: http://blog-svc.blog
-    - hostname: about.mvaldes.dev
-      service: http://about-svc.blog
+
     - hostname: vault.mvaldes.dev
       service: http://vault-vault-release-ui.vault:8200
+
     - service: http_status:404
