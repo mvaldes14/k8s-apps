@@ -72,18 +72,18 @@ data:
     environmentSecrets:
        - name: ATLANTIS_TFE_TOKEN
          secretKeyRef:
-           name: atlantis-tokens
+           name: atlantis-secrets
            key: tfe-token
        - name: ATLANTIS_GH_USER
          secretKeyRef:
-           name: atlantis-tokens
+           name: atlantis-secrets
            key: gh-user
        - name: ATLANTIS_GH_TOKEN
          secretKeyRef:
-           name: atlantis-tokens
+           name: atlantis-secrets
            key: gh-token
        - name: ATLANTIS_GH_WEBHOOK_SECRET
          secretKeyRef:
-           name: atlantis-tokens
+           name: atlantis-secrets
            key: gh-webhook-secret
     hostNetwork: false
