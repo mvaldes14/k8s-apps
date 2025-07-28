@@ -1,0 +1,14 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.14.2/.schema/devbox.schema.json",
+  "packages": [
+    "kubectl@latest",
+    "sops@latest",
+    "fluxcd@latest",
+    "kn@latest",
+  ],
+  "shell": {
+    "init_hook": [
+      "echo 'Welcome to devbox!' > /dev/null",
+    ],
+  },
+}
