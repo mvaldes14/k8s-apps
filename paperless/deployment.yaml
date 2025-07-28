@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: paperless-pod
-          image: ghcr.io/paperless-ngx/paperless-ngx:latest
+          image: ghcr.io/paperless-ngx/paperless-ngx:2.16
           imagePullPolicy: IfNotPresent
           livenessProbe:
             tcpSocket:
