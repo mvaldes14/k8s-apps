@@ -28,8 +28,13 @@ data:
     - grafana-github-datasource
     - magnesium-wordcloud-panel
     - yesoreyeram-infinity-datasource
+    - grafana-advisor-app
     - https://github.com/VictoriaMetrics/victorialogs-datasource/releases/download/v0.14.3/victoriametrics-logs-datasource-v0.14.3.zip;victoriametrics-logs-datasource
 
     # ini
     grafana.ini:
+      [plugins]
       allow_loading_unsigned_plugins: victoriametrics-logs-datasource
+      [feature_toggles]
+      provisioning = true
+      kubernetesDashboards = true ;
