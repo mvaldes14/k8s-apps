@@ -6,6 +6,7 @@ provisioner: nfs.csi.k8s.io
 parameters:
   server: 192.168.1.21
   share: /k8s
+  # subDir: ${pvc.metadata.namespace}-${pvc.metadata.name}
 reclaimPolicy: Delete # Use "Retain" if you don't want automatic storage deletion
 volumeBindingMode: Immediate
 mountOptions:
@@ -20,6 +21,7 @@ provisioner: nfs.csi.k8s.io
 parameters:
   server: 192.168.1.21
   share: /k8s
+  # subDir: ${pvc.metadata.namespace}-${pvc.metadata.name}
 reclaimPolicy: Retain
 volumeBindingMode: Immediate
 mountOptions:
