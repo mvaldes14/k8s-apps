@@ -37,4 +37,5 @@ data:
       allow_loading_unsigned_plugins: victoriametrics-logs-datasource
       [feature_toggles]
       provisioning = true
-      kubernetesDashboards = true ;
+      kubernetesDashboards = true
+      grafanaAdvisor = true
