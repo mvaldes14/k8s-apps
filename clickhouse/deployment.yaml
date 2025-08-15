@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: clickhouse-deploy
+  namespace: clickhouse 
+  labels:
+    app: clickhouse-deploy
+spec:
+  selector:
+    matchLabels:
+      app: clickhouse-deploy
+  replicas: 1
+  template:
+    metadata:
+      annotations:
+        kubectl.kubernetes.io/default-container:  clickhouse-deploy
+      labels:
+        app: clickhouse-deploy
+    spec:
+      containers:
+      - name: clickhouse-deploy
+        image: clickhouse/clickhouse-server:latest
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          tcpSocket:
+            port: 9000
+          initialDelaySeconds: 5
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 3
+          periodSeconds: 10
+        env:
+        - name: CLICKHOUSE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: clickhouse-secret
+              key: password
+        ports:
+        - containerPort: 9000
+          name: api
+        - containerPort: 8123
+          name: http
+        volumeMounts:
+        - name: clickhouse-pvc
+          mountPath: /var/lib/clickhouse/ 
+      volumes:
+        - name: clickhouse-pvc
+          persistentVolumeClaim:
+            claimName: clickhouse-pvc
+      restartPolicy: Always
