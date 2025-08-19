@@ -39,3 +39,4 @@ data:
       provisioning = true
       kubernetesDashboards = true
       grafanaAdvisor = true
+      alertingListViewV2 = true
