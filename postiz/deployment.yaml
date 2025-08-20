@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postiz-deploy
+  namespace: postiz 
+  labels:
+    app: postiz-deploy
+spec:
+  selector:
+    matchLabels:
+      app: postiz-deploy
+  replicas: 1
+  template:
+    metadata:
+      annotations:
+        kubectl.kubernetes.io/default-container:  postiz-deploy
+      labels:
+        app: postiz-deploy
+    spec:
+      containers:
+      - name: postiz-deploy
+        image: ghcr.io/gitroomhq/postiz-app:latest
+        imagePullPolicy: 
+        livenessProbe:
+          tcpSocket:
+            port: 5000
+          initialDelaySeconds: 5
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 3
+          periodSeconds: 10
+        env:
+        - name: MAIN_URL
+          value: "https://postiz.mvaldes.dev"
+        - name: FRONTEND_URL
+          value: "https://postiz.mvaldes.dev"
+        - name: NEXT_PUBLIC_BACKEND_URL
+          value: "https://postiz.mvaldes.dev/api"
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: postiz-secrets
+              key: JWT_SECRET
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: postiz-secrets
+              key: DATABASE_URL
+        - name: REDIS_URL 
+          valueFrom:
+            secretKeyRef:
+              name: postiz-secrets
+              key: REDIS_URL 
+        - name: BACKEND_INTERNAL_URL
+          value: http://localhost:3000
+        - name: IS_GENERAL
+          value: "true"
+        - name : DISABLE_REGISTRATION
+          value: "true" 
+        - name: STORAGE_PROVIDER
+          value: "local"
+        - name: UPLOAD_DIRECTORY
+          value: "/uploads"
+        - name: NEXT_PUBLIC_UPLOAD_DIRECTORY
+          value: "/uploads"
+        ports:
+        - containerPort: 5000
+          name: http
+        volumeMounts:
+        - name: postiz-pvc 
+          mountPath: /config/
+        - name: postiz-pvc 
+          mountPath: /uploads/
+      volumes:
+        - name: postiz-pvc 
+          persistentVolumeClaim:
+            claimName: postiz-pvc
+      restartPolicy: Always

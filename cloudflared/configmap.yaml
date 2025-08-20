@@ -5,7 +5,7 @@ metadata:
   namespace: cloudflared
 data:
   config.yaml: |-
-    tunnel: 7bf04d4a-ba48-460e-b0e1-e6ae134b92d4
+    tunnel: 7338b3b7-8da4-49ad-bc94-89ceadf305fa
     credentials-file: /etc/cloudflared/creds/tunnel.json
     metrics: 0.0.0.0:2000
     no-autoupdate: false
@@ -56,5 +56,8 @@ data:
 
     - hostname: vault.mvaldes.dev
       service: http://vault-vault-release-ui.vault:8200
+    
+    - hostname: postiz.mvaldes.dev
+      service: http://postiz-svc.postiz:5000
 
     - service: http_status:404
