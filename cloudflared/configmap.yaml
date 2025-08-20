@@ -57,7 +57,4 @@ data:
     - hostname: vault.mvaldes.dev
       service: http://vault-vault-release-ui.vault:8200
     
-    - hostname: postiz.mvaldes.dev
-      service: http://postiz-svc.postiz:5000
-
     - service: http_status:404
