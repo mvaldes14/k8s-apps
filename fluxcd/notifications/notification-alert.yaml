@@ -9,7 +9,7 @@ spec:
   eventMetadata:
     summary: "Cluster Event occured"
     cluster: "homelab"
-  eventSeverity: info 
+  eventSeverity: error
   eventSources:
     - kind: HelmRepository
       name: '*'
