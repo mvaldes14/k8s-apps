@@ -34,7 +34,7 @@ data:
       static_configs:
       - targets:
         - twitch-svc.bots:80
-    - job_name: 'blackbox-http'
+    - job_name: 'external-services'
       metrics_path: /probe
       params:
         module: [http]
@@ -45,7 +45,8 @@ data:
           - https://mvaldes.dev
           - https://umami.mvaldes.dev
           - https://vault.mvaldes.dev
-          - https://docs.mvaldes.dev
+          - https://paperless.mvaldes.dev
+          - https://calibre.mvaldes.dev
           - https://db.mvaldes.dev
           - https://automate.mvaldes.dev
           - https://hoa.mvaldes.dev
@@ -56,7 +57,26 @@ data:
           target_label: instance
         - target_label: __address__
           replacement: blackbox-svc.telemetry.svc.cluster.local:9115
-    - job_name: 'blackbox-icmp'
+    - job_name: 'internal-services'
+      metrics_path: /probe
+      params:
+        module: [http]
+      static_configs:
+        - targets:
+          - http://radarr.local.net
+          - http://readarr.local.net
+          - http://bazarr.local.net
+          - http://sonarr.local.net
+          - http://prowlarr.local.net
+          - http://links.local.net
+      relabel_configs:
+        - source_labels: [__address__]
+          target_label: __param_target
+        - source_labels: [__param_target]
+          target_label: instance
+        - target_label: __address__
+          replacement: blackbox-svc.telemetry.svc.cluster.local:9115
+    - job_name: 'servers'
       metrics_path: /probe
       params:
         module: [icmp]
@@ -64,7 +84,10 @@ data:
         - targets:
           - 192.168.1.2
           - 192.168.1.22
+          - 192.168.1.21
           - 192.168.1.13
+          - 192.168.1.193
+          - 192.168.1.23
       relabel_configs:
         - source_labels: [__address__]
           target_label: __param_target
