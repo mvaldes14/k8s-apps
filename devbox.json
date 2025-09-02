@@ -5,6 +5,7 @@
     "sops@latest",
     "fluxcd@latest",
     "kn@latest",
+    "flux@latest",
   ],
   "shell": {
     "init_hook": [
