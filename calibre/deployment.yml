@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: calibre-deploy
+  namespace: calibre
+  labels:
+    app: calibre-deploy
+spec:
+  selector:
+    matchLabels:
+      app: calibre-deploy
+  replicas: 1
+  template:
+    metadata:
+      annotations:
+        kubectl.kubernetes.io/default-container:  calibre-deploy
+      labels:
+        app: calibre-deploy
+    spec:
+      containers:
+      - name: calibre-deploy
+        image: lscr.io/linuxserver/calibre-web:latest
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          tcpSocket:
+            port: 8083
+          initialDelaySeconds: 5
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 3
+          periodSeconds: 10
+        ports:
+        - containerPort: 8083
+          name: calibre-deploy
+        volumeMounts:
+        - name: calibre-pvc
+          mountPath: /config
+        - name: calibre-pvc
+          mountPath: /books
+      volumes:
+        - name: calibre-pvc
+          persistentVolumeClaim:
+            claimName: calibre-pvc
+      restartPolicy: Always

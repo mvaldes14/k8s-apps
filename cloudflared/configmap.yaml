@@ -42,7 +42,7 @@ data:
     - hostname: hoa.mvaldes.dev
       service: http://hoa-svc.hoa
 
-    - hostname: docs.mvaldes.dev
+    - hostname: paperless.mvaldes.dev
       service: http://paperless-svc.paperless
 
     - hostname: search.mvaldes.dev
@@ -57,4 +57,7 @@ data:
     - hostname: vault.mvaldes.dev
       service: http://vault-vault-release-ui.vault:8200
     
+    - hostname: calibre.mvaldes.dev
+      service: http://calibre-svc.calibre:8083
+
     - service: http_status:404

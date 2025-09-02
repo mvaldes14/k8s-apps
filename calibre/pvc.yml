@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: calibre-pvc
+  namespace: calibre
+  labels:
+    app: calibre-pvc
+spec:
+  storageClassName: nfs-k8s-keep
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
