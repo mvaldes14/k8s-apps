@@ -27,7 +27,7 @@ spec:
             periodSeconds: 10
           env:
             - name: PAPERLESS_URL
-              value: https://docs.mvaldes.dev
+              value: https://paperless.mvaldes.dev
             - name: PAPERLESS_TIME_ZONE
               value: America/Los_Angeles
             - name: PAPERLESS_DBHOST
