@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: arr-pod
-        image: ghcr.io/hotio/readarr
+        image: ghcr.io/pennydreadful/bookshelf:hardcover
         ports:
         - containerPort: 8787
           name: http
