@@ -18,10 +18,19 @@ spec:
           - name: meal-notifier
             image: rorix/meal-notifier:latest
             env:
-            - name: DOPPLER_TOKEN
+            - name: TELEGRAM_CHAT_ID
               valueFrom:
                 secretKeyRef:
-                  name: cronjob-secrets
-                  key: DOPPLER_TOKEN
+                  name: meal-secrets
+                  key: TELEGRAM_CHAT_ID
+            - name: TELEGRAM_HOMELAB_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: meal-secrets
+                  key: TELEGRAM_HOMELAB_TOKEN
+            - name: BASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: meal-secrets
+                  key: BASE_URL
           restartPolicy: OnFailure
----
