@@ -68,7 +68,7 @@ data:
           - http://bazarr.local.net
           - http://sonarr.local.net
           - http://prowlarr.local.net
-          - http://links.local.net
+          - http://192.168.1.2:6011
       relabel_configs:
         - source_labels: [__address__]
           target_label: __param_target
