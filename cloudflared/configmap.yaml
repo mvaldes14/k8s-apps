@@ -59,5 +59,8 @@ data:
     
     - hostname: calibre.mvaldes.dev
       service: http://calibre-svc.calibre:8083
+    
+    - hostname: gotify.mvaldes.dev
+      service: http://gotify-svc.gotify
 
     - service: http_status:404
