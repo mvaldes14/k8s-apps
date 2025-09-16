@@ -35,7 +35,7 @@ data:
     # ini
     grafana.ini:
       feature_toggles:
-        provisioning: true
+        provisioning: false
         kubernetesDashboards: true
         grafanaAdvisor: true
         alertingListViewV2: true
