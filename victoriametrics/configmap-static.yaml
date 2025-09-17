@@ -6,6 +6,10 @@ metadata:
 data:
   prometheus.yml: |
     scrape_configs:
+    - job_name: pi
+      static_configs:
+      - targets:
+        - 192.168.1.13:9100
     - job_name: eva01
       static_configs:
       - targets:
@@ -50,6 +54,7 @@ data:
           - https://db.mvaldes.dev
           - https://automate.mvaldes.dev
           - https://hoa.mvaldes.dev
+          - https://gotify.mvaldes.dev
       relabel_configs:
         - source_labels: [__address__]
           target_label: __param_target
