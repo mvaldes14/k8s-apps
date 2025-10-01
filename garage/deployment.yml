@@ -1,0 +1,90 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: garage-deploy
+  namespace: garage
+  labels:
+    app: garage-deploy
+spec:
+  selector:
+    matchLabels:
+      app: garage-deploy
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: garage-deploy
+    spec:
+      containers:
+        - name: garage-deploy
+          image: dxflrs/garage:v2.1.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3900
+            - containerPort: 3902
+            - containerPort: 3903
+          volumeMounts:
+            - name: garage-pvc-meta
+              mountPath: /mnt/meta
+            - name: garage-pvc-data
+              mountPath: /mnt/data
+            - name: garage-config
+              mountPath: /etc/garage.toml
+              subPath: garage.toml
+              readOnly: true
+      volumes:
+        - name: garage-config
+          secret:
+            secretName: garage-secret
+            items:
+              - key: garage.toml
+                path: garage.toml
+        - name: garage-pvc-meta
+          persistentVolumeClaim:
+            claimName: garage-pvc-meta
+        - name: garage-pvc-data
+          persistentVolumeClaim:
+            claimName: garage-pvc-data
+      restartPolicy: Always
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: garage-ui
+  namespace: garage
+  labels:
+    app: garage-ui
+spec:
+  selector:
+    matchLabels:
+      app: garage-ui
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: garage-ui
+    spec:
+      containers:
+        - name: garage-ui
+          image: khairul169/garage-webui:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: API_BASE_URL
+              value: "http://garage-svc.garage:3903"
+            - name: S3_ENDPOINT_URL
+              value: "http://garage-svc.garage:3900"
+          ports:
+            - containerPort: 3909
+          volumeMounts:
+            - name: garage-config
+              mountPath: /etc/garage.toml
+              subPath: garage.toml
+              readOnly: true
+      volumes:
+        - name: garage-config
+          secret:
+            secretName: garage-secret
+            items:
+              - key: garage.toml
+                path: garage.toml
+      restartPolicy: Always

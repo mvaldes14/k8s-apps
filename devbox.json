@@ -6,6 +6,8 @@
     "fluxcd@latest",
     "kn@latest",
     "flux@latest",
+    "yamllint@latest",
+    "yamlfmt@latest",
   ],
   "shell": {
     "init_hook": [

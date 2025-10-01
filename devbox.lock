@@ -280,6 +280,118 @@
           "store_path": "/nix/store/9l0zr28qj0k68m4pw8iggf2fm1drjaby-sops-3.10.2"
         }
       }
+    },
+    "yamlfmt@latest": {
+      "last_modified": "2025-09-18T16:33:27Z",
+      "resolved": "github:NixOS/nixpkgs/f4b140d5b253f5e2a1ff4e5506edbf8267724bde#yamlfmt",
+      "source": "devbox-search",
+      "version": "0.17.2",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/rp4qzpva9kk8hjp2zyla9xbvgyavpdzd-yamlfmt-0.17.2",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/rp4qzpva9kk8hjp2zyla9xbvgyavpdzd-yamlfmt-0.17.2"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/4a1wyg20sdygn3gg8mbkn0ikhbjwhfyr-yamlfmt-0.17.2",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/4a1wyg20sdygn3gg8mbkn0ikhbjwhfyr-yamlfmt-0.17.2"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/zsy96qr1m8xblxxcj51i2pb6d1k56msc-yamlfmt-0.17.2",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/zsy96qr1m8xblxxcj51i2pb6d1k56msc-yamlfmt-0.17.2"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/dqppd19fbmn4d2082jkl0946rp2z0j9n-yamlfmt-0.17.2",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/dqppd19fbmn4d2082jkl0946rp2z0j9n-yamlfmt-0.17.2"
+        }
+      }
+    },
+    "yamllint@latest": {
+      "last_modified": "2025-09-18T16:33:27Z",
+      "resolved": "github:NixOS/nixpkgs/f4b140d5b253f5e2a1ff4e5506edbf8267724bde#yamllint",
+      "source": "devbox-search",
+      "version": "1.37.1",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/1ajlhkwnvxnirqacd95ccvcp4n4a2l6d-python3.13-yamllint-1.37.1",
+              "default": true
+            },
+            {
+              "name": "dist",
+              "path": "/nix/store/nc9v27cadla3hzarrypl7xqv714aj851-python3.13-yamllint-1.37.1-dist"
+            }
+          ],
+          "store_path": "/nix/store/1ajlhkwnvxnirqacd95ccvcp4n4a2l6d-python3.13-yamllint-1.37.1"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/wdn4zyww6gv95lhz0jvcfrf0an4vfbjf-python3.13-yamllint-1.37.1",
+              "default": true
+            },
+            {
+              "name": "dist",
+              "path": "/nix/store/llpps8kklgvx2m7xa8vnbfhcdrkirii7-python3.13-yamllint-1.37.1-dist"
+            }
+          ],
+          "store_path": "/nix/store/wdn4zyww6gv95lhz0jvcfrf0an4vfbjf-python3.13-yamllint-1.37.1"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/6yfzxvgkr2v043462sm2h6g2pjkm506n-python3.13-yamllint-1.37.1",
+              "default": true
+            },
+            {
+              "name": "dist",
+              "path": "/nix/store/hjh468yvb9nrw6jhizirvrjym8ngq35q-python3.13-yamllint-1.37.1-dist"
+            }
+          ],
+          "store_path": "/nix/store/6yfzxvgkr2v043462sm2h6g2pjkm506n-python3.13-yamllint-1.37.1"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/0v7zz7l98yw23xwk2j4fkccbj36dpjml-python3.13-yamllint-1.37.1",
+              "default": true
+            },
+            {
+              "name": "dist",
+              "path": "/nix/store/wpnf4f2x6qjkkk31s0505qiima771vxw-python3.13-yamllint-1.37.1-dist"
+            }
+          ],
+          "store_path": "/nix/store/0v7zz7l98yw23xwk2j4fkccbj36dpjml-python3.13-yamllint-1.37.1"
+        }
+      }
     }
   }
 }

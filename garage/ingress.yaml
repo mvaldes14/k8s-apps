@@ -1,0 +1,19 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: s3-ingressroute
+  namespace: garage
+spec:
+  entryPoints:
+    - web
+  routes:
+    - kind: Rule
+      match: Host(`s3.local.net`)
+      services:
+        - name: garage-svc
+          port: 3900
+    - kind: Rule
+      match: Host(`s3ui.local.net`)
+      services:
+        - name: garage-svc-ui
+          port: 3909

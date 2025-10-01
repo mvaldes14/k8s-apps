@@ -56,10 +56,10 @@ data:
 
     - hostname: vault.mvaldes.dev
       service: http://vault-vault-release-ui.vault:8200
-    
+
     - hostname: calibre.mvaldes.dev
       service: http://calibre-svc.calibre:8083
-    
+
     - hostname: gotify.mvaldes.dev
       service: http://gotify-svc.gotify
 

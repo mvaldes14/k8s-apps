@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: garage-svc
+  namespace: garage
+spec:
+  selector:
+    app: garage-deploy
+  type: ClusterIP
+  ports:
+    - name: s3-api
+      protocol: TCP
+      port: 3900
+      targetPort: 3900
+    - name: s3-web
+      protocol: TCP
+      port: 3902
+      targetPort: 3902
+    - name: s3-admin
+      protocol: TCP
+      port: 3903
+      targetPort: 3903
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: garage-svc-ui
+  namespace: garage
+spec:
+  selector:
+    app: garage-ui
+  type: ClusterIP
+  ports:
+    - name: garage-svc-ui
+      protocol: TCP
+      port: 3909
+      targetPort: 3909
