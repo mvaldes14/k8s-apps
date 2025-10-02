@@ -70,6 +70,11 @@ spec:
                 secretKeyRef:
                   name: bots-secrets
                   key: TWITCH_REFRESH_TOKEN
+            - name: GOTIFY_APPLICATION_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: bots-secrets
+                  key: GOTIFY_APPLICATION_TOKEN
           ports:
             - name: http
               containerPort: 3000
