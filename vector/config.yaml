@@ -24,8 +24,42 @@ data:
         type: remap
         inputs: [filter_vector]
         source: |
-          .log = parse_json(.message) ?? .message
+          .kubernetes_namespace_labels = .kubernetes.namespace_labels
+          .kubernetes_node_labels = .kubernetes.node_labels
+          .kubernetes_pod_annotations = .kubernetes.pod_annotations
+          .kubernetes_pod_labels = .kubernetes.pod_labels
+          .kubernetes_container_image = .kubernetes.container_image
+          .kubernetes_container_name = .kubernetes.container_name
+          .kubernetes_pod_ip = .kubernetes.pod_ip
+          .kubernetes_pod_ips = .kubernetes.pod_ips
+          .kubernetes_pod_name = .kubernetes.pod_name
+          .kubernetes_pod_namespace = .kubernetes.pod_namespace
+          .kubernetes_pod_node_name = .kubernetes.pod_node_name
+          .kubernetes_pod_owner = .kubernetes.pod_owner
+          if is_object("message") {
+              .message = parse_json!(."message")
+          }
+          del(.kubernetes)
+          del(.stream)
+          del(.kubernetes.container_id)
+          del(.kubernetes.container_image_id)
+          del(.kubernetes.pod_uid)
     sinks:
+      clickhouse:
+        type: clickhouse
+        inputs:
+          - parser
+        endpoint: clickhouse-svc.clickhouse:8123
+        table: kubernetes_logs
+        database: logs
+        auth:
+          strategy: basic
+          user: $CLICKHOUSE_USERNAME
+          password: $CLICKHOUSE_PASSWORD
+        compression: gzip
+        format: json_each_row
+        skip_unknown_fields: true
+        date_time_best_effort: true
       victorialogs:
         type: elasticsearch
         endpoints:
@@ -34,11 +68,10 @@ data:
           enabled: false
         inputs:
         - parser
+        query:
+          _msg_field: message
+          _time_field: timestamp
+          _stream_fields: stream
         api_version: v8
         mode: bulk
         compression: gzip
-        request:
-          headers:
-            VL-Msg-Field: log.msg,log.message,log
-            VL-Time-Field: timestamp
-            VL-Stream-Fields: stream,kubernetes.pod_name,kubernetes.container_name
