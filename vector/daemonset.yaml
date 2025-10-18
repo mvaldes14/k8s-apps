@@ -41,6 +41,16 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.namespace
+            - name: CLICLHOUSE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: vector-secret
+                  key: username
+            - name: CLICLHOUSE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: vector-secret
+                  key: password
           volumeMounts:
             - name: localtime
               mountPath: /etc/localtime
