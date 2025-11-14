@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: clickhouse-deploy
-  namespace: clickhouse 
+  namespace: clickhouse
   labels:
     app: clickhouse-deploy
 spec:
@@ -13,38 +13,85 @@ spec:
   template:
     metadata:
       annotations:
-        kubectl.kubernetes.io/default-container:  clickhouse-deploy
+        kubectl.kubernetes.io/default-container: clickhouse-deploy
       labels:
         app: clickhouse-deploy
     spec:
       containers:
-      - name: clickhouse-deploy
-        image: clickhouse/clickhouse-server:latest
-        imagePullPolicy: IfNotPresent
-        livenessProbe:
-          tcpSocket:
-            port: 9000
-          initialDelaySeconds: 5
-          timeoutSeconds: 5
-          successThreshold: 1
-          failureThreshold: 3
-          periodSeconds: 10
-        env:
-        - name: CLICKHOUSE_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: clickhouse-secret
-              key: password
-        ports:
-        - containerPort: 9000
-          name: api
-        - containerPort: 8123
-          name: http
-        volumeMounts:
-        - name: clickhouse-pvc
-          mountPath: /var/lib/clickhouse/ 
+        - name: clickhouse-deploy
+          image: clickhouse/clickhouse-server:latest
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            tcpSocket:
+              port: 9000
+            initialDelaySeconds: 5
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+            periodSeconds: 10
+          env:
+            - name: CLICKHOUSE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: clickhouse-secret
+                  key: password
+          ports:
+            - containerPort: 9000
+              name: api
+            - containerPort: 8123
+              name: http
+          volumeMounts:
+            - name: clickhouse-pvc
+              mountPath: /var/lib/clickhouse/
+            - name: clickhouse-config
+              mountPath: /etc/clickhouse-server/config.d/config.xml
       volumes:
         - name: clickhouse-pvc
           persistentVolumeClaim:
             claimName: clickhouse-pvc
+        - name: clickhouse-config
+          configMap:
+            name: clickhouse-cm
+      restartPolicy: Always
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: clickhouse-zookeeper
+  namespace: clickhouse
+  labels:
+    app: clickhouse-zookeeper
+spec:
+  selector:
+    matchLabels:
+      app: clickhouse-zookeeper
+  replicas: 1
+  template:
+    metadata:
+      annotations:
+        kubectl.kubernetes.io/default-container: clickhouse-zookeeper
+      labels:
+        app: clickhouse-zookeeper
+    spec:
+      containers:
+        - name: clickhouse-zookeeper
+          image: clickhouse/clickhouse-keeper:latest
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              cpu: 100m
+              memory: 100Mi
+            limits:
+              cpu: 100m
+              memory: 100Mi
+          livenessProbe:
+            tcpSocket:
+              port: 2181
+            initialDelaySeconds: 5
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+            periodSeconds: 10
+          ports:
+            - containerPort: 2181
       restartPolicy: Always
