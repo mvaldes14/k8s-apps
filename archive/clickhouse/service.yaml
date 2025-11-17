@@ -28,5 +28,5 @@ spec:
   type:
   ports:
     - protocol: TCP
-      port: 2181
-      targetPort: 2181
+      port: 9181
+      targetPort: 9181

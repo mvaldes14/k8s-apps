@@ -63,4 +63,7 @@ data:
     - hostname: gotify.mvaldes.dev
       service: http://gotify-svc.gotify
 
+    - hostname: signoz.mvaldes.dev
+      service: http://signoz.signoz:8080
+
     - service: http_status:404

@@ -45,6 +45,7 @@ spec:
               mountPath: /var/lib/clickhouse/
             - name: clickhouse-config
               mountPath: /etc/clickhouse-server/config.d/config.xml
+              subPath: config.xml
       volumes:
         - name: clickhouse-pvc
           persistentVolumeClaim:
@@ -75,8 +76,11 @@ spec:
     spec:
       containers:
         - name: clickhouse-zookeeper
-          image: clickhouse/clickhouse-keeper:latest
+          image: signoz/zookeeper:3.7.1
           imagePullPolicy: IfNotPresent
+          env:
+            - name: ALLOW_ANONYMOUS_LOGIN
+              value: 'yes'
           resources:
             requests:
               cpu: 100m
@@ -93,5 +97,13 @@ spec:
             failureThreshold: 3
             periodSeconds: 10
           ports:
-            - containerPort: 2181
+            - containerPort: 9181
+          volumeMounts:
+            - name: clickhouse-config
+              mountPath: /opt/bitnami/zookeeper/conf/zoo.cfg
+              subPath: zoo.cfg
       restartPolicy: Always
+      volumes:
+        - name: clickhouse-config
+          configMap:
+            name: clickhouse-keeper-cm
