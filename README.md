@@ -14,11 +14,11 @@ Kubernetes manifests for a homelab cluster deployed via GitOps with FluxCD.
 - **Vector**: Log collection and processing
 - **VictoriaMetrics**: Time series database and monitoring
 - **VictoriaLogs**: Log aggregation and analysis
+- **Signoz**: Full Stack Observability
 
 ### Development & Automation
 - **N8N**: Workflow automation platform
 - **Atlantis**: Terraform automation and PR workflows
-- **Ollama**: Local LLM inference server
 - **NocoDB**: No-code database platform
 
 ### Productivity & Tools
