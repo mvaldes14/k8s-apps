@@ -64,6 +64,6 @@ data:
       service: http://gotify-svc.gotify
 
     - hostname: signoz.mvaldes.dev
-      service: http://signoz.signoz:8080
+      service: http://signoz-helm-release.signoz:8080
 
     - service: http_status:404
