@@ -1,0 +1,14 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: signoz-otel-ingressroute
+  namespace: signoz
+spec:
+  entryPoints:
+    - web
+  routes:
+    - kind: Rule
+      match: Host(`otel.local.net`)
+      services:
+        - name:
+          port: 4317
