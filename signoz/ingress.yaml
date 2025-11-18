@@ -10,5 +10,5 @@ spec:
     - kind: Rule
       match: Host(`otel.local.net`)
       services:
-        - name:
+        - name: otel-svc.signoz
           port: 4317
