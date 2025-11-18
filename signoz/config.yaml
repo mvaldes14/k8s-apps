@@ -4,7 +4,7 @@ metadata:
   name: signoz-cm
   namespace: signoz
 data:
-  values.yml: |
+  values.yaml: |
     global:
       imageRegistry: &GLOBAL_IMAGE_REGISTRY null
       storageClass: nfs-k8s-keep
