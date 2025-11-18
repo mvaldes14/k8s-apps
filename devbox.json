@@ -8,6 +8,7 @@
     "flux@latest",
     "yamllint@latest",
     "yamlfmt@latest",
+    "yaml-language-server@latest",
   ],
   "shell": {
     "init_hook": [

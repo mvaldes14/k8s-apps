@@ -281,6 +281,54 @@
         }
       }
     },
+    "yaml-language-server@latest": {
+      "last_modified": "2025-10-07T08:41:47Z",
+      "resolved": "github:NixOS/nixpkgs/bce5fe2bb998488d8e7e7856315f90496723793c#yaml-language-server",
+      "source": "devbox-search",
+      "version": "1.18.0",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/1rj0c1zwbjkc9xjdxlbkvczlkd808kcm-yaml-language-server-1.18.0",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/1rj0c1zwbjkc9xjdxlbkvczlkd808kcm-yaml-language-server-1.18.0"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/lr9dh6y8f55lxssxx76s2h5l27wv8sq6-yaml-language-server-1.18.0",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/lr9dh6y8f55lxssxx76s2h5l27wv8sq6-yaml-language-server-1.18.0"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/lyjlkmnw9pr3821d1h4b2mkcrsh9yy16-yaml-language-server-1.18.0",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/lyjlkmnw9pr3821d1h4b2mkcrsh9yy16-yaml-language-server-1.18.0"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/q3in1cjrjj0y55pkqr86a492ffb3v61w-yaml-language-server-1.18.0",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/q3in1cjrjj0y55pkqr86a492ffb3v61w-yaml-language-server-1.18.0"
+        }
+      }
+    },
     "yamlfmt@latest": {
       "last_modified": "2025-09-18T16:33:27Z",
       "resolved": "github:NixOS/nixpkgs/f4b140d5b253f5e2a1ff4e5506edbf8267724bde#yamlfmt",
