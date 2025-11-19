@@ -8,7 +8,17 @@ spec:
     - web
   routes:
     - kind: Rule
-      match: Host(`otel.local.net`)
+      match: Host(`otel.local.net`) && PathPrefix(`/v1/metrics`)
+      services:
+        - name: signoz-helm-release-otel-collector.signoz
+          port: 4318
+    - kind: Rule
+      match: Host(`otel.local.net`) && PathPrefix(`/v1/logs`)
+      services:
+        - name: signoz-helm-release-otel-collector.signoz
+          port: 4318
+    - kind: Rule
+      match: Host(`otel.local.net`) && PathPrefix(`/v1/traces`)
       services:
         - name: signoz-helm-release-otel-collector.signoz
           port: 4318
