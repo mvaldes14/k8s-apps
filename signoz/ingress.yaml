@@ -11,5 +11,4 @@ spec:
       match: Host(`otel.local.net`)
       services:
         - name: signoz-helm-release-otel-collector.signoz
-          port: 4317
-          scheme: h2c
+          port: 4318
