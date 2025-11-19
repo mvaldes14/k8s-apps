@@ -12,3 +12,4 @@ spec:
       services:
         - name: signoz-helm-release-otel-collector.signoz
           port: 4317
+          scheme: h2c
