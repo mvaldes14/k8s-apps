@@ -692,13 +692,6 @@ data:
           maxReplicaCount: "5"
           triggers: []
       config:
-        connectors:
-          signozmeter:
-            metrics_flush_interval: 1h
-            dimensions:
-              - name: service.name
-              - name: deployment.environment
-              - name: host.name
         receivers:
           otlp:
             protocols:
@@ -716,8 +709,11 @@ data:
             - type: move
               from: attributes.message
               to: body
-          k8s_receiver:
+          k8s_cluster:
             collection_interval: 30s
+          kubeletstats:
+            collection_interval: 30s
+            endpoint: ${env:K8S_HOST_IP}:10250
         processors:
           batch:
             send_batch_size: 50000
@@ -745,10 +741,6 @@ data:
         extensions:
           health_check:
             endpoint: 0.0.0.0:13133
-          zpages:
-            endpoint: localhost:55679
-          pprof:
-            endpoint: localhost:1777
         exporters:
           clickhousetraces:
             datasource: tcp://${env:CLICKHOUSE_USER}:${env:CLICKHOUSE_PASSWORD}@${env:CLICKHOUSE_HOST}:${env:CLICKHOUSE_PORT}/${env:CLICKHOUSE_TRACE_DATABASE}
@@ -776,14 +768,14 @@ data:
           telemetry:
             logs:
               encoding: json
-          extensions: [health_check, zpages, pprof]
+          extensions: [health_check ]
           pipelines:
             traces:
               receivers: [otlp]
-              processors: [signozspanmetrics/delta, batch, k8sattributes]
+              processors: [batch, k8sattributes]
               exporters: [clickhousetraces, metadataexporter, signozmeter]
             metrics:
-              receivers: [otlp, k8s_receiver]
+              receivers: [otlp, k8s_cluster, kubeletstats]
               processors: [batch, k8sattributes]
               exporters: [metadataexporter, signozclickhousemetrics, signozmeter]
             logs:
