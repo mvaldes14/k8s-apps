@@ -619,7 +619,8 @@ data:
           servicePort: 8888
           nodePort: ""
           protocol: TCP
-        syslog: enabled: true 
+        syslog: 
+          enabled: true 
           containerPort: 54527
           servicePort: 54527 
           nodePort: ""
