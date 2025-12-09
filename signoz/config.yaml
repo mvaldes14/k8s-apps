@@ -723,7 +723,7 @@ data:
             send_batch_size: 20000
             timeout: 1s
           k8sattributes:
-           auth_type: "serviceAccount"
+            auth_type: "serviceAccount"
             passthrough: false
             extract:
               metadata:
