@@ -9,6 +9,7 @@
     "yamllint@latest",
     "yamlfmt@latest",
     "yaml-language-server@latest",
+    "helmfile@latest"
   ],
   "shell": {
     "init_hook": [

@@ -1,0 +1,348 @@
+# https://kubernetes.io/docs/concepts/configuration/configmap/
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: signoz-k8s-cm
+  namespace: signoz
+data:
+  config.yaml: |
+    global:
+      imageRegistry: null
+      imagePullSecrets: []
+      storageClass: nfs-k8s-keep
+      clusterDomain: cluster.local
+      clusterName: "homelab"
+      deploymentEnvironment: ""
+      cloud: other
+    nameOverride: ""
+    fullnameOverride: ""
+    enabled: true
+    clusterName: ""
+    otelCollectorEndpoint: null
+    otelInsecure: true
+    insecureSkipVerify: false
+    signozApiKey: ""
+    apiKeyExistingSecretName: ""
+    apiKeyExistingSecretKey: ""
+    otelTlsSecrets:
+      enabled: false
+    namespace: "signoz"
+    presets:
+      debugExporter:
+        enabled: false
+        verbosity: basic
+        samplingInitial: 2
+        samplingThereafter: 500
+      otlpExporter:
+        enabled: false
+      otlphttpExporter:
+        enabled: true
+      selfTelemetry:
+        enabled: false
+      logsCollection:
+        enabled: true
+        startAt: end
+        includeFilePath: true
+        includeFileName: false
+        include:
+          - /var/log/pods/*/*/*.log
+        multiline: null
+        blacklist:
+          enabled: true
+          signozLogs: true
+          namespaces:
+            - kube-system
+          pods: []
+          containers: []
+          additionalExclude: []
+        whitelist:
+          enabled: false
+        operators:
+          - id: container-parser
+            type: container
+      hostMetrics:
+        enabled: true
+        rootPath: "/hostfs"
+        collectionInterval: 30s
+        scrapers:
+          cpu: {}
+          load: {}
+          memory: {}
+          disk:
+            exclude:
+              devices:
+                - ^ram\d+$
+                - ^zram\d+$
+                - ^loop\d+$
+                - ^fd\d+$
+                - ^hd[a-z]\d+$
+                - ^sd[a-z]\d+$
+                - ^vd[a-z]\d+$
+                - ^xvd[a-z]\d+$
+                - ^nvme\d+n\d+p\d+$
+              match_type: regexp
+          filesystem:
+            exclude_fs_types:
+              fs_types:
+                - autofs
+                - binfmt_misc
+                - bpf
+                - cgroup2?
+                - configfs
+                - debugfs
+                - devpts
+                - devtmpfs
+                - fusectl
+                - hugetlbfs
+                - iso9660
+                - mqueue
+                - nsfs
+                - overlay
+                - proc
+                - procfs
+                - pstore
+                - rpc_pipefs
+                - securityfs
+                - selinuxfs
+                - squashfs
+                - sysfs
+                - tracefs
+              match_type: strict
+            exclude_mount_points:
+              mount_points:
+                - /dev/*
+                - /proc/*
+                - /sys/*
+                - /run/credentials/*
+                - /run/k3s/containerd/*
+                - /var/lib/docker/*
+                - /var/lib/containers/storage/*
+                - /var/lib/kubelet/*
+                - /snap/*
+              match_type: regexp
+          network:
+            exclude:
+              interfaces:
+                - ^veth.*$
+                - ^docker.*$
+                - ^br-.*$
+                - ^flannel.*$
+                - ^cali.*$
+                - ^cbr.*$
+                - ^cni.*$
+                - ^dummy.*$
+                - ^tailscale.*$
+                - ^lo$
+              match_type: regexp
+      kubeletMetrics:
+        enabled: true
+        collectionInterval: 30s
+        authType: serviceAccount
+        endpoint: ${env:K8S_HOST_IP}:10250
+        insecureSkipVerify: true
+        extraMetadataLabels:
+          - container.id
+          - k8s.volume.type
+        metricGroups:
+          - container
+          - pod
+          - node
+          - volume
+        metrics:
+          k8s.node.cpu.usage:
+            enabled: true
+          k8s.node.uptime:
+            enabled: true
+          k8s.pod.cpu.usage:
+            enabled: true
+          k8s.pod.cpu_limit_utilization:
+            enabled: true
+          k8s.pod.cpu_request_utilization:
+            enabled: true
+          k8s.pod.memory_limit_utilization:
+            enabled: true
+          k8s.pod.memory_request_utilization:
+            enabled: true
+          k8s.pod.uptime:
+            enabled: true
+          container.cpu.usage:
+            enabled: true
+          k8s.container.cpu_limit_utilization:
+            enabled: true
+          k8s.container.cpu_request_utilization:
+            enabled: true
+          k8s.container.memory_limit_utilization:
+            enabled: true
+          k8s.container.memory_request_utilization:
+            enabled: true
+          container.uptime:
+            enabled: true
+      kubernetesAttributes:
+        enabled: true
+        passthrough: false
+        filter:
+          node_from_env_var: K8S_NODE_NAME
+        podAssociation:
+          - sources:
+              - from: resource_attribute
+                name: k8s.pod.ip
+          - sources:
+              - from: resource_attribute
+                name: k8s.pod.uid
+          - sources:
+              - from: connection
+        extractMetadatas:
+          - k8s.namespace.name
+          - k8s.deployment.name
+          - k8s.statefulset.name
+          - k8s.daemonset.name
+          - k8s.cronjob.name
+          - k8s.job.name
+          - k8s.node.name
+          - k8s.node.uid
+          - k8s.pod.name
+          - k8s.pod.uid
+          - k8s.pod.start_time
+        extractLabels: []
+        extractAnnotations: []
+      clusterMetrics:
+        enabled: false
+      prometheus:
+        enabled: false
+      resourceDetection:
+        enabled: true
+        timeout: 2s
+        override: false
+        envResourceAttributes: ""
+      k8sEvents:
+        enabled: false
+    otelAgent:
+      enabled: true
+      name: "monitor"
+      image:
+        registry: docker.io
+        repository: otel/opentelemetry-collector-contrib
+        tag: 0.139.0
+        pullPolicy: IfNotPresent
+      imagePullSecrets: []
+      command:
+        name: /otelcol-contrib
+        extraArgs: []
+      configMap:
+        create: true
+      service:
+        annotations: {}
+        type: ClusterIP
+        internalTrafficPolicy: Local
+      serviceAccount:
+        create: true
+        annotations: {}
+        name:
+      annotations: {}
+      podAnnotations:
+        signoz.io/scrape: 'true'
+        signoz.io/port: '8888'
+        signoz.io/path: /metrics
+      additionalEnvs: {}
+      minReadySeconds: 5
+      clusterRole:
+        create: true
+        annotations: {}
+        name: ""
+        rules:
+          # k8sattributes processor requires these permissions
+          - apiGroups: [""]
+            resources: ["pods", "namespaces", "nodes", "persistentvolumeclaims"]
+            verbs: ["get", "list", "watch"]
+          - apiGroups: ["apps"]
+            resources: ["replicasets"]
+            verbs: ["get", "list", "watch"]
+          - apiGroups: ["extensions"]
+            resources: ["replicasets"]
+            verbs: ["get", "list", "watch"]
+          - apiGroups: [""]
+            resources: ["nodes", "endpoints"]
+            verbs: ["list", "watch"]
+          - apiGroups: ["batch"]
+            resources: ["jobs"]
+            verbs: ["list", "watch"]
+          - apiGroups: [""]
+            resources: ["nodes/proxy"]
+            verbs: ["get"]
+          - apiGroups: [""]
+            resources: ["nodes/stats", "configmaps", "events"]
+            verbs: ["create", "get"]
+          - apiGroups: [""]
+            resources: ["configmaps"]
+            resourceNames: ["otel-container-insight-clusterleader"]
+            verbs: ["get", "update"]
+        clusterRoleBinding:
+          annotations: {}
+          name: ""
+      ports:
+        otlp:
+          enabled: true
+          containerPort: 4317
+          servicePort: 4317
+          nodePort: ""
+          hostPort: 4317
+          protocol: TCP
+        otlp-http:
+          enabled: true
+          containerPort: 4318
+          servicePort: 4318
+          nodePort: ""
+          hostPort: 4318
+          protocol: TCP
+        metrics:
+          enabled: true
+          containerPort: 8888
+          servicePort: 8888
+          nodePort: ""
+          hostPort: 8888
+          protocol: TCP
+        health-check:
+          enabled: true
+          containerPort: 13133
+          servicePort: 13133
+          nodePort: ""
+          hostPort: 13133
+          protocol: TCP
+      hostNetwork: false
+      livenessProbe:
+        enabled: true
+        port: 13133
+        path: /
+        initialDelaySeconds: 10
+        periodSeconds: 10
+        timeoutSeconds: 5
+        failureThreshold: 6
+        successThreshold: 1
+      readinessProbe:
+        enabled: true
+        port: 13133
+        path: /
+        initialDelaySeconds: 10
+        periodSeconds: 10
+        timeoutSeconds: 5
+        failureThreshold: 6
+        successThreshold: 1
+      customLivenessProbe: {}
+      customReadinessProbe: {}
+      ingress:
+        enabled: false
+      resources:
+        requests:
+          cpu: 100m
+          memory: 100Mi
+      priorityClassName: ""
+      nodeSelector: {}
+      tolerations: {}
+      affinity: {}
+      podSecurityContext: {}
+      securityContext: {}
+      config: {}
+      extraVolumes: []
+      extraVolumeMounts: []
+    otelDeployment:
+      enabled: false
