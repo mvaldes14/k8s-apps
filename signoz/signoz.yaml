@@ -15,7 +15,7 @@ spec:
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: helm-release-signoz
+  name: signoz-helm
   namespace: signoz
 spec:
   targetNamespace: signoz
@@ -35,7 +35,7 @@ spec:
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: helm-release-monitor
+  name: k8s-helm
   namespace: signoz
 spec:
   targetNamespace: signoz
