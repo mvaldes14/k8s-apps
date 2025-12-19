@@ -715,6 +715,13 @@ data:
             dsn: tcp://${env:CLICKHOUSE_USER}:${env:CLICKHOUSE_PASSWORD}@${env:CLICKHOUSE_HOST}:${env:CLICKHOUSE_PORT}/${env:CLICKHOUSE_LOG_DATABASE}
             timeout: 10s
             use_new_schema: true
+          otlphttp/victoriametrics:
+            compression: gzip
+            encoding: proto
+            metrics_endpoint: http://victoriametrics-svc.metrics:8428/opentelemetry/v1/metrics
+            logs_endpoint: http://victorialogs-svc.logs:9428/insert/opentelemetry/v1/logs
+            tls:
+              insecure: true
         service:
           telemetry:
             logs:
@@ -728,11 +735,11 @@ data:
             metrics:
               receivers: [otlp, k8s_cluster ]
               processors: [batch, k8sattributes]
-              exporters: [signozclickhousemetrics]
+              exporters: [signozclickhousemetrics, otlphttp/victoriametrics]
             logs:
               receivers: [otlp, syslog]
               processors: [batch, k8sattributes]
-              exporters: [clickhouselogsexporter]
+              exporters: [clickhouselogsexporter, otlphttp/victoriametrics]
     postgresql:
       enabled: false
     signoz-otel-gateway:
