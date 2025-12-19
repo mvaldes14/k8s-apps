@@ -101,6 +101,54 @@
       "last_modified": "2025-07-08T04:39:49Z",
       "resolved": "github:NixOS/nixpkgs/9b008d60392981ad674e04016d25619281550a9d?lastModified=1751949589&narHash=sha256-mgFxAPLWw0Kq%2BC8P3dRrZrOYEQXOtKuYVlo9xvPntt8%3D"
     },
+    "helmfile@latest": {
+      "last_modified": "2025-11-23T21:50:36Z",
+      "resolved": "github:NixOS/nixpkgs/ee09932cedcef15aaf476f9343d1dea2cb77e261#helmfile",
+      "source": "devbox-search",
+      "version": "1.1.9",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/fxv20xqxy0qyb06pcgk5d0m59j4v8vmh-helmfile-1.1.9",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/fxv20xqxy0qyb06pcgk5d0m59j4v8vmh-helmfile-1.1.9"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/bm87ycprilhnfml8y5g3jpqrps612rvm-helmfile-1.1.9",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/bm87ycprilhnfml8y5g3jpqrps612rvm-helmfile-1.1.9"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/g68v1fcjxslcrcsf3963xsrybyasd5x7-helmfile-1.1.9",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/g68v1fcjxslcrcsf3963xsrybyasd5x7-helmfile-1.1.9"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/pfrs5s57zpd3r8f6bzz14c4p6f0gjj7m-helmfile-1.1.9",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/pfrs5s57zpd3r8f6bzz14c4p6f0gjj7m-helmfile-1.1.9"
+        }
+      }
+    },
     "kn@latest": {
       "last_modified": "2025-07-13T22:45:35Z",
       "resolved": "github:NixOS/nixpkgs/a421ac6595024edcfbb1ef950a3712b89161c359#kn",

@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: signoz-cm
+  name: signoz-k8s-cm
   namespace: signoz
 data:
-  values.yaml: |
+  config.yaml: |
     global:
       imageRegistry: &GLOBAL_IMAGE_REGISTRY null
       storageClass: nfs-k8s-keep
@@ -53,7 +53,6 @@ data:
         replicaCount: 1
         namespaceOverride: ""
         resources:
-          limits: {}
           requests:
             memory: 256Mi
             cpu: 100m
@@ -72,23 +71,15 @@ data:
         repository: clickhouse/clickhouse-server
         tag: 25.5.6
         pullPolicy: IfNotPresent
-      imagePullSecrets: []
-      annotations: {}
       serviceAccount:
         create: true
-        annotations: {}
         name:
       service:
-        annotations: {}
         type: ClusterIP
         httpPort: 8123
         tcpPort: 9000
       secure: false
       verify: false
-      externalZookeeper: {}
-      nodeSelector: {}
-      tolerations: []
-      affinity: {}
       resources:
         requests:
           cpu: 100m
@@ -113,7 +104,6 @@ data:
         accessModes:
           - ReadWriteOnce
         size: 2Gi
-      profiles: {}
       defaultProfiles:
         default/allow_experimental_window_functions: "1"
         default/allow_nondeterministic_mutations: "1"
@@ -174,7 +164,6 @@ data:
         signoz.io/scrape: 'true'
         signoz.io/port: '9363'
         signoz.io/path: /metrics
-      podDistribution: []
       coldStorage:
         enabled: false
       files:
@@ -290,7 +279,6 @@ data:
         metricsExporter:
           name: metrics-exporter
           service:
-            annotations: {}
             type: ClusterIP
             port: 8888
           image:
@@ -299,36 +287,18 @@ data:
             tag: 0.21.2
             pullPolicy: IfNotPresent
     externalClickhouse:
-      host:
-      cluster: cluster
-      database: signoz_metrics
-      traceDatabase: signoz_traces
-      logDatabase: signoz_logs
-      meterDatabase: signoz_meter
-      user: ""
-      password: ""
-      existingSecret:
-      existingSecretPasswordKey:
-      secure: false
-      verify: false
-      httpPort: 8123
-      tcpPort: 9000
     signoz:
       name: "signoz"
       replicaCount: 1
       image:
         registry: docker.io
         repository: signoz/signoz
-        tag: v0.98.0
+        tag: v0.105.1
         pullPolicy: IfNotPresent
-      imagePullSecrets: []
       serviceAccount:
         create: true
-        annotations: {}
         name:
       service:
-        annotations: {}
-        labels: {}
         type: ClusterIP
         port: 8080
         internalPort: 8085
@@ -336,8 +306,6 @@ data:
         nodePort: null
         internalNodePort: null
         opampInternalNodePort: null
-      annotations:
-      additionalArgs: []
       env:
         signoz_telemetrystore_provider: clickhouse
         dot_metrics_enabled: true
@@ -369,11 +337,6 @@ data:
           args: []
           command: []
           resources: {}
-      podSecurityContext: {}
-      podAnnotations: {}
-      securityContext: {}
-      additionalVolumeMounts: []
-      additionalVolumes: []
       livenessProbe:
         enabled: true
         port: http
@@ -396,27 +359,14 @@ data:
       customReadinessProbe: {}
       ingress:
         enabled: false
-        className: ""
-        annotations: {}
-        hosts:
-          - host: signoz.domain.com
-            paths:
-              - path: /
-                pathType: ImplementationSpecific
-                port: 8080
-        tls: []
       resources:
         requests:
           cpu: 100m
           memory: 100Mi
       priorityClassName: ""
-      nodeSelector: {}
-      tolerations: []
-      affinity: {}
-      topologySpreadConstraints: []
       persistence:
         enabled: true
-        existingClaim: ""
+        existingClaim:
         storageClass: null
         accessModes:
           - ReadWriteOnce
@@ -431,13 +381,8 @@ data:
         pullPolicy: IfNotPresent
       args:
         - "--up="
-      annotations: {}
       upgradeHelmHooks: true
       enableReplication: false
-      nodeSelector: {}
-      tolerations: []
-      affinity: {}
-      topologySpreadConstraints: []
       initContainers:
         init:
           enabled: true
@@ -516,31 +461,27 @@ data:
             repository: groundnuty/k8s-wait-for
             tag: v2.0
             pullPolicy: IfNotPresent
-          env: []
           resources: {}
       serviceAccount:
         create: true
-        annotations: {}
         name:
       role:
         create: true
-        annotations: {}
-        name: ""
+        name:
         rules:
           - apiGroups: ["batch"]
             resources: ["jobs"]
             verbs: ["get", "list", "watch"]
         roleBinding:
           annotations: {}
-          name: ""
+          name:
     otelCollector:
-      name: "otel-collector"
+      name: "otel-gateway"
       image:
         registry: docker.io
         repository: signoz/signoz-otel-collector
         tag: v0.129.7
         pullPolicy: IfNotPresent
-      imagePullSecrets: []
       initContainers:
         init:
           enabled: false
@@ -560,70 +501,61 @@ data:
         extraArgs:
           - --feature-gates=-pkg.translator.prometheus.NormalizeName
       configMap:
-        create: true
+        create: false
       serviceAccount:
         create: true
-        annotations: {}
-        name:
+        name: ""
       service:
-        annotations: {}
-        labels: {}
         type: ClusterIP
-        loadBalancerSourceRanges: []
-      annotations:
       podAnnotations:
         signoz.io/scrape: 'true'
         signoz.io/port: '8888'
-      podLabels: {}
-      additionalEnvs: {}
       lowCardinalityExceptionGrouping: false
       minReadySeconds: 5
       progressDeadlineSeconds: 600
       replicaCount: 1
       clusterRole:
         create: true
-        annotations: {}
-        name: ""
+        name:
         rules:
           - apiGroups: [""]
-            resources: ["pods", "namespaces", "nodes"]
+            resources: ["events", "pods", "pods/status", "namespaces", "namespaces/status", "nodes", "nodes/spec", "replicationcontrollers", "replicationcontrollers/status", "resourcequotas", "services"]
             verbs: ["get", "list", "watch"]
           - apiGroups: ["apps"]
-            resources: ["replicasets"]
+            resources: ["replicasets", "deployments", "daemonsets", "statefulsets"]
             verbs: ["get", "list", "watch"]
           - apiGroups: ["extensions"]
-            resources: ["replicasets"]
+            resources: ["replicasets", "daemonsets", "deployments"]
             verbs: ["get", "list", "watch"]
           - apiGroups: ["batch"]
             resources: ["jobs"]
             verbs: ["get", "list", "watch"]
         clusterRoleBinding:
-          annotations: {}
-          name: ""
+          name:
       ports:
         otlp:
           enabled: true
           containerPort: 4317
           servicePort: 4317
-          nodePort: ""
+          nodePort:
           protocol: TCP
         otlp-http:
           enabled: true
           containerPort: 4318
           servicePort: 4318
-          nodePort: ""
+          nodePort:
           protocol: TCP
         metrics:
           enabled: true
           containerPort: 8888
           servicePort: 8888
-          nodePort: ""
+          nodePort:
           protocol: TCP
-        syslog: 
-          enabled: true 
+        syslog:
+          enabled: true
           containerPort: 54527
-          servicePort: 54527 
-          nodePort: ""
+          servicePort: 54527
+          nodePort:
           protocol: TCP
       livenessProbe:
         enabled: true
@@ -643,29 +575,13 @@ data:
         timeoutSeconds: 5
         failureThreshold: 6
         successThreshold: 1
-      customLivenessProbe: {}
-      customReadinessProbe: {}
-      extraVolumeMounts: []
-      extraVolumes: []
       ingress:
         enabled: false
-        className: ""
-        annotations: {}
-        hosts:
-          - host: otelcollector.domain.com
-            paths:
-              - path: /
-                pathType: ImplementationSpecific
-                port: 4318
-        tls: []
       resources:
         requests:
-          cpu: 100m
+          cpu: 500m
           memory: 200Mi
-      priorityClassName: ""
-      nodeSelector: {}
-      tolerations: []
-      affinity: {}
+      priorityClassName:
       topologySpreadConstraints:
         - maxSkew: 1
           topologyKey: kubernetes.io/hostname
@@ -673,24 +589,8 @@ data:
           labelSelector:
             matchLabels:
               app.kubernetes.io/component: otel-collector
-      podSecurityContext: {}
-      securityContext: {}
       autoscaling:
         enabled: false
-        minReplicas: 1
-        maxReplicas: 11
-        targetCPUUtilizationPercentage: 50
-        targetMemoryUtilizationPercentage: 50
-        behavior: {}
-        autoscalingTemplate: []
-        keda:
-          annotations:
-          enabled: false
-          pollingInterval: "30"
-          cooldownPeriod: "300"
-          minReplicaCount: "1"
-          maxReplicaCount: "5"
-          triggers: []
       config:
         receivers:
           otlp:
@@ -706,21 +606,15 @@ data:
             protocol: rfc3164
             location: UTC
             operators:
-            - type: move
-              from: attributes.message
-              to: body
+              - type: move
+                from: attributes.message
+                to: body
           k8s_cluster:
             collection_interval: 30s
-          kubeletstats:
-            collection_interval: 30s
-            endpoint: ${env:K8S_HOST_IP}:10250
+            allocatable_types_to_report: ["cpu", "memory", "disk"]
         processors:
           batch:
             send_batch_size: 50000
-            timeout: 1s
-          batch/meter:
-            send_batch_max_size: 25000
-            send_batch_size: 20000
             timeout: 1s
           k8sattributes:
             auth_type: "serviceAccount"
@@ -753,39 +647,24 @@ data:
             dsn: tcp://${env:CLICKHOUSE_USER}:${env:CLICKHOUSE_PASSWORD}@${env:CLICKHOUSE_HOST}:${env:CLICKHOUSE_PORT}/${env:CLICKHOUSE_LOG_DATABASE}
             timeout: 10s
             use_new_schema: true
-          metadataexporter:
-            dsn: tcp://${env:CLICKHOUSE_USER}:${env:CLICKHOUSE_PASSWORD}@${env:CLICKHOUSE_HOST}:${env:CLICKHOUSE_PORT}/signoz_metadata
-            timeout: 10s
-            tenant_id: ${env:TENANT_ID}
-            cache:
-              provider: in_memory
-          signozclickhousemeter:
-            dsn: tcp://${env:CLICKHOUSE_USER}:${env:CLICKHOUSE_PASSWORD}@${env:CLICKHOUSE_HOST}:${env:CLICKHOUSE_PORT}/${env:CLICKHOUSE_METER_DATABASE}
-            timeout: 45s
-            sending_queue:
-              enabled: false
         service:
           telemetry:
             logs:
               encoding: json
-          extensions: [health_check ]
+          extensions: [health_check]
           pipelines:
             traces:
               receivers: [otlp]
               processors: [batch, k8sattributes]
-              exporters: [clickhousetraces, metadataexporter, signozmeter]
+              exporters: [clickhousetraces]
             metrics:
-              receivers: [otlp, k8s_cluster, kubeletstats]
+              receivers: [otlp, k8s_cluster]
               processors: [batch, k8sattributes]
-              exporters: [metadataexporter, signozclickhousemetrics, signozmeter]
+              exporters: [signozclickhousemetrics]
             logs:
               receivers: [otlp, syslog]
               processors: [batch, k8sattributes]
-              exporters: [clickhouselogsexporter, metadataexporter, signozmeter]
-            metrics/meter:
-              receivers: [signozmeter]
-              processors: [batch/meter]
-              exporters: [signozclickhousemeter]
+              exporters: [clickhouselogsexporter]
     postgresql:
       enabled: false
     signoz-otel-gateway:
