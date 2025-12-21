@@ -5,15 +5,13 @@ metadata:
   namespace: signoz
 data:
   values.yaml: |
-    # global -- Global override values.
-    # @section -- Global Configuration
     global:
       imageRegistry: null
       imagePullSecrets: []
       storageClass: null
       clusterDomain: cluster.local
-      clusterName: ""
-      deploymentEnvironment: ""
+      clusterName: "homelab"
+      deploymentEnvironment: "homelab"
       cloud: other
     nameOverride: ""
     fullnameOverride: ""
@@ -172,17 +170,12 @@ data:
         timeoutSeconds: 5
         failureThreshold: 6
         successThreshold: 1
-      customLivenessProbe: {}
-      customReadinessProbe: {}
       ingress:
         enabled: false
       resources:
         requests:
           cpu: 100m
           memory: 100Mi
-         limits:
-           cpu: 1000m
-           memory: 1Gi
       priorityClassName: ""
       nodeSelector: {}
       tolerations:
@@ -193,20 +186,19 @@ data:
       securityContext: {}
       config:
         exporters:
-          otlp:
+          otlphttp:
             endpoint: http://otel.localnet
-            insecure: true
         service:
           telemetry:
             logs:
               encoding: json
           pipelines:
             traces:
-              exporters: [otlp]
+              exporters: [otlphttp]
             metrics:
-              exporters: [otlp]
+              exporters: [otlphttp]
             logs:
-              exporters: [otlp]
+              exporters: [otlphttp]
       extraVolumes: []
       extraVolumeMounts: []
     otelDeployment:
