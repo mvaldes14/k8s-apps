@@ -23,7 +23,7 @@ spec:
               drop:
                 - ALL
             readOnlyRootFilesystem: true
-          image: victoriametrics/victoria-logs:v1.8.0-victorialogs
+          image: victoriametrics/victoria-logs:v1.43.0
           imagePullPolicy: IfNotPresent
           args:
             - --envflag.enable

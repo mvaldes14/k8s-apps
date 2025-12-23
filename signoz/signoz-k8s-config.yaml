@@ -17,7 +17,7 @@ data:
     fullnameOverride: ""
     enabled: true
     clusterName: ""
-    otelCollectorEndpoint: otel.local.net
+    otelCollectorEndpoint: signoz-k8s-helm-k8s-infra-otel-agent:4318
     otelInsecure: true
     insecureSkipVerify: false
     signozApiKey: ""
@@ -187,7 +187,7 @@ data:
       config:
         exporters:
           otlphttp:
-            endpoint: http://otel.localnet
+            endpoint: http://signoz-k8s-helm-k8s-infra-otel-agent:4318
         service:
           telemetry:
             logs:

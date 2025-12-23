@@ -10,7 +10,7 @@ spec:
         branch: main
     commit:
       author:
-        email: fluxcdbot@users.noreply.github.com
+        email: fluxcdbot@mvaldes.dev
         name: fluxcdbot
       messageTemplate: '{{range .Changed.Changes}}{{print .OldValue}} -> {{println .NewValue}}{{end}}'
     push:
@@ -34,7 +34,7 @@ spec:
         branch: main
     commit:
       author:
-        email: fluxcdbot@users.noreply.github.com
+        email: fluxcdbot@mvaldes.dev
         name: fluxcdbot
       messageTemplate: '{{range .Changed.Changes}}{{print .OldValue}} -> {{println .NewValue}}{{end}}'
     push:
@@ -45,4 +45,3 @@ spec:
     name: homelab-repository
   update:
     path: ./blog
-
