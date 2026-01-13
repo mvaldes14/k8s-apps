@@ -34,5 +34,5 @@ spec:
   routes:
     - match: HostSNI(\`*\`)
       services:
-        - name: signoz-signoz-otel-collector
+        - name: signoz-signoz-helm-otel-collector
           port: 54527
