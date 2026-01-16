@@ -32,7 +32,7 @@ spec:
   entryPoints:
     - syslog
   routes:
-    - match: HostSNI(\`*\`)
+    - match: HostSNI(`*`)
       services:
         - name: signoz-signoz-helm-otel-collector
           port: 54527
