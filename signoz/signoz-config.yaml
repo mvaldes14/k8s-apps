@@ -1,7 +1,747 @@
-apiVersion: v1
+apiVersion: v2
 kind: ConfigMap
 metadata:
   name: signoz-cm
   namespace: signoz
 data:
-  values.yaml: "global:\n  imageRegistry: &GLOBAL_IMAGE_REGISTRY null\n  storageClass: nfs-k8s-keep\n  clusterDomain: cluster.local\n  clusterName: \"\"\n  cloud: other\nnameOverride: \"\"\nfullnameOverride: \"\"\nclusterName: \"\"\nimagePullSecrets: []\nclickhouse:\n  enabled: true\n  zookeeper:\n    enabled: true\n    podAnnotations:\n      signoz.io/scrape: \"true\"\n      signoz.io/port: \"9141\"\n      signoz.io/path: \"/metrics\"\n    metrics:\n      enabled: true\n    logLevel: INFO\n    livenessProbe:\n      enabled: false\n    readinessProbe:\n      enabled: false\n    customLivenessProbe:\n      exec:\n        command: ['/bin/bash', '-c', 'curl -s -m 2 http://localhost:8080/commands/ruok | grep ruok']\n      initialDelaySeconds: 30\n      periodSeconds: 10\n      timeoutSeconds: 5\n      successThreshold: 1\n      failureThreshold: 6\n    customReadinessProbe:\n      exec:\n        command: ['/bin/bash', '-c', 'curl -s -m 2 http://localhost:8080/commands/ruok | grep error | grep null']\n      initialDelaySeconds: 5\n      periodSeconds: 10\n      timeoutSeconds: 5\n      successThreshold: 1\n      failureThreshold: 6\n    image:\n      registry: *GLOBAL_IMAGE_REGISTRY\n      repository: signoz/zookeeper\n      tag: 3.7.1\n    replicaCount: 1\n    namespaceOverride: \"\"\n    resources:\n      limits: {}\n      requests:\n        memory: 256Mi\n        cpu: 100m\n  namespace: \"\"\n  nameOverride: \"\"\n  fullnameOverride: \"\"\n  cluster: cluster\n  database: signoz_metrics\n  traceDatabase: signoz_traces\n  logDatabase: signoz_logs\n  meterDatabase: signoz_meter\n  user: admin\n  password: 27ff0399-0d3a-4bd8-919d-17c2181e6fb9\n  image:\n    registry: docker.io\n    repository: clickhouse/clickhouse-server\n    tag: 25.5.6\n    pullPolicy: IfNotPresent\n  imagePullSecrets: []\n  annotations: {}\n  serviceAccount:\n    create: true\n    annotations: {}\n    name:\n  service:\n    annotations: {}\n    type: ClusterIP\n    httpPort: 8123\n    tcpPort: 9000\n  secure: false\n  verify: false\n  externalZookeeper: {}\n  nodeSelector: {}\n  tolerations: []\n  affinity: {}\n  resources:\n    requests:\n      cpu: 100m\n      memory: 200Mi\n  securityContext:\n    enabled: true\n    runAsUser: 101\n    runAsGroup: 101\n    fsGroup: 101\n    fsGroupChangePolicy: OnRootMismatch\n  allowedNetworkIps:\n    - \"10.0.0.0/8\"\n    - \"100.64.0.0/10\"\n    - \"172.16.0.0/12\"\n    - \"192.0.0.0/24\"\n    - \"198.18.0.0/15\"\n    - \"192.168.0.0/16\"\n  persistence:\n    enabled: true\n    existingClaim: \"\"\n    storageClass: null\n    accessModes:\n      - ReadWriteOnce\n    size: 2Gi\n  profiles: {}\n  defaultProfiles:\n    default/allow_experimental_window_functions: \"1\"\n    default/allow_nondeterministic_mutations: \"1\"\n    default/secondary_indices_enable_bulk_filtering: \"0\"\n    admin/secondary_indices_enable_bulk_filtering: \"0\"\n    default/query_plan_max_limit_for_lazy_materialization: \"0\"\n    admin/query_plan_max_limit_for_lazy_materialization: \"0\"\n  initContainers:\n    enabled: true\n    udf:\n      enabled: true\n      image:\n        registry: docker.io\n        repository: alpine\n        tag: 3.18.2\n        pullPolicy: IfNotPresent\n      command:\n        - sh\n        - -c\n        - |\n          set -e\n          version=\"v0.0.1\"\n          node_os=$(uname -s | tr '[:upper:]' '[:lower:]')\n          node_arch=$(uname -m | sed s/aarch64/arm64/ | sed s/x86_64/amd64/)\n          echo \"Fetching histogram-binary for ${node_os}/${node_arch}\"\n          cd /tmp\n          wget -O histogram-quantile.tar.gz \"https://github.com/SigNoz/signoz/releases/download/histogram-quantile%2F${version}/histogram-quantile_${node_os}_${node_arch}.tar.gz\"\n          tar -xzf histogram-quantile.tar.gz\n          chmod +x histogram-quantile\n          mv histogram-quantile /var/lib/clickhouse/user_scripts/histogramQuantile\n          echo \"histogram-quantile installed successfully\"\n    init:\n      enabled: false\n      image:\n        registry: docker.io\n        repository: busybox\n        tag: 1.35\n        pullPolicy: IfNotPresent\n      command:\n        - /bin/sh\n        - -c\n        - |\n          set -e\n          until curl -s -o /dev/null http://signoz-clickhouse:8123/\n          do sleep 1\n          done\n  layout:\n    shardsCount: 1\n    replicasCount: 1\n  settings:\n    prometheus/endpoint: /metrics\n    prometheus/port: 9363\n  defaultSettings:\n    format_schema_path: /etc/clickhouse-server/config.d/\n    user_scripts_path: /var/lib/clickhouse/user_scripts/\n    user_defined_executable_functions_config: '/etc/clickhouse-server/functions/custom-functions.xml'\n  podAnnotations:\n    signoz.io/scrape: 'true'\n    signoz.io/port: '9363'\n    signoz.io/path: /metrics\n  podDistribution: []\n  coldStorage:\n    enabled: false\n  files:\n    config.d/formatting.xml: |\n      <clickhouse>\n        <logger>\n          <formatting replace=\"replace\">\n            <type>json</type>\n            <names>\n              <date_time>date_time</date_time>\n              <thread_name>thread_name</thread_name>\n              <thread_id>thread_id</thread_id>\n              <level>level</level>\n              <query_id>query_id</query_id>\n              <logger_name>logger_name</logger_name>\n              <message>message</message>\n              <source_file>source_file</source_file>\n              <source_line>source_line</source_line>\n            </names>\n          </formatting>\n        </logger>\n      </clickhouse>\n    config.d/crash.xml: |\n      <clickhouse>\n        <send_crash_reports replace=\"replace\">\n          <enabled>false</enabled>\n        </send_crash_reports>\n      </clickhouse>\n    config.d/load.xml: |\n      <clickhouse>\n        <async_load_databases replace=\"replace\">false</async_load_databases>\n      </clickhouse>\n    config.d/system_log.xml: |\n      <clickhouse>\n        <text_log>\n          <ttl>event_date + INTERVAL 3 DAY DELETE</ttl>\n        </text_log>\n        <latency_log>\n          <ttl>event_date + INTERVAL 3 DAY DELETE</ttl>\n        </latency_log>\n        <error_log>\n          <ttl>event_date + INTERVAL 7 DAY DELETE</ttl>\n        </error_log>\n        <query_metric_log>\n          <ttl>event_date + INTERVAL 3 DAY DELETE</ttl>\n        </query_metric_log>\n      </clickhouse>\n  installCustomStorageClass: false\n  clickhouseOperator:\n    name: operator\n    version: 0.21.2\n    image:\n      registry: docker.io\n      repository: altinity/clickhouse-operator\n      tag: 0.21.2\n      pullPolicy: IfNotPresent\n    imagePullSecrets: []\n    serviceAccount:\n      create: true\n      annotations: {}\n      name:\n    logger:\n      level: information\n      size: 1000M\n      count: 10\n      console: 1\n    queryLog:\n      ttl: 30\n      flushInterval: 7500\n    partLog:\n      ttl: 30\n      flushInterval: 7500\n    traceLog:\n      ttl: 7\n      flushInterval: 7500\n    asynchronousInsertLog:\n      ttl: 7\n      flushInterval: 7500\n    asynchronousMetricLog:\n      ttl: 30\n      flushInterval: 7500\n    backupLog:\n      ttl: 7\n      flushInterval: 7500\n    blobStorageLog:\n      ttl: 30\n      flushInterval: 7500\n    crashLog:\n      ttl: 30\n      flushInterval: 7500\n    metricLog:\n      ttl: 30\n      flushInterval: 7500\n    queryThreadLog:\n      ttl: 7\n      flushInterval: 7500\n    queryViewsLog:\n      ttl: 15\n      flushInterval: 7500\n    sessionLog:\n      ttl: 30\n      flushInterval: 7500\n    zookeeperLog:\n      ttl: 30\n      flushInterval: 7500\n    processorsProfileLog:\n      ttl: 7\n      flushInterval: 7500\n    podAnnotations:\n      signoz.io/port: '8888'\n      signoz.io/scrape: 'true'\n    nodeSelector: {}\n    metricsExporter:\n      name: metrics-exporter\n      service:\n        annotations: {}\n        type: ClusterIP\n        port: 8888\n      image:\n        registry: docker.io\n        repository: altinity/metrics-exporter\n        tag: 0.21.2\n        pullPolicy: IfNotPresent\nexternalClickhouse:\nsignoz:\n  name: \"signoz\"\n  replicaCount: 1\n  image:\n    registry: docker.io\n    repository: signoz/signoz\n    tag: v0.105.1\n    pullPolicy: IfNotPresent\n  imagePullSecrets: []\n  serviceAccount:\n    create: true\n    annotations: {}\n    name:\n  service:\n    annotations: {}\n    labels: {}\n    type: ClusterIP\n    port: 8080\n    internalPort: 8085\n    opampPort: 4320\n    nodePort: null\n    internalNodePort: null\n    opampInternalNodePort: null\n  annotations: []\n  additionalArgs: []\n  env:\n    signoz_telemetrystore_provider: clickhouse\n    dot_metrics_enabled: true\n    signoz_emailing_enabled: false\n    signoz_prometheus_active_query_tracker_enabled: false\n    signoz_alertmanager_provider: signoz\n    signoz_alertmanager_signoz_external__url: http://localhost:8080\n  initContainers:\n    init:\n      enabled: true\n      image:\n        registry: docker.io\n        repository: busybox\n        tag: 1.35\n        pullPolicy: IfNotPresent\n      command:\n        delay: 5\n        endpoint: /ping\n        waitMessage: \"waiting for clickhouseDB\"\n        doneMessage: \"clickhouse ready, starting query service now\"\n      resources: {}\n    migration:\n      enabled: false\n      image:\n        registry: docker.io\n        repository: busybox\n        tag: 1.35\n        pullPolicy: IfNotPresent\n      args: []\n      command: []\n      resources: {}\n  podSecurityContext: {}\n  podAnnotations: {}\n  securityContext: {}\n  additionalVolumeMounts: []\n  additionalVolumes: []\n  livenessProbe:\n    enabled: true\n    port: http\n    path: /api/v1/health\n    initialDelaySeconds: 5\n    periodSeconds: 10\n    timeoutSeconds: 5\n    failureThreshold: 6\n    successThreshold: 1\n  readinessProbe:\n    enabled: true\n    port: http\n    path: /api/v1/health?live=1\n    initialDelaySeconds: 5\n    periodSeconds: 10\n    timeoutSeconds: 5\n    failureThreshold: 6\n    successThreshold: 1\n  customLivenessProbe: {}\n  customReadinessProbe: {}\n  ingress:\n    enabled: false\n  resources:\n    requests:\n      cpu: 100m\n      memory: 100Mi\n  priorityClassName: \"\"\n  nodeSelector: {}\n  tolerations: []\n  affinity: {}\n  topologySpreadConstraints: []\n  persistence:\n    enabled: true\n    existingClaim: \n    storageClass: null\n    accessModes:\n      - ReadWriteOnce\n    size: 1Gi\nschemaMigrator:\n  enabled: true\n  name: \"schema-migrator\"\n  image:\n    registry: docker.io\n    repository: signoz/signoz-schema-migrator\n    tag: v0.129.7\n    pullPolicy: IfNotPresent\n  args:\n    - \"--up=\"\n  annotations: {}\n  upgradeHelmHooks: true\n  enableReplication: false\n  nodeSelector: {}\n  tolerations: []\n  affinity: {}\n  topologySpreadConstraints: []\n  initContainers:\n    init:\n      enabled: true\n      image:\n        registry: docker.io\n        repository: busybox\n        tag: 1.35\n        pullPolicy: IfNotPresent\n      command:\n        delay: 5\n        endpoint: /ping\n        waitMessage: \"waiting for clickhouseDB\"\n        doneMessage: \"clickhouse ready, starting schema migrator now\"\n      resources: {}\n    chReady:\n      enabled: true\n      image:\n        registry: docker.io\n        repository: clickhouse/clickhouse-server\n        tag: 25.5.6\n        pullPolicy: IfNotPresent\n      command:\n        - \"sh\"\n        - \"-c\"\n        - |\n          echo \"Running clickhouse ready check\"\n          while true\n          do\n            version=\"$(CLICKHOUSE_VERSION)\"\n            shards=\"$(CLICKHOUSE_SHARDS)\"\n            replicas=\"$(CLICKHOUSE_REPLICAS)\"\n            current_version=\"$(clickhouse client --host ${CLICKHOUSE_HOST} --port ${CLICKHOUSE_PORT} --user \"${CLICKHOUSE_USER}\" --password \"${CLICKHOUSE_PASSWORD}\" -q \"SELECT version()\")\"\n            if [ -z \"$current_version\" ]; then\n              echo \"waiting for clickhouse to be ready\"\n              sleep 5\n              continue\n            fi\n            if [ -z \"$(echo \"$current_version\" | grep \"$version\")\" ]; then\n              echo \"expected version: $version, current version: $current_version\"\n              echo \"waiting for clickhouse with correct version\"\n              sleep 5\n              continue\n            fi\n            current_shards=\"$(clickhouse client --host ${CLICKHOUSE_HOST} --port ${CLICKHOUSE_PORT} --user \"${CLICKHOUSE_USER}\" --password \"${CLICKHOUSE_PASSWORD}\" -q \"SELECT count(DISTINCT(shard_num)) FROM system.clusters WHERE cluster = '${CLICKHOUSE_CLUSTER}'\")\"\n            if [ -z \"$current_shards\" ]; then\n              echo \"waiting for clickhouse to be ready\"\n              sleep 5\n              continue\n            fi\n            if [ \"$current_shards\" -ne \"$shards\" ]; then\n              echo \"expected shard count: $shards, current shard count: $current_shards\"\n              echo \"waiting for clickhouse with correct shard count\"\n              sleep 5\n              continue\n            fi\n            current_replicas=\"$(clickhouse client --host ${CLICKHOUSE_HOST} --port ${CLICKHOUSE_PORT} --user \"${CLICKHOUSE_USER}\" --password \"${CLICKHOUSE_PASSWORD}\" -q \"SELECT count(DISTINCT(replica_num)) FROM system.clusters WHERE cluster = '${CLICKHOUSE_CLUSTER}'\")\"\n            if [ -z \"$current_replicas\" ]; then\n              echo \"waiting for clickhouse to be ready\"\n              sleep 5\n              continue\n            fi\n            if [ \"$current_replicas\" -ne \"$replicas\" ]; then\n              echo \"expected replica count: $replicas, current replica count: $current_replicas\"\n              echo \"waiting for clickhouse with correct replica count\"\n              sleep 5\n              continue\n            fi\n            break\n          done\n          echo \"clickhouse ready, starting schema migrator now\"\n      resources: {}\n    wait:\n      enabled: true\n      image:\n        registry: docker.io\n        repository: groundnuty/k8s-wait-for\n        tag: v2.0\n        pullPolicy: IfNotPresent\n      env: []\n      resources: {}\n  serviceAccount:\n    create: true\n    annotations: {}\n    name:\n  role:\n    create: true\n    annotations: {}\n    name: \n    rules:\n      - apiGroups: [\"batch\"]\n        resources: [\"jobs\"]\n        verbs: [\"get\", \"list\", \"watch\"]\n    roleBinding:\n      annotations: {}\n      name: \notelCollector:\n  name: \"otel-collector\"\n  image:\n    registry: docker.io\n    repository: signoz/signoz-otel-collector\n    tag: v0.129.7\n    pullPolicy: IfNotPresent\n  imagePullSecrets: []\n  initContainers:\n    init:\n      enabled: false\n      image:\n        registry: docker.io\n        repository: busybox\n        tag: 1.35\n        pullPolicy: IfNotPresent\n      command:\n        delay: 5\n        endpoint: /ping\n        waitMessage: \"waiting for clickhouseDB\"\n        doneMessage: \"clickhouse ready, starting otel collector now\"\n      resources: {}\n  command:\n    name: /signoz-otel-collector\n    extraArgs:\n      - --feature-gates=-pkg.translator.prometheus.NormalizeName\n  configMap:\n    create: true\n  serviceAccount:\n    create: true\n    annotations: {}\n    name: \"\"\n  service:\n    annotations: {}\n    labels: {}\n    type: ClusterIP\n    loadBalancerSourceRanges: []\n  annotations:\n  podAnnotations:\n    signoz.io/scrape: 'true'\n    signoz.io/port: '8888'\n  podLabels: {}\n  additionalEnvs: {}\n  lowCardinalityExceptionGrouping: false\n  minReadySeconds: 5\n  progressDeadlineSeconds: 600\n  replicaCount: 1\n  clusterRole:\n    create: true\n    annotations: {}\n    name: \n    rules:\n      - apiGroups: [\"\"]\n        resources: [\"events\", \"pods\", \"pods/status\", \"namespaces\", \"namespaces/status\", \"nodes\", \"nodes/spec\", \"replicationcontrollers\", \"replicationcontrollers/status\", \"resourcequotas\", \"services\"]\n        verbs: [\"get\", \"list\", \"watch\"]\n      - apiGroups: [\"apps\"]\n        resources: [\"replicasets\", \"deployments\", \"daemonsets\", \"statefulsets\"]\n        verbs: [\"get\", \"list\", \"watch\"]\n      - apiGroups: [\"extensions\"]\n        resources: [\"replicasets\", \"daemonsets\", \"deployments\"]\n        verbs: [\"get\", \"list\", \"watch\"]\n      - apiGroups: [\"batch\"]\n        resources: [\"jobs\", \"cronjobs\"]\n        verbs: [\"get\", \"list\", \"watch\"]\n      - apiGroups: [\"autoscaling\"]\n        resources: [\"horizontalpodautoscalers\"]\n        verbs: [\"get\", \"list\", \"watch\"]\n    clusterRoleBinding:\n      annotations: {}\n      name: \n  ports:\n    otlp:\n      enabled: true\n      containerPort: 4317\n      servicePort: 4317\n      nodePort: \n      protocol: TCP\n    otlp-http:\n      enabled: true\n      containerPort: 4318\n      servicePort: 4318\n      nodePort: \n      protocol: TCP\n    metrics:\n      enabled: true\n      containerPort: 8888\n      servicePort: 8888\n      nodePort: \n      protocol: TCP\n    syslog: \n      enabled: true \n      containerPort: 54527\n      servicePort: 54527 \n      nodePort: \n      protocol: TCP\n  livenessProbe:\n    enabled: true\n    port: 13133\n    path: /\n    initialDelaySeconds: 5\n    periodSeconds: 10\n    timeoutSeconds: 5\n    failureThreshold: 6\n    successThreshold: 1\n  readinessProbe:\n    enabled: true\n    port: 13133\n    path: /\n    initialDelaySeconds: 5\n    periodSeconds: 10\n    timeoutSeconds: 5\n    failureThreshold: 6\n    successThreshold: 1\n  customLivenessProbe: {}\n  customReadinessProbe: {}\n  extraVolumeMounts: []\n  extraVolumes: []\n  ingress:\n    enabled: false\n  resources:\n    requests:\n      cpu: 100m\n      memory: 200Mi\n  priorityClassName: \n  nodeSelector: {}\n  tolerations: []\n  affinity: {}\n  topologySpreadConstraints:\n    - maxSkew: 1\n      topologyKey: kubernetes.io/hostname\n      whenUnsatisfiable: ScheduleAnyway\n      labelSelector:\n        matchLabels:\n          app.kubernetes.io/component: otel-collector\n  podSecurityContext: {}\n  securityContext: {}\n  autoscaling:\n    enabled: false\n    minReplicas: 1\n    maxReplicas: 11\n    targetCPUUtilizationPercentage: 50\n    targetMemoryUtilizationPercentage: 50\n    behavior: {}\n    autoscalingTemplate: []\n    keda:\n      annotations:\n      enabled: false\n      pollingInterval: \"30\"\n      cooldownPeriod: \"300\"\n      minReplicaCount: \"1\"\n      maxReplicaCount: \"5\"\n      triggers: []\n  config:\n    receivers:\n      otlp:\n        protocols:\n          grpc:\n            endpoint: 0.0.0.0:4317\n            max_recv_msg_size_mib: 16\n          http:\n            endpoint: 0.0.0.0:4318\n      syslog:\n        tcp:\n          listen_address: 0.0.0.0:54527\n        protocol: rfc3164\n        location: UTC\n        operators:\n        - type: move\n          from: attributes.message\n          to: body\n      k8s_cluster:\n        collection_interval: 30s\n        allocatable_types_to_report: [\"cpu\", \"memory\", \"disk\"]\n    processors:\n      batch:\n        send_batch_size: 50000\n        timeout: 1s\n      k8sattributes:\n        auth_type: \"serviceAccount\"\n        passthrough: false\n        extract:\n          metadata:\n            - k8s.pod.name\n            - k8s.pod.uid\n            - k8s.deployment.name\n            - k8s.namespace.name\n            - k8s.node.name\n            - k8s.pod.start_time\n            - service.namespace\n            - service.name\n            - service.version\n            - service.instance.id\n          otel_annotations: true\n    extensions:\n      health_check:\n        endpoint: 0.0.0.0:13133\n    exporters:\n      clickhousetraces:\n        datasource: tcp://${env:CLICKHOUSE_USER}:${env:CLICKHOUSE_PASSWORD}@${env:CLICKHOUSE_HOST}:${env:CLICKHOUSE_PORT}/${env:CLICKHOUSE_TRACE_DATABASE}\n        low_cardinal_exception_grouping: ${env:LOW_CARDINAL_EXCEPTION_GROUPING}\n        use_new_schema: true\n      signozclickhousemetrics:\n        dsn: tcp://${env:CLICKHOUSE_USER}:${env:CLICKHOUSE_PASSWORD}@${env:CLICKHOUSE_HOST}:${env:CLICKHOUSE_PORT}/${env:CLICKHOUSE_DATABASE}\n        timeout: 45s\n      clickhouselogsexporter:\n        dsn: tcp://${env:CLICKHOUSE_USER}:${env:CLICKHOUSE_PASSWORD}@${env:CLICKHOUSE_HOST}:${env:CLICKHOUSE_PORT}/${env:CLICKHOUSE_LOG_DATABASE}\n        timeout: 10s\n        use_new_schema: true\n      otlphttp/victoriametrics:\n        compression: gzip\n        encoding: proto\n        metrics_endpoint: http://victoriametrics-svc.metrics:8428/opentelemetry/v1/metrics\n        logs_endpoint: http://victorialogs-svc.logs:9428/insert/opentelemetry/v1/logs\n        tls:\n          insecure: true\n    service:\n      telemetry:\n        logs:\n          encoding: json\n      extensions: [health_check]\n      pipelines:\n        traces:\n          receivers: [otlp]\n          processors: [batch, k8sattributes]\n          exporters: [clickhousetraces]\n        metrics:\n          receivers: [otlp, k8s_cluster ]\n          processors: [batch, k8sattributes]\n          exporters: [signozclickhousemetrics, otlphttp/victoriametrics]\n        logs:\n          receivers: [otlp, syslog]\n          processors: [batch, k8sattributes]\n          exporters: [clickhouselogsexporter, otlphttp/victoriametrics]\npostgresql:\n  enabled: false\nsignoz-otel-gateway:\n  enabled: false\nredpanda:\n  enabled: false\n"
+  values.yaml: |
+    global:
+      imageRegistry: &GLOBAL_IMAGE_REGISTRY null
+      storageClass: nfs-k8s-keep
+      clusterDomain: cluster.local
+      clusterName:
+      cloud: other
+    nameOverride:
+    fullnameOverride:
+    clusterName:
+    imagePullSecrets: []
+    clickhouse:
+      enabled: true
+      zookeeper:
+        enabled: true
+        podAnnotations:
+          signoz.io/scrape: "true"
+          signoz.io/port: "9141"
+          signoz.io/path: "/metrics"
+        metrics:
+          enabled: true
+        logLevel: INFO
+        livenessProbe:
+          enabled: false
+        readinessProbe:
+          enabled: false
+        customLivenessProbe:
+          exec:
+            command: ['/bin/bash', '-c', 'curl -s -m 2 http://localhost:8080/commands/ruok | grep ruok']
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 6
+        customReadinessProbe:
+          exec:
+            command: ['/bin/bash', '-c', 'curl -s -m 2 http://localhost:8080/commands/ruok | grep error | grep null']
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 6
+        image:
+          registry: *GLOBAL_IMAGE_REGISTRY
+          repository: signoz/zookeeper
+          tag: 3.7.1
+        replicaCount: 1
+        namespaceOverride: ""
+        resources:
+          limits: {}
+          requests:
+            memory: 256Mi
+            cpu: 100m
+      namespace: ""
+      nameOverride: ""
+      fullnameOverride: ""
+      cluster: cluster
+      database: signoz_metrics
+      traceDatabase: signoz_traces
+      logDatabase: signoz_logs
+      meterDatabase: signoz_meter
+      user: admin
+      password: 27ff0399-0d3a-4bd8-919d-17c2181e6fb9
+      image:
+        registry: docker.io
+        repository: clickhouse/clickhouse-server
+        tag: 25.5.6
+        pullPolicy: IfNotPresent
+      imagePullSecrets: []
+      annotations: {}
+      serviceAccount:
+        create: true
+        annotations: {}
+        name:
+      service:
+        annotations: {}
+        type: ClusterIP
+        httpPort: 8123
+        tcpPort: 9000
+      secure: false
+      verify: false
+      externalZookeeper: {}
+      nodeSelector: {}
+      tolerations: []
+      affinity: {}
+      resources:
+        requests:
+          cpu: 100m
+          memory: 200Mi
+      securityContext:
+        enabled: true
+        runAsUser: 101
+        runAsGroup: 101
+        fsGroup: 101
+        fsGroupChangePolicy: OnRootMismatch
+      allowedNetworkIps:
+        - "10.0.0.0/8"
+        - "100.64.0.0/10"
+        - "172.16.0.0/12"
+        - "192.0.0.0/24"
+        - "198.18.0.0/15"
+        - "192.168.0.0/16"
+      persistence:
+        enabled: true
+        existingClaim: ""
+        storageClass: null
+        accessModes:
+          - ReadWriteOnce
+        size: 2Gi
+      profiles: {}
+      defaultProfiles:
+        default/allow_experimental_window_functions: "1"
+        default/allow_nondeterministic_mutations: "1"
+        default/secondary_indices_enable_bulk_filtering: "0"
+        admin/secondary_indices_enable_bulk_filtering: "0"
+        default/query_plan_max_limit_for_lazy_materialization: "0"
+        admin/query_plan_max_limit_for_lazy_materialization: "0"
+      initContainers:
+        enabled: true
+        udf:
+          enabled: true
+          image:
+            registry: docker.io
+            repository: alpine
+            tag: 3.18.2
+            pullPolicy: IfNotPresent
+          command:
+            - sh
+            - -c
+            - |
+              set -e
+              version="v0.0.1"
+              node_os=$(uname -s | tr '[:upper:]' '[:lower:]')
+              node_arch=$(uname -m | sed s/aarch64/arm64/ | sed s/x86_64/amd64/)
+              echo "Fetching histogram-binary for ${node_os}/${node_arch}"
+              cd /tmp
+              wget -O histogram-quantile.tar.gz "https://github.com/SigNoz/signoz/releases/download/histogram-quantile%2F${version}/histogram-quantile_${node_os}_${node_arch}.tar.gz"
+              tar -xzf histogram-quantile.tar.gz
+              chmod +x histogram-quantile
+              mv histogram-quantile /var/lib/clickhouse/user_scripts/histogramQuantile
+              echo "histogram-quantile installed successfully"
+        init:
+          enabled: false
+          image:
+            registry: docker.io
+            repository: busybox
+            tag: 1.35
+            pullPolicy: IfNotPresent
+          command:
+            - /bin/sh
+            - -c
+            - |
+              set -e
+              until curl -s -o /dev/null http://signoz-clickhouse:8123/
+              do sleep 1
+              done
+      layout:
+        shardsCount: 1
+        replicasCount: 1
+      settings:
+        prometheus/endpoint: /metrics
+        prometheus/port: 9363
+      defaultSettings:
+        format_schema_path: /etc/clickhouse-server/config.d/
+        user_scripts_path: /var/lib/clickhouse/user_scripts/
+        user_defined_executable_functions_config: '/etc/clickhouse-server/functions/custom-functions.xml'
+      podAnnotations:
+        signoz.io/scrape: 'true'
+        signoz.io/port: '9363'
+        signoz.io/path: /metrics
+      podDistribution: []
+      coldStorage:
+        enabled: false
+      files:
+        config.d/formatting.xml: |
+          <clickhouse>
+            <logger>
+              <formatting replace="replace">
+                <type>json</type>
+                <names>
+                  <date_time>date_time</date_time>
+                  <thread_name>thread_name</thread_name>
+                  <thread_id>thread_id</thread_id>
+                  <level>level</level>
+                  <query_id>query_id</query_id>
+                  <logger_name>logger_name</logger_name>
+                  <message>message</message>
+                  <source_file>source_file</source_file>
+                  <source_line>source_line</source_line>
+                </names>
+              </formatting>
+            </logger>
+          </clickhouse>
+        config.d/crash.xml: |
+          <clickhouse>
+            <send_crash_reports replace="replace">
+              <enabled>false</enabled>
+            </send_crash_reports>
+          </clickhouse>
+        config.d/load.xml: |
+          <clickhouse>
+            <async_load_databases replace="replace">false</async_load_databases>
+          </clickhouse>
+        config.d/system_log.xml: |
+          <clickhouse>
+            <text_log>
+              <ttl>event_date + INTERVAL 3 DAY DELETE</ttl>
+            </text_log>
+            <latency_log>
+              <ttl>event_date + INTERVAL 3 DAY DELETE</ttl>
+            </latency_log>
+            <error_log>
+              <ttl>event_date + INTERVAL 7 DAY DELETE</ttl>
+            </error_log>
+            <query_metric_log>
+              <ttl>event_date + INTERVAL 3 DAY DELETE</ttl>
+            </query_metric_log>
+          </clickhouse>
+      installCustomStorageClass: false
+      clickhouseOperator:
+        name: operator
+        version: 0.21.2
+        image:
+          registry: docker.io
+          repository: altinity/clickhouse-operator
+          tag: 0.21.2
+          pullPolicy: IfNotPresent
+        imagePullSecrets: []
+        serviceAccount:
+          create: true
+          annotations: {}
+          name:
+        logger:
+          level: information
+          size: 1000M
+          count: 10
+          console: 1
+        queryLog:
+          ttl: 30
+          flushInterval: 7500
+        partLog:
+          ttl: 30
+          flushInterval: 7500
+        traceLog:
+          ttl: 7
+          flushInterval: 7500
+        asynchronousInsertLog:
+          ttl: 7
+          flushInterval: 7500
+        asynchronousMetricLog:
+          ttl: 30
+          flushInterval: 7500
+        backupLog:
+          ttl: 7
+          flushInterval: 7500
+        blobStorageLog:
+          ttl: 30
+          flushInterval: 7500
+        crashLog:
+          ttl: 30
+          flushInterval: 7500
+        metricLog:
+          ttl: 30
+          flushInterval: 7500
+        queryThreadLog:
+          ttl: 7
+          flushInterval: 7500
+        queryViewsLog:
+          ttl: 15
+          flushInterval: 7500
+        sessionLog:
+          ttl: 30
+          flushInterval: 7500
+        zookeeperLog:
+          ttl: 30
+          flushInterval: 7500
+        processorsProfileLog:
+          ttl: 7
+          flushInterval: 7500
+        podAnnotations:
+          signoz.io/port: '8888'
+          signoz.io/scrape: 'true'
+        nodeSelector: {}
+        metricsExporter:
+          name: metrics-exporter
+          service:
+            annotations: {}
+            type: ClusterIP
+            port: 8888
+          image:
+            registry: docker.io
+            repository: altinity/metrics-exporter
+            tag: 0.21.2
+            pullPolicy: IfNotPresent
+    externalClickhouse:
+    signoz:
+      name: "signoz"
+      replicaCount: 1
+      image:
+        registry: docker.io
+        repository: signoz/signoz
+        tag: v0.105.1
+        pullPolicy: IfNotPresent
+      imagePullSecrets: []
+      serviceAccount:
+        create: true
+        annotations: {}
+        name:
+      service:
+        annotations: {}
+        labels: {}
+        type: ClusterIP
+        port: 8080
+        internalPort: 8085
+        opampPort: 4320
+        nodePort: null
+        internalNodePort: null
+        opampInternalNodePort: null
+      annotations: []
+      additionalArgs: []
+      env:
+        signoz_telemetrystore_provider: clickhouse
+        dot_metrics_enabled: true
+        signoz_emailing_enabled: false
+        signoz_prometheus_active_query_tracker_enabled: false
+        signoz_alertmanager_provider: signoz
+        signoz_alertmanager_signoz_external__url: http://localhost:8080
+      initContainers:
+        init:
+          enabled: true
+          image:
+            registry: docker.io
+            repository: busybox
+            tag: 1.35
+            pullPolicy: IfNotPresent
+          command:
+            delay: 5
+            endpoint: /ping
+            waitMessage: "waiting for clickhouseDB"
+            doneMessage: "clickhouse ready, starting query service now"
+          resources: {}
+        migration:
+          enabled: false
+          image:
+            registry: docker.io
+            repository: busybox
+            tag: 1.35
+            pullPolicy: IfNotPresent
+          args: []
+          command: []
+          resources: {}
+      podSecurityContext: {}
+      podAnnotations: {}
+      securityContext: {}
+      additionalVolumeMounts: []
+      additionalVolumes: []
+      livenessProbe:
+        enabled: true
+        port: http
+        path: /api/v1/health
+        initialDelaySeconds: 5
+        periodSeconds: 10
+        timeoutSeconds: 5
+        failureThreshold: 6
+        successThreshold: 1
+      readinessProbe:
+        enabled: true
+        port: http
+        path: /api/v1/health?live=1
+        initialDelaySeconds: 5
+        periodSeconds: 10
+        timeoutSeconds: 5
+        failureThreshold: 6
+        successThreshold: 1
+      customLivenessProbe: {}
+      customReadinessProbe: {}
+      ingress:
+        enabled: false
+      resources:
+        requests:
+          cpu: 100m
+          memory: 100Mi
+      priorityClassName: ""
+      nodeSelector: {}
+      tolerations: []
+      affinity: {}
+      topologySpreadConstraints: []
+      persistence:
+        enabled: true
+        existingClaim: 
+        storageClass: null
+        accessModes:
+          - ReadWriteOnce
+        size: 1Gi
+    schemaMigrator:
+      enabled: true
+      name: "schema-migrator"
+      image:
+        registry: docker.io
+        repository: signoz/signoz-schema-migrator
+        tag: v0.129.7
+        pullPolicy: IfNotPresent
+      args:
+        - "--up="
+      annotations: {}
+      upgradeHelmHooks: true
+      enableReplication: false
+      nodeSelector: {}
+      tolerations: []
+      affinity: {}
+      topologySpreadConstraints: []
+      initContainers:
+        init:
+          enabled: true
+          image:
+            registry: docker.io
+            repository: busybox
+            tag: 1.35
+            pullPolicy: IfNotPresent
+          command:
+            delay: 5
+            endpoint: /ping
+            waitMessage: "waiting for clickhouseDB"
+            doneMessage: "clickhouse ready, starting schema migrator now"
+          resources: {}
+        chReady:
+          enabled: true
+          image:
+            registry: docker.io
+            repository: clickhouse/clickhouse-server
+            tag: 25.5.6
+            pullPolicy: IfNotPresent
+          command:
+            - "sh"
+            - "-c"
+            - |
+              echo "Running clickhouse ready check"
+              while true
+              do
+                version="$(CLICKHOUSE_VERSION)"
+                shards="$(CLICKHOUSE_SHARDS)"
+                replicas="$(CLICKHOUSE_REPLICAS)"
+                current_version="$(clickhouse client --host ${CLICKHOUSE_HOST} --port ${CLICKHOUSE_PORT} --user "${CLICKHOUSE_USER}" --password "${CLICKHOUSE_PASSWORD}" -q "SELECT version()")"
+                if [ -z "$current_version" ]; then
+                  echo "waiting for clickhouse to be ready"
+                  sleep 5
+                  continue
+                fi
+                if [ -z "$(echo "$current_version" | grep "$version")" ]; then
+                  echo "expected version: $version, current version: $current_version"
+                  echo "waiting for clickhouse with correct version"
+                  sleep 5
+                  continue
+                fi
+                current_shards="$(clickhouse client --host ${CLICKHOUSE_HOST} --port ${CLICKHOUSE_PORT} --user "${CLICKHOUSE_USER}" --password "${CLICKHOUSE_PASSWORD}" -q "SELECT count(DISTINCT(shard_num)) FROM system.clusters WHERE cluster = '${CLICKHOUSE_CLUSTER}'")"
+                if [ -z "$current_shards" ]; then
+                  echo "waiting for clickhouse to be ready"
+                  sleep 5
+                  continue
+                fi
+                if [ "$current_shards" -ne "$shards" ]; then
+                  echo "expected shard count: $shards, current shard count: $current_shards"
+                  echo "waiting for clickhouse with correct shard count"
+                  sleep 5
+                  continue
+                fi
+                current_replicas="$(clickhouse client --host ${CLICKHOUSE_HOST} --port ${CLICKHOUSE_PORT} --user "${CLICKHOUSE_USER}" --password "${CLICKHOUSE_PASSWORD}" -q "SELECT count(DISTINCT(replica_num)) FROM system.clusters WHERE cluster = '${CLICKHOUSE_CLUSTER}'")"
+                if [ -z "$current_replicas" ]; then
+                  echo "waiting for clickhouse to be ready"
+                  sleep 5
+                  continue
+                fi
+                if [ "$current_replicas" -ne "$replicas" ]; then
+                  echo "expected replica count: $replicas, current replica count: $current_replicas"
+                  echo "waiting for clickhouse with correct replica count"
+                  sleep 5
+                  continue
+                fi
+                break
+              done
+              echo "clickhouse ready, starting schema migrator now"
+          resources: {}
+        wait:
+          enabled: true
+          image:
+            registry: docker.io
+            repository: groundnuty/k8s-wait-for
+            tag: v2.0
+            pullPolicy: IfNotPresent
+          env: []
+          resources: {}
+      serviceAccount:
+        create: true
+        annotations: {}
+        name:
+      role:
+        create: true
+        annotations: {}
+        name: 
+        rules:
+          - apiGroups: ["batch"]
+            resources: ["jobs"]
+            verbs: ["get", "list", "watch"]
+        roleBinding:
+          annotations: {}
+          name: 
+    otelCollector:
+      name: "otel-collector"
+      image:
+        registry: docker.io
+        repository: signoz/signoz-otel-collector
+        tag: v0.129.7
+        pullPolicy: IfNotPresent
+      imagePullSecrets: []
+      initContainers:
+        init:
+          enabled: false
+          image:
+            registry: docker.io
+            repository: busybox
+            tag: 1.35
+            pullPolicy: IfNotPresent
+          command:
+            delay: 5
+            endpoint: /ping
+            waitMessage: "waiting for clickhouseDB"
+            doneMessage: "clickhouse ready, starting otel collector now"
+          resources: {}
+      command:
+        name: /signoz-otel-collector
+        extraArgs:
+          - --feature-gates=-pkg.translator.prometheus.NormalizeName
+      configMap:
+        create: true
+      serviceAccount:
+        create: true
+        annotations: {}
+        name: ""
+      service:
+        annotations: {}
+        labels: {}
+        type: ClusterIP
+        loadBalancerSourceRanges: []
+      annotations:
+      podAnnotations:
+        signoz.io/scrape: 'true'
+        signoz.io/port: '8888'
+      podLabels: {}
+      additionalEnvs: {}
+      lowCardinalityExceptionGrouping: false
+      minReadySeconds: 5
+      progressDeadlineSeconds: 600
+      replicaCount: 1
+      clusterRole:
+        create: true
+        annotations: {}
+        name: 
+        rules:
+          - apiGroups: [""]
+            resources: ["events", "pods", "pods/status", "namespaces", "namespaces/status", "nodes", "nodes/spec", "replicationcontrollers", "replicationcontrollers/status", "resourcequotas", "services"]
+            verbs: ["get", "list", "watch"]
+          - apiGroups: ["apps"]
+            resources: ["replicasets", "deployments", "daemonsets", "statefulsets"]
+            verbs: ["get", "list", "watch"]
+          - apiGroups: ["extensions"]
+            resources: ["replicasets", "daemonsets", "deployments"]
+            verbs: ["get", "list", "watch"]
+          - apiGroups: ["batch"]
+            resources: ["jobs", "cronjobs"]
+            verbs: ["get", "list", "watch"]
+          - apiGroups: ["autoscaling"]
+            resources: ["horizontalpodautoscalers"]
+            verbs: ["get", "list", "watch"]
+        clusterRoleBinding:
+          annotations: {}
+          name: 
+      ports:
+        otlp:
+          enabled: true
+          containerPort: 4317
+          servicePort: 4317
+          nodePort: 
+          protocol: TCP
+        otlp-http:
+          enabled: true
+          containerPort: 4318
+          servicePort: 4318
+          nodePort: 
+          protocol: TCP
+        metrics:
+          enabled: true
+          containerPort: 8888
+          servicePort: 8888
+          nodePort: 
+          protocol: TCP
+        syslog: 
+          enabled: true 
+          containerPort: 54527
+          servicePort: 54527 
+          nodePort: 
+          protocol: TCP
+      livenessProbe:
+        enabled: true
+        port: 13133
+        path: /
+        initialDelaySeconds: 5
+        periodSeconds: 10
+        timeoutSeconds: 5
+        failureThreshold: 6
+        successThreshold: 1
+      readinessProbe:
+        enabled: true
+        port: 13133
+        path: /
+        initialDelaySeconds: 5
+        periodSeconds: 10
+        timeoutSeconds: 5
+        failureThreshold: 6
+        successThreshold: 1
+      customLivenessProbe: {}
+      customReadinessProbe: {}
+      extraVolumeMounts: []
+      extraVolumes: []
+      ingress:
+        enabled: false
+      resources:
+        requests:
+          cpu: 100m
+          memory: 200Mi
+      priorityClassName: 
+      nodeSelector: {}
+      tolerations: []
+      affinity: {}
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/component: otel-collector
+      podSecurityContext: {}
+      securityContext: {}
+      autoscaling:
+        enabled: false
+        minReplicas: 1
+        maxReplicas: 11
+        targetCPUUtilizationPercentage: 50
+        targetMemoryUtilizationPercentage: 50
+        behavior: {}
+        autoscalingTemplate: []
+        keda:
+          annotations:
+          enabled: false
+          pollingInterval: "30"
+          cooldownPeriod: "300"
+          minReplicaCount: "1"
+          maxReplicaCount: "5"
+          triggers: []
+      config:
+        receivers:
+          otlp:
+            protocols:
+              grpc:
+                endpoint: 0.0.0.0:4317
+                max_recv_msg_size_mib: 16
+              http:
+                endpoint: 0.0.0.0:4318
+          syslog:
+            tcp:
+              listen_address: 0.0.0.0:54527
+            protocol: rfc3164
+            location: UTC
+          k8s_cluster:
+            collection_interval: 30s
+            allocatable_types_to_report: ["cpu", "memory", "disk"]
+        processors:
+          batch:
+            send_batch_size: 50000
+            timeout: 1s
+          k8sattributes:
+            auth_type: "serviceAccount"
+            passthrough: false
+            extract:
+              metadata:
+                - k8s.pod.name
+                - k8s.pod.uid
+                - k8s.deployment.name
+                - k8s.namespace.name
+                - k8s.node.name
+                - k8s.pod.start_time
+                - service.namespace
+                - service.name
+                - service.version
+                - service.instance.id
+              otel_annotations: true
+        extensions:
+          health_check:
+            endpoint: 0.0.0.0:13133
+        exporters:
+          clickhousetraces:
+            datasource: tcp://${env:CLICKHOUSE_USER}:${env:CLICKHOUSE_PASSWORD}@${env:CLICKHOUSE_HOST}:${env:CLICKHOUSE_PORT}/${env:CLICKHOUSE_TRACE_DATABASE}
+            low_cardinal_exception_grouping: ${env:LOW_CARDINAL_EXCEPTION_GROUPING}
+            use_new_schema: true
+          signozclickhousemetrics:
+            dsn: tcp://${env:CLICKHOUSE_USER}:${env:CLICKHOUSE_PASSWORD}@${env:CLICKHOUSE_HOST}:${env:CLICKHOUSE_PORT}/${env:CLICKHOUSE_DATABASE}
+            timeout: 45s
+          clickhouselogsexporter:
+            dsn: tcp://${env:CLICKHOUSE_USER}:${env:CLICKHOUSE_PASSWORD}@${env:CLICKHOUSE_HOST}:${env:CLICKHOUSE_PORT}/${env:CLICKHOUSE_LOG_DATABASE}
+            timeout: 10s
+            use_new_schema: true
+          otlphttp/victoriametrics:
+            compression: gzip
+            encoding: proto
+            metrics_endpoint: http://victoriametrics-svc.metrics:8428/opentelemetry/v1/metrics
+            logs_endpoint: http://victorialogs-svc.logs:9428/insert/opentelemetry/v1/logs
+            tls:
+              insecure: true
+        service:
+          telemetry:
+            logs:
+              encoding: json
+          extensions: [health_check]
+          pipelines:
+            traces:
+              receivers: [otlp]
+              processors: [batch, k8sattributes]
+              exporters: [clickhousetraces]
+            metrics:
+              receivers: [otlp, k8s_cluster ]
+              processors: [batch, k8sattributes]
+              exporters: [signozclickhousemetrics, otlphttp/victoriametrics]
+            logs:
+              receivers: [otlp, syslog]
+              processors: [batch, k8sattributes]
+              exporters: [clickhouselogsexporter, otlphttp/victoriametrics]
+    postgresql:
+      enabled: false
+    signoz-otel-gateway:
+      enabled: false
+    redpanda:
+      enabled: false
