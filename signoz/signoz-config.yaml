@@ -305,7 +305,7 @@ data:
       image:
         registry: docker.io
         repository: signoz/signoz
-        tag: v0.105.1
+        tag: v0.107.0
         pullPolicy: IfNotPresent
       imagePullSecrets: []
       serviceAccount:
