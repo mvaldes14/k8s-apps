@@ -674,8 +674,10 @@ data:
           syslog:
             tcp:
               listen_address: 0.0.0.0:54527
-            protocol: rfc3164
+            protocol: rfc5424
             location: UTC
+            attributes:
+              syslog: "data"
           k8s_cluster:
             collection_interval: 30s
             allocatable_types_to_report: ["cpu", "memory", "disk"]
