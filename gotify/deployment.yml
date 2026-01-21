@@ -14,36 +14,82 @@ spec:
   template:
     metadata:
       annotations:
-        kubectl.kubernetes.io/default-container:  gotify-deploy
+        kubectl.kubernetes.io/default-container: gotify-server
       labels:
         app: gotify-deploy
     spec:
       containers:
-      - name: gotify-deploy
-        image: gotify/server
-        resources:
-          requests:
-            cpu: 100m
-            memory: 100Mi
-          limits:
-            cpu: 100m
-            memory: 100Mi
-        livenessProbe:
-          tcpSocket:
-            port: 80
-          initialDelaySeconds: 5
-          timeoutSeconds: 5
-          successThreshold: 1
-          failureThreshold: 3
-          periodSeconds: 10
-        ports:
-        - containerPort: 80
-          name: gotify-deploy
-        volumeMounts:
-        - name: gotify-pvc
-          mountPath: /app/data
+        - name: igotify-assistant
+          image: ghcr.io/androidseb25/igotify-notification-assist:latest
+          imagePullPolicy: Always
+          env:
+            - name: GOTIFY_URLS
+              valueFrom:
+                secretKeyRef:
+                  name: gotify-secrets
+                  key: GOTIFY_URL
+            - name: GOTIFY_CLIENT_TOKENS
+              valueFrom:
+                secretKeyRef:
+                  name: gotify-secrets
+                  key: GOTIFY_CLIENT_TOKENS
+            - name: SECNTFY_TOKENS
+              valueFrom:
+                secretKeyRef:
+                  name: gotify-secrets
+                  key: SECNTFY_TOKENS
+            - name: ENABLE_CONSOLE_LOG
+              value: "true"
+            - name: ENABLE_SCALAR_UI
+              value: "true"
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 100m
+              memory: 128Mi
+          livenessProbe:
+            exec:
+              command: ["curl", "-f", "http://localhost:8080/Version"]
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 5
+            initialDelaySeconds: 10
+        - name: gotify-server
+          image: gotify/server
+          imagePullPolicy: Always
+          resources:
+            requests:
+              cpu: 100m
+              memory: 100Mi
+            limits:
+              cpu: 100m
+              memory: 100Mi
+          livenessProbe:
+            tcpSocket:
+              port: 80
+            initialDelaySeconds: 5
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+            periodSeconds: 10
+          readinessProbe:
+            tcpSocket:
+              port: 80
+            initialDelaySeconds: 3
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 3
+            periodSeconds: 5
+          ports:
+            - containerPort: 80
+              name: gotify-deploy
+          volumeMounts:
+            - name: gotify-pvc
+              mountPath: /app/data
       volumes:
-        - name: gotify-pvc 
+        - name: gotify-pvc
           persistentVolumeClaim:
             claimName: gotify-pvc
       restartPolicy: Always
