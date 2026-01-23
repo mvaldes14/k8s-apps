@@ -5,7 +5,7 @@ metadata:
   namespace: gotify
 spec:
   selector:
-    app: gotify-server
+    app: gotify-deploy
   type: ClusterIP
   ports:
     - protocol: TCP
