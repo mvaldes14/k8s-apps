@@ -1,11 +1,11 @@
 apiVersion: notification.toolkit.fluxcd.io/v1beta2
 kind: Alert
 metadata:
-  name: discord 
-  namespace: flux-system 
+  name: discord
+  namespace: flux-system
 spec:
   providerRef:
-    name: discord 
+    name: discord
   eventMetadata:
     summary: "Cluster Event occured"
     cluster: "homelab"
@@ -15,9 +15,7 @@ spec:
       name: '*'
     - kind: HelmRelease
       name: '*'
-    - kind: Kustomization 
-      name: '*'
-    - kind: GitRepository 
+    - kind: Kustomization
       name: '*'
     - kind: ImageUpdateAutomation
       name: '*'
