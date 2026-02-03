@@ -676,8 +676,9 @@ data:
               listen_address: 0.0.0.0:54527
             protocol: rfc5424
             location: UTC
-            attributes:
-              syslog: "data"
+            operators:
+            - type: regex_parser
+              regex: '^CEF:(?P<cef_version>\d+)\|(?P<device_vendor>[^|]+)\|(?P<device_product>[^|]+)\|(?P<device_version>[^|]+)\|(?P<signature_id>[^|]+)\|(?P<name>[^|]+)\|(?P<severity>[^|]+)\|(?P<extension>.*)$'
           k8s_cluster:
             collection_interval: 30s
             allocatable_types_to_report: ["cpu", "memory", "disk"]
