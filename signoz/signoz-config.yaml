@@ -663,6 +663,13 @@ data:
           maxReplicaCount: "5"
           triggers: []
       config:
+        connectors:
+          signozmeter:
+            metrics_flush_interval: 1h
+            dimensions:
+              - name: service.name
+              - name: deployment.environment
+              - name: host.name
         receivers:
           otlp:
             protocols:
@@ -686,6 +693,21 @@ data:
           batch:
             send_batch_size: 50000
             timeout: 1s
+          batch/meter:
+            send_batch_max_size: 25000
+            send_batch_size: 20000
+            timeout: 1s
+          signozspanmetrics/delta:
+            metrics_exporter: signozclickhousemetrics
+            latency_histogram_buckets: [100us, 1ms, 2ms, 6ms, 10ms, 50ms, 100ms, 250ms, 500ms, 1000ms, 1400ms, 2000ms, 5s, 10s, 20s, 40s, 60s]
+            dimensions_cache_size: 100000
+            dimensions:
+              - name: service.namespace
+                default: default
+              - name: deployment.environment
+                default: default
+              - name: signoz.collector.id
+            aggregation_temporality: AGGREGATION_TEMPORALITY_DELTA
           k8sattributes:
             auth_type: "serviceAccount"
             passthrough: false
@@ -717,6 +739,17 @@ data:
             dsn: tcp://${env:CLICKHOUSE_USER}:${env:CLICKHOUSE_PASSWORD}@${env:CLICKHOUSE_HOST}:${env:CLICKHOUSE_PORT}/${env:CLICKHOUSE_LOG_DATABASE}
             timeout: 10s
             use_new_schema: true
+          metadataexporter:
+            dsn: tcp://${env:CLICKHOUSE_USER}:${env:CLICKHOUSE_PASSWORD}@${env:CLICKHOUSE_HOST}:${env:CLICKHOUSE_PORT}/signoz_metadata
+            timeout: 10s
+            tenant_id: ${env:TENANT_ID}
+            cache:
+              provider: in_memory
+          signozclickhousemeter:
+            dsn: tcp://${env:CLICKHOUSE_USER}:${env:CLICKHOUSE_PASSWORD}@${env:CLICKHOUSE_HOST}:${env:CLICKHOUSE_PORT}/${env:CLICKHOUSE_METER_DATABASE}
+            timeout: 45s
+            sending_queue:
+              enabled: false
           otlphttp/victoriametrics:
             compression: gzip
             encoding: proto
@@ -732,16 +765,20 @@ data:
           pipelines:
             traces:
               receivers: [otlp]
-              processors: [batch, k8sattributes]
-              exporters: [clickhousetraces]
+              processors: [signozspanmetrics/delta, batch, k8sattributes]
+              exporters: [clickhousetraces, metadataexporter, signozmeter]
             metrics:
-              receivers: [otlp, k8s_cluster ]
+              receivers: [otlp, k8s_cluster]
               processors: [batch, k8sattributes]
-              exporters: [signozclickhousemetrics, otlphttp/victoriametrics]
+              exporters: [metadataexporter, signozclickhousemetrics, otlphttp/victoriametrics, signozmeter]
             logs:
               receivers: [otlp, syslog]
               processors: [batch, k8sattributes]
-              exporters: [clickhouselogsexporter, otlphttp/victoriametrics]
+              exporters: [clickhouselogsexporter, metadataexporter, otlphttp/victoriametrics, signozmeter]
+            metrics/meter:
+              receivers: [signozmeter]
+              processors: [batch/meter]
+              exporters: [signozclickhousemeter]
     postgresql:
       enabled: false
     signoz-otel-gateway:
