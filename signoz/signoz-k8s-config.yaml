@@ -199,7 +199,14 @@ data:
               exporters: [otlphttp]
             logs:
               exporters: [otlphttp]
-      extraVolumes: []
-      extraVolumeMounts: []
+      extraVolumes:
+        - name: hostfs
+          hostPath:
+            path: /
+      extraVolumeMounts:
+        - name: hostfs
+          mountPath: /hostfs
+          readOnly: true
+          mountPropagation: HostToContainer
     otelDeployment:
       enabled: false
