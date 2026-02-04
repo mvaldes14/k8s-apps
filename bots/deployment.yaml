@@ -82,6 +82,8 @@ spec:
                   key: OTEL_EXPORTER_OTLP_ENDPOINT
             - name: OTEL_ENVIRONMENT
               value: "production"
+            - name: OTEL_INSECURE_ENDPOINT
+              value: "true"
           ports:
             - name: http
               containerPort: 3000
