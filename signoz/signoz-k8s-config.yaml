@@ -17,7 +17,7 @@ data:
     fullnameOverride: ""
     enabled: true
     clusterName: ""
-    otelCollectorEndpoint: otel.local.net
+    otelCollectorEndpoint: signoz-signoz-helm-otel-collector.signoz.svc.cluster.local
     otelInsecure: true
     insecureSkipVerify: false
     signozApiKey: ""
@@ -187,7 +187,7 @@ data:
       config:
         exporters:
           otlphttp:
-            endpoint: http://otel.local.net
+            endpoint: http://signoz-signoz-helm-otel-collector.signoz.svc.cluster.local:4318
         service:
           telemetry:
             logs:
