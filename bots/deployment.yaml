@@ -75,6 +75,13 @@ spec:
                 secretKeyRef:
                   name: bots-secrets
                   key: GOTIFY_APPLICATION_TOKEN
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              valueFrom:
+                secretKeyRef:
+                  name: bots-secrets
+                  key: OTEL_EXPORTER_OTLP_ENDPOINT
+            - name: OTEL_ENVIRONMENT
+              value: "production"
           ports:
             - name: http
               containerPort: 3000
