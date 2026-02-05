@@ -76,10 +76,7 @@ spec:
                   name: bots-secrets
                   key: GOTIFY_APPLICATION_TOKEN
             - name: OTEL_EXPORTER_OTLP_ENDPOINT
-              valueFrom:
-                secretKeyRef:
-                  name: bots-secrets
-                  key: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: signoz-signoz-helm-otel-collector.signoz:4318
             - name: OTEL_ENVIRONMENT
               value: "production"
             - name: OTEL_INSECURE_ENDPOINT
