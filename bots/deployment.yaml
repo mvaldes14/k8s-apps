@@ -65,6 +65,11 @@ spec:
                 secretKeyRef:
                   name: bots-secrets
                   key: TWITCH_CLIENT_SECRET
+            - name: TWITCH_USER_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: bots-secrets
+                  key: TWITCH_USER_TOKEN
             - name: TWITCH_REFRESH_TOKEN
               valueFrom:
                 secretKeyRef:
