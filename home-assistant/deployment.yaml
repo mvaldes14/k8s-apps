@@ -18,6 +18,8 @@ spec:
       labels:
         app: hoa
     spec:
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
       containers:
         - name: hoa
           image: ghcr.io/home-assistant/home-assistant:2025.1
