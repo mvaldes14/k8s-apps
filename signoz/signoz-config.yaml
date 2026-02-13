@@ -601,7 +601,7 @@ data:
           servicePort: 8888
           nodePort: 
           protocol: TCP
-        syslog: 
+        tcplog:
           enabled: true 
           containerPort: 54527
           servicePort: 54527 
@@ -680,11 +680,10 @@ data:
                 max_recv_msg_size_mib: 16
               http:
                 endpoint: 0.0.0.0:4318
-          syslog:
-            tcp:
-              listen_address: 0.0.0.0:54527
-            protocol: rfc5424
-            location: UTC
+          tcplog:
+            listen_address: 0.0.0.0:54527
+            resource:
+              entity: udm
             operators:
             - type: regex_parser
               regex: '^CEF:(?P<cef_version>\d+)\|(?P<device_vendor>[^|]+)\|(?P<device_product>[^|]+)\|(?P<device_version>[^|]+)\|(?P<signature_id>[^|]+)\|(?P<name>[^|]+)\|(?P<severity>[^|]+)\|(?P<extension>.*)$'
@@ -774,7 +773,7 @@ data:
               processors: [batch, k8sattributes]
               exporters: [metadataexporter, signozclickhousemetrics, otlphttp/victoriametrics, signozmeter]
             logs:
-              receivers: [otlp, syslog]
+              receivers: [otlp, tcplog]
               processors: [batch, k8sattributes]
               exporters: [clickhouselogsexporter, metadataexporter, otlphttp/victoriametrics, signozmeter]
             metrics/meter:
