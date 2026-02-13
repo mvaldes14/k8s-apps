@@ -10,4 +10,4 @@ spec:
     name: homelab-repository
   path: "./signoz"
   prune: true
-  timeout: 1m
+  timeout: 30m

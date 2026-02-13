@@ -19,6 +19,7 @@ metadata:
   namespace: signoz
 spec:
   targetNamespace: signoz
+  timeout: 30m
   chart:
     spec:
       chart: signoz
