@@ -176,12 +176,7 @@ data:
         signoz.io/path: /metrics
       podDistribution: []
       coldStorage:
-        enabled: true
-        defaultKeepFreeSpaceBytes: "10485760"
-        type: s3
-        endpoint: http://garage-svc.garage:3900/signoz
-        accessKey: GKedb859501c5f293581b8187a
-        secretAccess: e1baedb9187547cf6701e57802aed66aafde47050dd588c0e5c3c4fcff5d1ce2
+        enabled: false
       files:
         config.d/formatting.xml: |
           <clickhouse>
