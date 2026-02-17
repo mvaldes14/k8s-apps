@@ -16,7 +16,7 @@ spec:
       containers:
         - name: search-deploy
           image: searxng/searxng:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           livenessProbe:
             tcpSocket:
               port: 8080
