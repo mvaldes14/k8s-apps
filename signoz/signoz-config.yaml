@@ -628,9 +628,12 @@ data:
         enabled: false
       resources:
         requests:
-          cpu: 100m
-          memory: 200Mi
-      priorityClassName: 
+          cpu: 500m
+          memory: 1Gi
+        limits:
+          cpu: 2000m
+          memory: 4Gi
+      priorityClassName:
       nodeSelector: {}
       tolerations: []
       affinity: {}
@@ -687,8 +690,8 @@ data:
             allocatable_types_to_report: ["cpu", "memory", "disk"]
         processors:
           batch:
-            send_batch_size: 50000
-            timeout: 1s
+            send_batch_size: 10000
+            timeout: 2s
           batch/meter:
             send_batch_max_size: 25000
             send_batch_size: 20000
@@ -733,8 +736,17 @@ data:
             timeout: 45s
           clickhouselogsexporter:
             dsn: tcp://${env:CLICKHOUSE_USER}:${env:CLICKHOUSE_PASSWORD}@${env:CLICKHOUSE_HOST}:${env:CLICKHOUSE_PORT}/${env:CLICKHOUSE_LOG_DATABASE}
-            timeout: 10s
+            timeout: 30s
             use_new_schema: true
+            sending_queue:
+              enabled: true
+              num_consumers: 4
+              queue_size: 10000
+            retry_on_failure:
+              enabled: true
+              initial_interval: 5s
+              max_interval: 30s
+              max_elapsed_time: 5m
           metadataexporter:
             dsn: tcp://${env:CLICKHOUSE_USER}:${env:CLICKHOUSE_PASSWORD}@${env:CLICKHOUSE_HOST}:${env:CLICKHOUSE_PORT}/signoz_metadata
             timeout: 10s
