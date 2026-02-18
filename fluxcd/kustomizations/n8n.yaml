@@ -10,8 +10,4 @@ spec:
     name: homelab-repository
   path: "./n8n"
   prune: true
-  timeout: 1m
-  decryption:
-    provider: sops
-    secretRef:
-      name: sops-age
+  timeout: 5m
