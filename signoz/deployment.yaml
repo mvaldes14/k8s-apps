@@ -15,6 +15,7 @@ spec:
       labels:
         app: otel-monitor
     spec:
+      serviceAccountName: signoz-signoz-helm-otel-collector
       containers:
       - name: otel-monitor
         image: otel/opentelemetry-collector-contrib:latest
