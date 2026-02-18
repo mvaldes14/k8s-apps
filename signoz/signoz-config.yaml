@@ -529,10 +529,6 @@ data:
             waitMessage: "waiting for clickhouseDB"
             doneMessage: "clickhouse ready, starting otel collector now"
           resources: {}
-      command:
-        name: /signoz-otel-collector
-        extraArgs:
-          - --feature-gates=-pkg.translator.prometheus.NormalizeName
       configMap:
         create: true
       serviceAccount:
