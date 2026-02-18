@@ -28,6 +28,7 @@ spec:
               mountPath: /data
       containers:
         - image: n8nio/n8n:next
+          name: n8n
           command:
             - /bin/sh
           args:
