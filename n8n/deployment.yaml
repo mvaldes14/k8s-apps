@@ -17,7 +17,7 @@ spec:
       annotations:
         prometheus.io/scrape: "true"
         prometheus.io/path: /metrics
-        prometheus.io/port: "5678"
+        prometheus.io/port: "443"
     spec:
       initContainers:
         - name: volume-permissions
@@ -60,9 +60,9 @@ spec:
             - name: WEBHOOK_URL
               value: https://automate.mvaldes.dev
             - name: N8N_METRICS
-              value: true
+              value: 'true'
             - name: N8N_PROXY_HOPS
-              value: 2
+              value: '2'
           ports:
             - containerPort: 5678
           volumeMounts:
