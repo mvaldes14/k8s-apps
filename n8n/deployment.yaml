@@ -23,7 +23,7 @@ spec:
             - name: n8n-pvc
               mountPath: /data
       containers:
-        - image: n8nio/n8n
+        - image: n8nio/n8n:stable
           name: n8n
           command:
             - /bin/sh
