@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: otel-monitor
+  namespace: signoz
+  labels:
+    app: otel-monitor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: otel-monitor
+  template:
+    metadata:
+      labels:
+        app: otel-monitor
+    spec:
+      containers:
+      - name: otel-monitor
+        image: otel/opentelemetry-collector-contrib:latest
+        imagePullPolicy: IfNotPresent
+        args:
+          - "--config=/etc/otel-collector-config/otel-collector-config.yaml"
+        volumeMounts:
+        - mountPath: /etc/otel-collector-config
+          name: otel-config
+          readOnly: true
+      volumes:
+      - name: otel-config
+        configMap:
+          name: otel-monitor-config
+      restartPolicy: Always

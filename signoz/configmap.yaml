@@ -1,0 +1,79 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: otel-monitor-config
+  namespace: signoz
+data:
+  otel-collector-config.yaml: |
+    receivers:
+      httpcheck:
+        metrics:
+              httpcheck.dns.lookup.duration:
+                enabled: true
+              httpcheck.client.connection.duration:
+                enabled: true
+              httpcheck.tls.handshake.duration:
+                enabled: true
+              httpcheck.client.request.duration:
+                enabled: true
+              httpcheck.response.duration:
+                enabled: true
+              httpcheck.tls.cert_remaining:
+                enabled: true
+        targets:
+          - endpoint: https://grafana.mvaldes.dev
+            method: GET
+          - endpoint: https://blog.mvaldes.dev
+            method: GET
+          - endpoint: https://mvaldes.dev
+            method: GET
+          - endpoint: https://umami.mvaldes.dev
+            method: GET
+          - endpoint: https://vault.mvaldes.dev
+            method: GET
+          - endpoint: https://paperless.mvaldes.dev
+            method: GET
+          - endpoint: https://calibre.mvaldes.dev
+            method: GET
+          - endpoint: https://db.mvaldes.dev
+            method: GET
+          - endpoint: https://automate.mvaldes.dev
+            method: GET
+          - endpoint: https://hoa.mvaldes.dev
+            method: GET
+          - endpoint: https://gotify.mvaldes.dev
+            method: GET
+          - endpoint: https://signoz.mvaldes.dev
+            method: GET
+        collection_interval: 30s
+
+    processors:
+      batch:
+        timeout: 10s
+        send_batch_size: 100
+
+      resource:
+        attributes:
+          - key: service.name
+            value: site-monitoring
+            action: insert
+          - key: deployment.environment
+            value: production
+            action: insert
+
+    exporters:
+      otlp:
+        endpoint: "signoz-signoz-helm-otel-collector:4317"
+        tls:
+          insecure: true
+
+    service:
+      pipelines:
+        metrics:
+          receivers: [httpcheck]
+          processors: [resource, batch]
+          exporters: [otlp]
+
+      telemetry:
+        logs:
+          level: debug
