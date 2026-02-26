@@ -514,7 +514,7 @@ data:
         registry: docker.io
         repository: signoz/signoz-otel-collector
         pullPolicy: IfNotPresent
-      imagePullSecrets: []
+        tag: v0.144.1
       initContainers:
         init:
           enabled: false
