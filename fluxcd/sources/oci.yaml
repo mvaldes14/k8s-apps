@@ -1,0 +1,10 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: capacitor-next-helm
+  namespace: flux-system
+spec:
+  interval: 24h
+  url: oci://ghcr.io/gimlet-io/charts/capacitor-next
+  ref:
+    semver: ">= 0.12.0"
