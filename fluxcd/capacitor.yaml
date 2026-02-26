@@ -5,9 +5,9 @@ metadata:
   namespace: flux-system
 spec:
   interval: 12h
-  url: oci://ghcr.io/gimlet-io/capacitor-manifests
+  url: oci://ghcr.io/gimlet-io/capacitor-next
   ref:
-    tag: "latest"
+    semver: ">= 0.12.0"
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
