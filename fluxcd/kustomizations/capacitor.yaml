@@ -15,3 +15,4 @@ spec:
       AUTH: noauth
       AUTH_DEBUG: "true" #logs impersonation headers
       IMPERSONATE_SA_RULES: "noauth=flux-system:capacitor-next-preset-clusteradmin"
+    existingSecret: capacitor-next-helm
