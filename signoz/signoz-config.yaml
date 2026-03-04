@@ -9,14 +9,16 @@ data:
       imageRegistry: &GLOBAL_IMAGE_REGISTRY null
       storageClass: nfs-k8s-keep
       clusterDomain: cluster.local
-      clusterName:
       cloud: other
     nameOverride:
     fullnameOverride:
     clusterName:
-    imagePullSecrets: []
     clickhouse:
       enabled: true
+      config:
+        exporters:
+          otlp:
+            endpoint: http://signoz-signoz-helm-otel-collector.signoz.svc.cluster.local:4318
       zookeeper:
         enabled: true
         podAnnotations:
@@ -397,117 +399,8 @@ data:
         accessModes:
           - ReadWriteOnce
         size: 1Gi
-    schemaMigrator:
+    telemetryStoreMigrator:
       enabled: true
-      name: "schema-migrator"
-      image:
-        registry: docker.io
-        repository: signoz/signoz-schema-migrator
-        pullPolicy: IfNotPresent
-      args:
-        - "--up="
-      annotations: {}
-      upgradeHelmHooks: true
-      enableReplication: false
-      nodeSelector: {}
-      tolerations: []
-      affinity: {}
-      topologySpreadConstraints: []
-      initContainers:
-        init:
-          enabled: true
-          image:
-            registry: docker.io
-            repository: busybox
-            tag: 1.35
-            pullPolicy: IfNotPresent
-          command:
-            delay: 5
-            endpoint: /ping
-            waitMessage: "waiting for clickhouseDB"
-            doneMessage: "clickhouse ready, starting schema migrator now"
-          resources: {}
-        chReady:
-          enabled: true
-          image:
-            registry: docker.io
-            repository: clickhouse/clickhouse-server
-            tag: 25.5.6
-            pullPolicy: IfNotPresent
-          command:
-            - "sh"
-            - "-c"
-            - |
-              echo "Running clickhouse ready check"
-              while true
-              do
-                version="$(CLICKHOUSE_VERSION)"
-                shards="$(CLICKHOUSE_SHARDS)"
-                replicas="$(CLICKHOUSE_REPLICAS)"
-                current_version="$(clickhouse client --host ${CLICKHOUSE_HOST} --port ${CLICKHOUSE_PORT} --user "${CLICKHOUSE_USER}" --password "${CLICKHOUSE_PASSWORD}" -q "SELECT version()")"
-                if [ -z "$current_version" ]; then
-                  echo "waiting for clickhouse to be ready"
-                  sleep 5
-                  continue
-                fi
-                if [ -z "$(echo "$current_version" | grep "$version")" ]; then
-                  echo "expected version: $version, current version: $current_version"
-                  echo "waiting for clickhouse with correct version"
-                  sleep 5
-                  continue
-                fi
-                current_shards="$(clickhouse client --host ${CLICKHOUSE_HOST} --port ${CLICKHOUSE_PORT} --user "${CLICKHOUSE_USER}" --password "${CLICKHOUSE_PASSWORD}" -q "SELECT count(DISTINCT(shard_num)) FROM system.clusters WHERE cluster = '${CLICKHOUSE_CLUSTER}'")"
-                if [ -z "$current_shards" ]; then
-                  echo "waiting for clickhouse to be ready"
-                  sleep 5
-                  continue
-                fi
-                if [ "$current_shards" -ne "$shards" ]; then
-                  echo "expected shard count: $shards, current shard count: $current_shards"
-                  echo "waiting for clickhouse with correct shard count"
-                  sleep 5
-                  continue
-                fi
-                current_replicas="$(clickhouse client --host ${CLICKHOUSE_HOST} --port ${CLICKHOUSE_PORT} --user "${CLICKHOUSE_USER}" --password "${CLICKHOUSE_PASSWORD}" -q "SELECT count(DISTINCT(replica_num)) FROM system.clusters WHERE cluster = '${CLICKHOUSE_CLUSTER}'")"
-                if [ -z "$current_replicas" ]; then
-                  echo "waiting for clickhouse to be ready"
-                  sleep 5
-                  continue
-                fi
-                if [ "$current_replicas" -ne "$replicas" ]; then
-                  echo "expected replica count: $replicas, current replica count: $current_replicas"
-                  echo "waiting for clickhouse with correct replica count"
-                  sleep 5
-                  continue
-                fi
-                break
-              done
-              echo "clickhouse ready, starting schema migrator now"
-          resources: {}
-        wait:
-          enabled: true
-          image:
-            registry: docker.io
-            repository: groundnuty/k8s-wait-for
-            tag: v2.0
-            pullPolicy: IfNotPresent
-          env: []
-          resources: {}
-      serviceAccount:
-        create: true
-        annotations: {}
-        name:
-      role:
-        create: true
-        annotations: {}
-        name: 
-        rules:
-          - apiGroups: ["batch"]
-            resources: ["jobs"]
-            verbs: ["get", "list", "watch"]
-        roleBinding:
-          annotations: {}
-          name: 
     otelCollector:
       name: "otel-collector"
       image:
@@ -533,13 +426,9 @@ data:
         create: true
       serviceAccount:
         create: true
-        annotations: {}
         name: ""
       service:
-        annotations: {}
-        labels: {}
         type: ClusterIP
-        loadBalancerSourceRanges: []
       annotations:
       podAnnotations:
         signoz.io/scrape: 'true'
