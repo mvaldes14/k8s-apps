@@ -71,7 +71,7 @@ data:
             tag: 25.5.6
             pullPolicy: IfNotPresent
           imagePullSecrets: []
-          annotations:
+          podAnnotations:
             signoz.io/scrape: 'true'
             signoz.io/port: '9363'
           serviceAccount:
