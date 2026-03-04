@@ -21,7 +21,7 @@ data:
       config:
         exporters:
           otlp:
-            endpoint: http://signoz-signoz-helm-otel-collector.signoz.svc.cluster.local:4318
+            endpoint: http://signoz-signoz-helm-otel-collector.signoz:4318
       zookeeper:
         enabled: true
         podAnnotations:
