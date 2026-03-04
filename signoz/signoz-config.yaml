@@ -15,6 +15,9 @@ data:
     clusterName:
     clickhouse:
       enabled: true
+      logs:
+        system:
+          enabled: true
       config:
         exporters:
           otlp:
