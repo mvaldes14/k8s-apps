@@ -1,99 +1,99 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: otel-monitor-config
-  namespace: signoz
+    name: otel-monitor-config
+    namespace: signoz
 data:
-  otel-collector-config.yaml: |
-    receivers:
-      httpcheck:
-        metrics:
-              httpcheck.dns.lookup.duration:
-                enabled: true
-              httpcheck.client.connection.duration:
-                enabled: true
-              httpcheck.tls.handshake.duration:
-                enabled: true
-              httpcheck.client.request.duration:
-                enabled: true
-              httpcheck.response.duration:
-                enabled: true
-              httpcheck.tls.cert_remaining:
-                enabled: true
-        targets:
-          - endpoint: https://grafana.mvaldes.dev
-            method: GET
-          - endpoint: https://blog.mvaldes.dev
-            method: GET
-          - endpoint: https://mvaldes.dev
-            method: GET
-          - endpoint: https://umami.mvaldes.dev
-            method: GET
-          - endpoint: https://vault.mvaldes.dev
-            method: GET
-          - endpoint: https://paperless.mvaldes.dev
-            method: GET
-          - endpoint: https://calibre.mvaldes.dev
-            method: GET
-          - endpoint: https://db.mvaldes.dev
-            method: GET
-          - endpoint: https://automate.mvaldes.dev
-            method: GET
-          - endpoint: https://hoa.mvaldes.dev
-            method: GET
-          - endpoint: https://gotify.mvaldes.dev
-            method: GET
-          - endpoint: https://signoz.mvaldes.dev
-            method: GET
-        collection_interval: 30s
+    otel-collector-config.yaml: |
+        receivers:
+          httpcheck:
+            metrics:
+                  httpcheck.dns.lookup.duration:
+                    enabled: true
+                  httpcheck.client.connection.duration:
+                    enabled: true
+                  httpcheck.tls.handshake.duration:
+                    enabled: true
+                  httpcheck.client.request.duration:
+                    enabled: true
+                  httpcheck.response.duration:
+                    enabled: true
+                  httpcheck.tls.cert_remaining:
+                    enabled: true
+            targets:
+              - endpoint: https://grafana.mvaldes.dev
+                method: GET
+              - endpoint: https://blog.mvaldes.dev
+                method: GET
+              - endpoint: https://mvaldes.dev
+                method: GET
+              - endpoint: https://umami.mvaldes.dev
+                method: GET
+              - endpoint: https://vault.mvaldes.dev
+                method: GET
+              - endpoint: https://paperless.mvaldes.dev
+                method: GET
+              - endpoint: https://calibre.mvaldes.dev
+                method: GET
+              - endpoint: https://db.mvaldes.dev
+                method: GET
+              - endpoint: https://automate.mvaldes.dev
+                method: GET
+              - endpoint: https://hoa.mvaldes.dev
+                method: GET
+              - endpoint: https://gotify.mvaldes.dev
+                method: GET
+              - endpoint: https://signoz.mvaldes.dev
+                method: GET
+            collection_interval: 30s
 
-      prometheus:
-        config:
-          scrape_configs:
-            - job_name: k8s-pods
-              kubernetes_sd_configs:
-                - role: pod
-              relabel_configs:
-                - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
-                  action: keep
-                  regex: "true"
-                - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
-                  action: replace
-                  target_label: __metrics_path__
-                  regex: (.+)
-                - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
-                  action: replace
-                  regex: ([^:]+)(?::\d+)?;(\d+)
-                  replacement: $1:$2
-                  target_label: __address__
+          prometheus:
+            config:
+              scrape_configs:
+                - job_name: k8s-pods
+                  kubernetes_sd_configs:
+                    - role: pod
+                  relabel_configs:
+                    - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+                      action: keep
+                      regex: "true"
+                    - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+                      action: replace
+                      target_label: __metrics_path__
+                      regex: (.+)
+                    - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
+                      action: replace
+                      regex: ([^:]+)(?::\d+)?;(\d+)
+                      replacement: $1:$2
+                      target_label: __address__
 
-    processors:
-      batch:
-        timeout: 10s
-        send_batch_size: 100
+        processors:
+          batch:
+            timeout: 10s
+            send_batch_size: 100
 
-      resource:
-        attributes:
-          - key: service.name
-            value: site-monitoring
-            action: insert
-          - key: deployment.environment
-            value: production
-            action: insert
+          resource:
+            attributes:
+              - key: service.name
+                value: site-monitoring
+                action: insert
+              - key: deployment.environment
+                value: homelab
+                action: insert
 
-    exporters:
-      otlp:
-        endpoint: "signoz-signoz-helm-otel-collector:4317"
-        tls:
-          insecure: true
+        exporters:
+          otlp:
+            endpoint: "signoz-signoz-helm-otel-collector:4317"
+            tls:
+              insecure: true
 
-    service:
-      pipelines:
-        metrics:
-          receivers: [httpcheck, prometheus]
-          processors: [resource, batch]
-          exporters: [otlp]
+        service:
+          pipelines:
+            metrics:
+              receivers: [httpcheck, prometheus]
+              processors: [resource, batch]
+              exporters: [otlp]
 
-      telemetry:
-        logs:
-          level: debug
+          telemetry:
+            logs:
+              level: info
