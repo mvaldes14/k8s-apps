@@ -162,7 +162,7 @@ data:
                   done
           layout:
             shardsCount: 1
-            replicasCount: 2
+            replicasCount: 1
           settings:
             prometheus/endpoint: /metrics
             prometheus/port: 9363
