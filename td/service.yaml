@@ -5,7 +5,7 @@ metadata:
   namespace: td
 spec:
   selector:
-    app: td
+    app: td-deploy
   type: ClusterIP
   ports:
     - port: 80

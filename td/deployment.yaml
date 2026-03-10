@@ -22,15 +22,14 @@ spec:
         - name: td
           image: ghcr.io/mvaldes14/task-manager:latest
           ports:
-            - containerPort: 5000
+            - name: td-port
+              containerPort: 5000
           env:
             - name: DATABASE_URL
-              value: postgresql://admin:$(POSTGRES_PASSWORD)@postgres-svc.db:5432/td
-            - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: td-secret
-                  key: POSTGRES_PASSWORD
+                  key: POSTGRES_URL
             - name: TD_USERNAME
               valueFrom:
                 secretKeyRef:
