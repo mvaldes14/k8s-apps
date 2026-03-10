@@ -66,4 +66,7 @@ data:
     - hostname: signoz.mvaldes.dev
       service: http://signoz-signoz-helm.signoz:8080
 
+    - hostname: td.mvaldes.dev
+      service: http://td-svc.td
+
     - service: http_status:404
