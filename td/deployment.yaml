@@ -1,0 +1,74 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: td
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: td-deploy
+  namespace: td
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: td-deploy
+  template:
+    metadata:
+      labels:
+        app: td-deploy
+    spec:
+      containers:
+        - name: td
+          image: ghcr.io/mvaldes14/task-manager:latest
+          ports:
+            - containerPort: 5000
+          env:
+            - name: DATABASE_URL
+              value: postgresql://admin:$(POSTGRES_PASSWORD)@postgres-svc.db:5432/td
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: td-secret
+                  key: POSTGRES_PASSWORD
+            - name: TD_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: td-secret
+                  key: TD_USERNAME
+            - name: TD_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: td-secret
+                  key: TD_PASSWORD
+            - name: TD_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: td-secret
+                  key: TD_API_KEY
+            - name: GCAL_CREDENTIALS_JSON
+              valueFrom:
+                secretKeyRef:
+                  name: td-secret
+                  key: GCAL_CREDENTIALS_JSON
+            - name: GCAL_CALENDAR_ID
+              valueFrom:
+                secretKeyRef:
+                  name: td-secret
+                  key: GCAL_CALENDAR_ID
+            - name: OBSIDIAN_VAULT
+              valueFrom:
+                secretKeyRef:
+                  name: td-secret
+                  key: OBSIDIAN_VAULT
+            - name: OBSIDIAN_INBOX
+              valueFrom:
+                secretKeyRef:
+                  name: td-secret
+                  key: OBSIDIAN_INBOX
+          readinessProbe:
+            httpGet:
+              path: /auth/status
+              port: 5000
+            initialDelaySeconds: 5
+            periodSeconds: 10

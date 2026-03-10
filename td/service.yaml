@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: td-svc
+  namespace: td
+spec:
+  selector:
+    app: td
+  type: ClusterIP
+  ports:
+    - port: 80
+      name: td-port
+      protocol: TCP
+      targetPort: 5000
