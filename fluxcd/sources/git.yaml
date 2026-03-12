@@ -21,3 +21,14 @@ spec:
   url: https://github.com/mvaldes14/k8s-apps
   secretRef:
     name: github-source-secret
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: td-repository
+  namespace: flux-system
+spec:
+  interval: 1m
+  ref:
+    branch: main
+  url: https://github.com/mvaldes14/task-manager
