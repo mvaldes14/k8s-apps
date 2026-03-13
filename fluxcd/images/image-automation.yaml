@@ -66,6 +66,6 @@ spec:
   interval: 30m0s
   sourceRef:
     kind: GitRepository
-    name: td-repository
+    name: homelab-repository
   update:
     path: ./td

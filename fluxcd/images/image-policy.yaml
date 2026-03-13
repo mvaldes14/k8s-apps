@@ -23,3 +23,16 @@ spec:
   policy:
     alphabetical:
       order: asc
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImagePolicy
+metadata:
+  name: td-policy
+  namespace: flux-system
+spec:
+  imageRepositoryRef:
+    name: td-repository
+  digestReflectionPolicy: IfNotPresent
+  policy:
+    alphabetical:
+      order: asc
