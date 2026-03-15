@@ -1,11 +1,11 @@
 apiVersion: image.toolkit.fluxcd.io/v1beta2
 kind: ImagePolicy
 metadata:
-  name: bot-policy 
-  namespace: flux-system 
+  name: bot-policy
+  namespace: flux-system
 spec:
   imageRepositoryRef:
-    name: bot-repository 
+    name: bot-repository
   digestReflectionPolicy: IfNotPresent
   policy:
     alphabetical:
@@ -33,8 +33,6 @@ spec:
   imageRepositoryRef:
     name: td-repository
   digestReflectionPolicy: IfNotPresent
-  filterTags:
-    pattern: '^latest$'
   policy:
     alphabetical:
       order: asc
