@@ -33,6 +33,8 @@ spec:
   imageRepositoryRef:
     name: td-repository
   digestReflectionPolicy: IfNotPresent
+  filterTags:
+    pattern: '^[0-9]{8}-[0-9]{6}$'
   policy:
     alphabetical:
-      order: asc
+      order: desc
