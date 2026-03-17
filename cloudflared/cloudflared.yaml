@@ -12,6 +12,10 @@ spec:
     metadata:
       labels:
         app: cloudflared
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: /metrics
+        prometheus.io/port: "20241"
     spec:
       containers:
         - name: cloudflared
