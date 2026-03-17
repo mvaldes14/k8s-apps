@@ -6,8 +6,8 @@ metadata:
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
 metadata:
-  name: atlantis-helm 
-  namespace: atlantis 
+  name: atlantis-helm
+  namespace: atlantis
 spec:
   interval: 10m0s
   url: https://runatlantis.github.io/helm-charts
@@ -21,7 +21,7 @@ spec:
   targetNamespace: atlantis
   chart:
     spec:
-      chart: atlantis 
+      chart: atlantis
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
