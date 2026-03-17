@@ -614,7 +614,6 @@ data:
               max_interval: 30s
               max_elapsed_time: 5m
           metadataexporter:
-            enable: true
             dsn: tcp://${env:CLICKHOUSE_USER}:${env:CLICKHOUSE_PASSWORD}@${env:CLICKHOUSE_HOST}:${env:CLICKHOUSE_PORT}/signoz_metadata
             timeout: 10s
             tenant_id: ${env:TENANT_ID}
