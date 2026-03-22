@@ -1,23 +1,21 @@
-apiVersion: v1
-kind: Secret
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
 metadata:
-    name: discord-webhook
-    namespace: flux-system
-type: Opaque
-stringData:
-    address: ENC[AES256_GCM,data:MNcltzz6btsGjDMGv3KyxO+L2vXYd9fp6yW9RQ3Zvr7SZ5laH9iK6Sg7QDPZUqoTVm5uYSunCpLdPqtPfG4dNk+xPL1cnb9IStLrq0nbemtwsg1DbjmfL32nHRb4ny2uM34sMHSYupJ6qk+h1kCa0Tic1vygvEA+zw==,iv:6VNXbU/A0fsIpO6SaVhRLc2zBgpEa6mtFsvLHALA6CE=,tag:g7tlbRzwkHsrXnLTSs6OIg==,type:str]
-sops:
-    age:
-        - recipient: age1emykjszgesgtwyth9jkc3x24zuzpfvrkxcwzk6lcsc0ecv66defss5ncp0
-          enc: |
-            -----BEGIN AGE ENCRYPTED FILE-----
-            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBJNS9IczAwV1YvYzB0TkN1
-            bnBwckd1WFBPR09BNDFxUnVUOXl5Q3prMDNrClJyOGNnbzhrRGU4cnpLQ0tSZFpt
-            dGI3eHBBdVdmTWxpQ2EyT0dPREF3L0UKLS0tIG9rWEhuVHNRbk9idG1ySEE4Y05Z
-            RHpENEd1dTRYWnJkQkUrOERkTW4xdmMK82majcM430cXyYbsMFaGkeLlDEs+lzjW
-            sxY1KkDqyqzLSSMgOz/aW7quVJF7BWO+0/DAViXR1axPvfbH5tZnag==
-            -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2025-06-09T04:55:35Z"
-    mac: ENC[AES256_GCM,data:5Lj5vhWwa38LaGL9q8PasYhIohSr6Kf1pul8bTe7nMpWrgpd+OAIcP3lc7ywNMXb8nkkJU89EcGoebUDC9oaDdylqg2F3+2/2bGxUtfn1eZFeQYdAD3fd/alfgdi9YBT2Gy16wtKqC97Hig715c9tjwjbPy9rDkiX2BGdHoe+EQ=,iv:wMYJh1FcTJTsO7LU9f3sWpQE25Um+i4nkKHRYp9WTy4=,tag:hSvaNNnq889R60aPQbOO4Q==,type:str]
-    encrypted_regex: ^(data|stringData)$
-    version: 3.10.2
+  name: gotify-webhook
+  namespace: flux-system
+spec:
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: vault-store-apps
+  refreshPolicy: Periodic
+  refreshInterval: 10m
+  dataFrom:
+    - extract:
+        key: apps/gotify
+  target:
+    name: gotify-webhook
+    creationPolicy: Owner
+    deletionPolicy: Delete
+    template:
+      data:
+        address: "{{ .GOTIFY_URL }}/message?token={{ .GOTIFY_CLIENT_TOKENS }}"
