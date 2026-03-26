@@ -18,4 +18,4 @@ spec:
     deletionPolicy: Delete
     template:
       data:
-        address: "{{ .GOTIFY_URL }}/message?token={{ .GOTIFY_CLIENT_TOKENS }}"
+        address: "{{ .GOTIFY_URL }}/message?token={{ .GOTIFY_FLUX_TOKEN }}"
