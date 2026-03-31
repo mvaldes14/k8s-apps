@@ -53,10 +53,11 @@ data:
         replicaCount: 1
         namespaceOverride: ""
         resources:
-          limits: {}
           requests:
-            memory: 256Mi
-            cpu: 100m
+            memory: 1000Mi
+            cpu: 400m
+          limits:
+            memory: 12Gi
       namespace: ""
       nameOverride: ""
       fullnameOverride: ""
