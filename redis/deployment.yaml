@@ -17,11 +17,11 @@ spec:
         fsGroup: 1000
       containers:
         - name: redis-deploy
-          image: docker.io/bitnami/redis:6.2
+          image: redis:latest
           imagePullPolicy: IfNotPresent
           env:
             - name: ALLOW_EMPTY_PASSWORD
-              value: 'yes'
+              value: "yes"
           ports:
             - containerPort: 6379
           volumeMounts:

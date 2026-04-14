@@ -41,6 +41,11 @@ spec:
       confFileMountPath: /var/lib/rancher/k3s/agent/etc/cni/net.d
       binPath: /var/lib/rancher/k3s/data/cni
 
+    l2announcements:
+      enable: true
+
+    MTU: 1450
+
     ipam:
       mode: cluster-pool
       operator:
@@ -54,7 +59,10 @@ spec:
       relay:
         enabled: true
       ui:
-        enabled: false
+        enabled: true
+    bpf:
+      masquerade: true
+      hostLegacyRouting: true
 
     operator:
       replicas: 1
