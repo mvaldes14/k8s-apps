@@ -40,7 +40,7 @@ spec:
       email-domain: "*"
       upstream: "file:///dev/null"
       cookie-domain: ".local.net"
-      cookie-secure: "true"
+      cookie-secure: "false"
       cookie-refresh: "1m"
       cookie-expire: "30m"
       pass-authorization-header: "true"
