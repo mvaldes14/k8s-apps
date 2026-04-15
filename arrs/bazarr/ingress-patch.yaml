@@ -11,6 +11,7 @@ spec:
       match: Host(`bazarr.local.net`)
       middlewares:
         - name: oauth2-proxy-oauth2-proxy@kubernetescrd
+        - name: oauth2-proxy-oauth2-errors@kubernetescrd
       services:
         - name: bazarr-svc
           port: 80
