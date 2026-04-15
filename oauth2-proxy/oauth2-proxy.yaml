@@ -48,6 +48,7 @@ spec:
       set-authorization-header: "true"
       pass-access-token: "true"
       skip-provider-button: "true"
+      code-challenge-method: "S256"
     ingress:
       enabled: true
       className: traefik
