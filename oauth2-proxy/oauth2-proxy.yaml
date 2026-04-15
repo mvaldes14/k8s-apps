@@ -30,6 +30,7 @@ spec:
         kind: HelmRepository
         name: oauth2-proxy-helm
   values:
+    fullnameOverride: oauth2-proxy
     config:
       clientID: "oauth2-proxy"
       existingSecret: "oauth2-proxy-secrets"
