@@ -35,8 +35,8 @@ spec:
       existingSecret: "oauth2-proxy-secrets"
     extraArgs:
       provider: keycloak-oidc
-      oidc-issuer-url: "https://keycloak.local.net/realms/homelab"
-      redirect-url: "https://auth.local.net/oauth2/callback"
+      oidc-issuer-url: "http://keycloak.local.net/realms/homelab"
+      redirect-url: "http://auth.local.net/oauth2/callback"
       email-domain: "*"
       upstream: "file:///dev/null"
       cookie-domain: ".local.net"
