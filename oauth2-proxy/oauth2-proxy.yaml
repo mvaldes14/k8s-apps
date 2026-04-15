@@ -51,10 +51,9 @@ spec:
       enabled: true
       className: traefik
       hosts:
-        - host: auth.local.net
-          paths:
-            - path: /oauth2
-              pathType: Prefix
+        - auth.local.net
+      path: /oauth2
+      pathType: Prefix
     replicaCount: 1
     resources:
       requests:
