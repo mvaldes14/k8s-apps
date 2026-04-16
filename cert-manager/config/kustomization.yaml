@@ -4,3 +4,4 @@ resources:
   - cert-homelab.yaml
   - cert-issuer.yaml
   - external-secret.yaml
+  - tlsstore.yaml
