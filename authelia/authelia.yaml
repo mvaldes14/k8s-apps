@@ -1,0 +1,106 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: authelia
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: authelia
+  namespace: flux-system
+spec:
+  interval: 1h
+  url: https://charts.authelia.com
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: authelia
+  namespace: authelia
+spec:
+  interval: 1h
+  chart:
+    spec:
+      chart: authelia
+      version: ">=0.9.0"
+      sourceRef:
+        kind: HelmRepository
+        name: authelia
+        namespace: flux-system
+  values:
+    domain: int.mvaldes.dev
+    ingress:
+      enabled: true
+      className: traefik
+      subdomain: auth
+      tls:
+        enabled: true
+        secret: wildcard-int-tls
+    pod:
+      extraVolumes:
+        - name: authelia-secrets
+          secret:
+            secretName: authelia-secrets
+      extraVolumeMounts:
+        - name: authelia-secrets
+          mountPath: /secrets
+          readOnly: true
+    configMap:
+      theme: dark
+      authentication_backend:
+        password_reset:
+          disable: false
+        ldap:
+          enabled: false
+        file:
+          enabled: false
+        oidc:
+          enabled: true
+          issuer: https://keycloak.int.mvaldes.dev/realms/homelab
+          client_id: authelia
+          client_secret:
+            path: /secrets/OIDC_CLIENT_SECRET
+          scopes:
+            - openid
+            - profile
+            - email
+            - groups
+      session:
+        name: authelia_session
+        same_site: lax
+        expiration: 1h
+        inactivity: 5m
+        remember_me: 1d
+        secret:
+          path: /secrets/SESSION_SECRET
+        redis:
+          enabled: true
+          host: redis-svc.db
+          port: 6379
+          password:
+            path: /secrets/REDIS_PASSWORD
+          database_index: 1
+      storage:
+        local:
+          enabled: false
+        postgres:
+          enabled: true
+          host: postgres-svc.db
+          port: 5432
+          database: authelia
+          username: authelia
+          password:
+            path: /secrets/POSTGRES_PASSWORD
+        encryption_key:
+          path: /secrets/STORAGE_ENCRYPTION_KEY
+      notifier:
+        disable_startup_check: true
+        filesystem:
+          enabled: true
+          filename: /tmp/authelia-notifications.txt
+      access_control:
+        default_policy: one_factor
+      identity_validation:
+        reset_password:
+          jwt_secret:
+            path: /secrets/JWT_TOKEN

@@ -1,0 +1,46 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: arrs-ingressroute
+  namespace: arr
+spec:
+  entryPoints:
+    - websecure
+  tls:
+    secretName: wildcard-int-tls
+  routes:
+    - kind: Rule
+      match: Host(`bazarr.int.mvaldes.dev`)
+      services:
+        - name: bazarr-svc
+          port: 80
+    - kind: Rule
+      match: Host(`sonarr.int.mvaldes.dev`)
+      services:
+        - name: sonarr-svc
+          port: 80
+    - kind: Rule
+      match: Host(`radarr.int.mvaldes.dev`)
+      services:
+        - name: radarr-svc
+          port: 80
+    - kind: Rule
+      match: Host(`readarr.int.mvaldes.dev`)
+      services:
+        - name: readarr-svc
+          port: 80
+    - kind: Rule
+      match: Host(`prowlarr.int.mvaldes.dev`)
+      services:
+        - name: prowlarr-svc
+          port: 80
+    - kind: Rule
+      match: Host(`flaresolverr.int.mvaldes.dev`)
+      services:
+        - name: flaresolverr-svc
+          port: 80
+    - kind: Rule
+      match: Host(`transmission.int.mvaldes.dev`)
+      services:
+        - name: transmission-svc
+          port: 80

@@ -12,9 +12,6 @@ patches:
   - path: patch.yaml
     target:
       kind: Deployment 
-  - path: ingress-patch.yaml
-    target:
-      kind: IngressRoute
   - patch: |-
       - op: replace
         path: /spec/template/spec/containers/0/name

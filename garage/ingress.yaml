@@ -5,15 +5,17 @@ metadata:
   namespace: garage
 spec:
   entryPoints:
-    - web
+    - websecure
+  tls:
+    secretName: wildcard-int-tls
   routes:
     - kind: Rule
-      match: Host(`s3.local.net`)
+      match: Host(`s3.int.mvaldes.dev`)
       services:
         - name: garage-svc
           port: 3900
     - kind: Rule
-      match: Host(`s3ui.local.net`)
+      match: Host(`s3ui.int.mvaldes.dev`)
       services:
         - name: garage-svc-ui
           port: 3909

@@ -5,10 +5,12 @@ metadata:
   namespace: keycloak
 spec:
   entryPoints:
-    - web
+    - websecure
+  tls:
+    secretName: wildcard-int-tls
   routes:
     - kind: Rule
-      match: Host(`keycloak.local.net`)
+      match: Host(`keycloak.int.mvaldes.dev`)
       services:
         - name: keycloak-svc
           port: 8080

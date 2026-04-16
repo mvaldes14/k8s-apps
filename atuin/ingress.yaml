@@ -5,10 +5,12 @@ metadata:
   namespace: atuin
 spec:
   entryPoints:
-    - web
+    - websecure
+  tls:
+    secretName: wildcard-int-tls
   routes:
     - kind: Rule
-      match: Host(`atuin.local.net`)
+      match: Host(`atuin.int.mvaldes.dev`)
       services:
         - name: atuin-svc
           port: 80

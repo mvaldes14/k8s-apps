@@ -5,10 +5,12 @@ metadata:
   namespace: shlink
 spec:
   entryPoints:
-    - web
+    - websecure
+  tls:
+    secretName: wildcard-int-tls
   routes:
     - kind: Rule
-      match: Host(`links.local.net`)
+      match: Host(`links.int.mvaldes.dev`)
       services:
         - name: shlink-svc-web
           port: 80
