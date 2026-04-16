@@ -11,3 +11,24 @@ spec:
   path: "./cert-manager"
   prune: true
   timeout: 10m
+  healthChecks:
+    - apiVersion: helm.toolkit.fluxcd.io/v2beta1
+      kind: HelmRelease
+      name: cert-manager
+      namespace: cert-manager
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: cert-manager-config-flux
+  namespace: flux-system
+spec:
+  interval: 10m
+  sourceRef:
+    kind: GitRepository
+    name: homelab-repository
+  path: "./cert-manager/config"
+  prune: true
+  timeout: 10m
+  dependsOn:
+    - name: cert-manager-flux
