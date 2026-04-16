@@ -1,0 +1,92 @@
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: signoz-mcp-secrets
+  namespace: signoz
+spec:
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: vault-store-apps
+  refreshPolicy: Periodic
+  refreshInterval: 10m
+  dataFrom:
+    - extract:
+        key: apps/signoz-mcp
+  target:
+    name: signoz-mcp-secrets
+    creationPolicy: Owner
+    deletionPolicy: Delete
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: signoz-mcp-server
+  namespace: signoz
+  labels:
+    app: signoz-mcp-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: signoz-mcp-server
+  template:
+    metadata:
+      labels:
+        app: signoz-mcp-server
+    spec:
+      containers:
+        - name: signoz-mcp-server
+          image: signoz/signoz-mcp-server:latest
+          imagePullPolicy: Always
+          envFrom:
+            - secretRef:
+                name: signoz-mcp-secrets
+          env:
+            - name: TRANSPORT_MODE
+              value: "http"
+            - name: MCP_SERVER_PORT
+              value: "8000"
+          ports:
+            - containerPort: 8000
+          resources:
+            requests:
+              cpu: 10m
+              memory: 64Mi
+            limits:
+              memory: 128Mi
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: signoz-mcp-server
+  namespace: signoz
+spec:
+  selector:
+    app: signoz-mcp-server
+  ports:
+    - port: 8000
+      targetPort: 8000
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: signoz-mcp-server
+  namespace: signoz
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: signoz-mcp.int.mvaldes.dev
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: signoz-mcp-server
+                port:
+                  number: 8000
+  tls:
+    - secretName: wildcard-int-tls
+      hosts:
+        - signoz-mcp.int.mvaldes.dev
