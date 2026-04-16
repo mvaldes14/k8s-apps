@@ -11,6 +11,7 @@ spec:
     solvers:
       - dns01:
           cloudflare:
-            apiTokenSecretRef:
+            email: elxilote@gmail.com
+            apiKeySecretRef:
               name: cert-manager-secrets
               key: cloudflare-api-token
