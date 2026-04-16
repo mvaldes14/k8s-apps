@@ -1,15 +1,15 @@
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
-  name: atuin-ingressroute
-  namespace: atuin
+  name: oauth2-proxy
+  namespace: oauth2-proxy
 spec:
   entryPoints:
     - websecure
   tls: {}
   routes:
     - kind: Rule
-      match: Host(`atuin.int.mvaldes.dev`)
+      match: Host(`auth.int.mvaldes.dev`) && PathPrefix(`/oauth2`)
       services:
-        - name: atuin-svc
+        - name: oauth2-proxy
           port: 80

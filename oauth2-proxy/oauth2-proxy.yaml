@@ -52,16 +52,7 @@ spec:
       skip-provider-button: "true"
       code-challenge-method: "S256"
     ingress:
-      enabled: true
-      className: traefik
-      hosts:
-        - auth.int.mvaldes.dev
-      path: /oauth2
-      pathType: Prefix
-      tls:
-        - secretName: wildcard-int-tls
-          hosts:
-            - auth.int.mvaldes.dev
+      enabled: false
     replicaCount: 1
     resources:
       requests:

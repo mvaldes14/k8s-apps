@@ -6,8 +6,7 @@ metadata:
 spec:
   entryPoints:
     - websecure
-  tls:
-    secretName: wildcard-int-tls
+  tls: {}
   routes:
     - kind: Rule
       match: Host(`links.int.mvaldes.dev`)
