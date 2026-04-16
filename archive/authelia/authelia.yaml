@@ -28,11 +28,9 @@ spec:
         name: authelia
         namespace: flux-system
   values:
-    domain: int.mvaldes.dev
     ingress:
       enabled: true
       className: traefik
-      subdomain: auth
       tls:
         enabled: true
         secret: wildcard-int-tls
@@ -53,26 +51,19 @@ spec:
         ldap:
           enabled: false
         file:
-          enabled: false
-        oidc:
           enabled: true
-          issuer: https://keycloak.int.mvaldes.dev/realms/homelab
-          client_id: authelia
-          client_secret:
-            path: /secrets/OIDC_CLIENT_SECRET
-          scopes:
-            - openid
-            - profile
-            - email
-            - groups
+          path: /config/users_database.yml
       session:
         name: authelia_session
         same_site: lax
         expiration: 1h
         inactivity: 5m
         remember_me: 1d
-        secret:
+        encryption_key:
           path: /secrets/SESSION_SECRET
+        cookies:
+          - domain: int.mvaldes.dev
+            subdomain: auth
         redis:
           enabled: true
           host: redis-svc.db
@@ -85,8 +76,7 @@ spec:
           enabled: false
         postgres:
           enabled: true
-          host: postgres-svc.db
-          port: 5432
+          address: tcp://postgres-svc.db:5432
           database: authelia
           username: authelia
           password:
@@ -102,5 +92,5 @@ spec:
         default_policy: one_factor
       identity_validation:
         reset_password:
-          jwt_secret:
+          secret:
             path: /secrets/JWT_TOKEN

@@ -1,0 +1,71 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: oauth2-proxy
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: oauth2-proxy-helm
+  namespace: flux-system
+spec:
+  interval: 1h
+  url: https://oauth2-proxy.github.io/manifests
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: oauth2-proxy
+  namespace: oauth2-proxy
+spec:
+  targetNamespace: oauth2-proxy
+  interval: 10m
+  timeout: 10m
+  chart:
+    spec:
+      chart: oauth2-proxy
+      version: ">=7.0.0"
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        name: oauth2-proxy-helm
+        namespace: flux-system
+  values:
+    fullnameOverride: oauth2-proxy
+    config:
+      clientID: "oauth2-proxy"
+      existingSecret: "oauth2-proxy-secrets"
+    extraArgs:
+      provider: keycloak-oidc
+      oidc-issuer-url: "https://keycloak.int.mvaldes.dev/realms/homelab"
+      redirect-url: "https://auth.int.mvaldes.dev/oauth2/callback"
+      email-domain: "*"
+      upstream: "static://202"
+      cookie-domain: ".int.mvaldes.dev"
+      cookie-secure: "true"
+      cookie-refresh: "1m"
+      cookie-expire: "30m"
+      whitelist-domain: ".int.mvaldes.dev"
+      pass-authorization-header: "true"
+      set-authorization-header: "true"
+      pass-access-token: "true"
+      skip-provider-button: "true"
+      code-challenge-method: "S256"
+    ingress:
+      enabled: true
+      className: traefik
+      hosts:
+        - auth.int.mvaldes.dev
+      path: /oauth2
+      pathType: Prefix
+      tls:
+        - secretName: wildcard-int-tls
+          hosts:
+            - auth.int.mvaldes.dev
+    replicaCount: 1
+    resources:
+      requests:
+        cpu: 10m
+        memory: 32Mi
+      limits:
+        memory: 128Mi
