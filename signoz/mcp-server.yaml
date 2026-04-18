@@ -80,6 +80,11 @@ spec:
   routes:
     - kind: Rule
       match: Host(`signoz-mcp.int.mvaldes.dev`)
+      middlewares:
+        - name: oauth2-proxy
+          namespace: oauth2-proxy
+        - name: oauth2-errors
+          namespace: oauth2-proxy
       services:
         - name: signoz-mcp-server
           port: 8000
