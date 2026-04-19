@@ -1,0 +1,118 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: authentik-server-deploy
+  namespace: authentik
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: authentik-server-deploy
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: authentik-server-deploy
+    spec:
+      containers:
+        - name: authentik-server
+          image: ghcr.io/goauthentik/server:2024.12.3
+          args: ["server"]
+          env:
+            - name: AUTHENTIK_POSTGRESQL__HOST
+              value: postgres-svc.db
+            - name: AUTHENTIK_POSTGRESQL__PORT
+              value: "5432"
+            - name: AUTHENTIK_POSTGRESQL__NAME
+              value: authentik
+            - name: AUTHENTIK_POSTGRESQL__USER
+              value: admin
+            - name: AUTHENTIK_POSTGRESQL__PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: authentik-secret
+                  key: POSTGRES_PASSWORD
+            - name: AUTHENTIK_REDIS__HOST
+              value: redis-svc.redis
+            - name: AUTHENTIK_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: authentik-secret
+                  key: SECRET_KEY
+            - name: AUTHENTIK_ERROR_REPORTING__ENABLED
+              value: "false"
+          ports:
+            - containerPort: 9000
+              name: http
+            - containerPort: 9443
+              name: https
+          volumeMounts:
+            - name: authentik-media-pvc
+              mountPath: /media
+          livenessProbe:
+            httpGet:
+              path: /-/health/live/
+              port: 9000
+            initialDelaySeconds: 30
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /-/health/ready/
+              port: 9000
+            initialDelaySeconds: 30
+            periodSeconds: 10
+      volumes:
+        - name: authentik-media-pvc
+          persistentVolumeClaim:
+            claimName: authentik-media-pvc
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: authentik-worker-deploy
+  namespace: authentik
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: authentik-worker-deploy
+  template:
+    metadata:
+      labels:
+        app: authentik-worker-deploy
+    spec:
+      containers:
+        - name: authentik-worker
+          image: ghcr.io/goauthentik/server:2024.12.3
+          args: ["worker"]
+          env:
+            - name: AUTHENTIK_POSTGRESQL__HOST
+              value: postgres-svc.db
+            - name: AUTHENTIK_POSTGRESQL__PORT
+              value: "5432"
+            - name: AUTHENTIK_POSTGRESQL__NAME
+              value: authentik
+            - name: AUTHENTIK_POSTGRESQL__USER
+              value: admin
+            - name: AUTHENTIK_POSTGRESQL__PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: authentik-secret
+                  key: POSTGRES_PASSWORD
+            - name: AUTHENTIK_REDIS__HOST
+              value: redis-svc.redis
+            - name: AUTHENTIK_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: authentik-secret
+                  key: SECRET_KEY
+            - name: AUTHENTIK_ERROR_REPORTING__ENABLED
+              value: "false"
+          volumeMounts:
+            - name: authentik-media-pvc
+              mountPath: /media
+      volumes:
+        - name: authentik-media-pvc
+          persistentVolumeClaim:
+            claimName: authentik-media-pvc

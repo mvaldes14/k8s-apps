@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: wger-media-pvc
+  namespace: wger
+  labels:
+    app: wger-media-pvc
+spec:
+  storageClassName: nfs-k8s-keep
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi

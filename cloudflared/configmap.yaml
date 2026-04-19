@@ -66,4 +66,7 @@ data:
     - hostname: doit.mvaldes.dev
       service: http://td-svc.td
 
+    - hostname: wger.mvaldes.dev
+      service: http://wger-svc.wger
+
     - service: http_status:404

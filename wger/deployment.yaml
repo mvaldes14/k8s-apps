@@ -1,0 +1,121 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wger-deploy
+  namespace: wger
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wger-deploy
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: wger-deploy
+    spec:
+      containers:
+        - name: wger
+          image: wger/server:2.4
+          env:
+            - name: DJANGO_DB_DATABASE
+              value: wger
+            - name: DJANGO_DB_USER
+              value: admin
+            - name: DJANGO_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: wger-secret
+                  key: POSTGRES_PASSWORD
+            - name: DJANGO_DB_HOST
+              value: postgres-svc.db
+            - name: DJANGO_DB_PORT
+              value: "5432"
+            - name: DJANGO_CACHE_BACKEND
+              value: django.core.cache.backends.redis.RedisCache
+            - name: DJANGO_CACHE_LOCATION
+              value: redis://redis-svc.redis:6379/1
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: wger-secret
+                  key: SECRET_KEY
+            - name: SITE_URL
+              value: https://wger.int.mvaldes.dev
+            - name: ALLOWED_HOSTS
+              value: wger.int.mvaldes.dev
+            - name: X_FORWARDED_FOR_HEADER
+              value: "True"
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: wger-media-pvc
+              mountPath: /home/wger/media
+          livenessProbe:
+            httpGet:
+              path: /en/user/login
+              port: 80
+            initialDelaySeconds: 60
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /en/user/login
+              port: 80
+            initialDelaySeconds: 60
+            periodSeconds: 10
+      volumes:
+        - name: wger-media-pvc
+          persistentVolumeClaim:
+            claimName: wger-media-pvc
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wger-celery-deploy
+  namespace: wger
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wger-celery-deploy
+  template:
+    metadata:
+      labels:
+        app: wger-celery-deploy
+    spec:
+      containers:
+        - name: wger-celery
+          image: wger/server:2.4
+          command: ["/bin/sh", "-c"]
+          args: ["celery -A wger worker --loglevel=info"]
+          env:
+            - name: DJANGO_DB_DATABASE
+              value: wger
+            - name: DJANGO_DB_USER
+              value: admin
+            - name: DJANGO_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: wger-secret
+                  key: POSTGRES_PASSWORD
+            - name: DJANGO_DB_HOST
+              value: postgres-svc.db
+            - name: DJANGO_DB_PORT
+              value: "5432"
+            - name: DJANGO_CACHE_BACKEND
+              value: django.core.cache.backends.redis.RedisCache
+            - name: DJANGO_CACHE_LOCATION
+              value: redis://redis-svc.redis:6379/1
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: wger-secret
+                  key: SECRET_KEY
+          volumeMounts:
+            - name: wger-media-pvc
+              mountPath: /home/wger/media
+      volumes:
+        - name: wger-media-pvc
+          persistentVolumeClaim:
+            claimName: wger-media-pvc
