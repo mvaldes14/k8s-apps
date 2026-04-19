@@ -6,7 +6,6 @@ metadata:
 spec:
   entryPoints:
     - websecure
-  tls: {}
   routes:
     - kind: Rule
       match: Host(`otel.int.mvaldes.dev`) && PathPrefix(`/v1/metrics`)

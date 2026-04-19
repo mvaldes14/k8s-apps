@@ -43,6 +43,8 @@ spec:
                 secretKeyRef:
                   name: wger-secret
                   key: SECRET_KEY
+            - name: DJANGO_DEBUG
+              value: "False"
             - name: SITE_URL
               value: https://wger.mvaldes.dev
             - name: ALLOWED_HOSTS
