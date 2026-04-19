@@ -15,6 +15,8 @@ spec:
       labels:
         app: authentik-server-deploy
     spec:
+      securityContext:
+        fsGroup: 1000
       containers:
         - name: authentik-server
           image: ghcr.io/goauthentik/server:2024.12.3
@@ -82,6 +84,8 @@ spec:
       labels:
         app: authentik-worker-deploy
     spec:
+      securityContext:
+        fsGroup: 1000
       containers:
         - name: authentik-worker
           image: ghcr.io/goauthentik/server:2024.12.3

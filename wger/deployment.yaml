@@ -19,6 +19,8 @@ spec:
         - name: wger
           image: wger/server:2.4
           env:
+            - name: DJANGO_DB_ENGINE
+              value: django.db.backends.postgresql
             - name: DJANGO_DB_DATABASE
               value: wger
             - name: DJANGO_DB_USER
@@ -90,6 +92,8 @@ spec:
           command: ["/bin/sh", "-c"]
           args: ["celery -A wger worker --loglevel=info"]
           env:
+            - name: DJANGO_DB_ENGINE
+              value: django.db.backends.postgresql
             - name: DJANGO_DB_DATABASE
               value: wger
             - name: DJANGO_DB_USER
