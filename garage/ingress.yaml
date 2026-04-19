@@ -16,9 +16,9 @@ spec:
     - kind: Rule
       match: Host(`s3ui.int.mvaldes.dev`)
       middlewares:
-        - name: oauth2-proxy
-          namespace: oauth2-proxy
         - name: oauth2-errors
+          namespace: oauth2-proxy
+        - name: oauth2-proxy
           namespace: oauth2-proxy
       services:
         - name: garage-svc-ui

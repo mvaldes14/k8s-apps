@@ -35,7 +35,7 @@ spec:
             - name: DJANGO_CACHE_BACKEND
               value: django.core.cache.backends.redis.RedisCache
             - name: DJANGO_CACHE_LOCATION
-              value: redis://redis-svc.redis:6379/1
+              value: redis://redis-svc.db:6379/1
             - name: SECRET_KEY
               valueFrom:
                 secretKeyRef:
