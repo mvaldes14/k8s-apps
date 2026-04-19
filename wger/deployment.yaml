@@ -42,9 +42,9 @@ spec:
                   name: wger-secret
                   key: SECRET_KEY
             - name: SITE_URL
-              value: https://wger.int.mvaldes.dev
+              value: https://wger.mvaldes.dev
             - name: ALLOWED_HOSTS
-              value: wger.int.mvaldes.dev
+              value: wger.mvaldes.dev
             - name: X_FORWARDED_FOR_HEADER
               value: "True"
           ports:
@@ -106,7 +106,7 @@ spec:
             - name: DJANGO_CACHE_BACKEND
               value: django.core.cache.backends.redis.RedisCache
             - name: DJANGO_CACHE_LOCATION
-              value: redis://redis-svc.redis:6379/1
+              value: redis://redis-svc.db:6379/1
             - name: SECRET_KEY
               valueFrom:
                 secretKeyRef:
