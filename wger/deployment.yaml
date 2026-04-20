@@ -17,7 +17,7 @@ spec:
     spec:
       initContainers:
         - name: collectstatic
-          image: wger/server:2.4
+          image: wger/server:2.5
           command: ["/bin/sh", "-c"]
           args: ["python3 /home/wger/src/manage.py collectstatic --noinput"]
           env:
@@ -46,7 +46,7 @@ spec:
               mountPath: /home/wger/static
       containers:
         - name: wger
-          image: wger/server:2.4
+          image: wger/server:2.5
           env:
             - name: DJANGO_DB_ENGINE
               value: django.db.backends.postgresql
@@ -144,7 +144,7 @@ spec:
     spec:
       containers:
         - name: wger-celery
-          image: wger/server:2.4
+          image: wger/server:2.5
           command: ["/bin/sh", "-c"]
           args: ["celery -A wger worker --loglevel=info"]
           env:
