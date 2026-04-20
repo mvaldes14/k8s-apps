@@ -19,7 +19,7 @@ spec:
         - name: collectstatic
           image: wger/server:2.4
           command: ["/bin/sh", "-c"]
-          args: ["python /home/wger/src/manage.py collectstatic --noinput"]
+          args: ["python3 /home/wger/src/manage.py collectstatic --noinput"]
           env:
             - name: DJANGO_DB_ENGINE
               value: django.db.backends.postgresql
