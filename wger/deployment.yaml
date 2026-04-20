@@ -81,7 +81,7 @@ spec:
             - name: ALLOWED_HOSTS
               value: wger.mvaldes.dev
             - name: CSRF_TRUSTED_ORIGINS
-              value: https://wger.mvaldes.dev,http://localhost:8080
+              value: https://wger.mvaldes.dev,http://localhost:8080,http://localhost:8000
             - name: X_FORWARDED_FOR_HEADER
               value: "True"
             - name: USE_GUNICORN
