@@ -199,6 +199,8 @@ spec:
                 secretKeyRef:
                   name: wger-secret
                   key: SECRET_KEY
+            - name: CELERY_BROKER
+              value: redis://redis-svc.db:6379/2
           volumeMounts:
             - name: wger-media-pvc
               mountPath: /home/wger/media

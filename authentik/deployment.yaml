@@ -37,6 +37,8 @@ spec:
                   key: POSTGRES_PASSWORD
             - name: AUTHENTIK_REDIS__HOST
               value: redis-svc.db
+            - name: AUTHENTIK_REDIS__DB
+              value: "3"
             - name: AUTHENTIK_SECRET_KEY
               valueFrom:
                 secretKeyRef:
@@ -106,6 +108,8 @@ spec:
                   key: POSTGRES_PASSWORD
             - name: AUTHENTIK_REDIS__HOST
               value: redis-svc.db
+            - name: AUTHENTIK_REDIS__DB
+              value: "3"
             - name: AUTHENTIK_SECRET_KEY
               valueFrom:
                 secretKeyRef:
