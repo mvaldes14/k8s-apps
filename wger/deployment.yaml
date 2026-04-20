@@ -44,6 +44,31 @@ spec:
           volumeMounts:
             - name: wger-static
               mountPath: /home/wger/static
+        - name: migrate
+          image: wger/server:2.5
+          command: ["/bin/sh", "-c"]
+          args: ["python3 /home/wger/src/manage.py migrate --noinput"]
+          env:
+            - name: DJANGO_DB_ENGINE
+              value: django.db.backends.postgresql
+            - name: DJANGO_DB_DATABASE
+              value: wger
+            - name: DJANGO_DB_USER
+              value: admin
+            - name: DJANGO_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: wger-secret
+                  key: POSTGRES_PASSWORD
+            - name: DJANGO_DB_HOST
+              value: postgres-svc.db
+            - name: DJANGO_DB_PORT
+              value: "5432"
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: wger-secret
+                  key: SECRET_KEY
       containers:
         - name: wger
           image: wger/server:2.5
