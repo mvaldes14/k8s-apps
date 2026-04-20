@@ -51,6 +51,8 @@ spec:
               value: wger.mvaldes.dev
             - name: X_FORWARDED_FOR_HEADER
               value: "True"
+            - name: USE_GUNICORN
+              value: "True"
           ports:
             - containerPort: 80
           volumeMounts:
