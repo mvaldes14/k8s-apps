@@ -51,23 +51,21 @@ spec:
               value: wger.mvaldes.dev
             - name: X_FORWARDED_FOR_HEADER
               value: "True"
-            - name: USE_GUNICORN
-              value: "True"
           ports:
-            - containerPort: 80
+            - containerPort: 8000
           volumeMounts:
             - name: wger-media-pvc
               mountPath: /home/wger/media
           livenessProbe:
             httpGet:
               path: /en/user/login
-              port: 80
+              port: 8000
             initialDelaySeconds: 60
             periodSeconds: 30
           readinessProbe:
             httpGet:
               path: /en/user/login
-              port: 80
+              port: 8000
             initialDelaySeconds: 60
             periodSeconds: 10
       volumes:
