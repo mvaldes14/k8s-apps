@@ -11,4 +11,4 @@ spec:
     - port: 80
       name: td-port
       protocol: TCP
-      targetPort: 5000
+      targetPort: 3000

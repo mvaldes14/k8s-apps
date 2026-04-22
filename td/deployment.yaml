@@ -23,7 +23,7 @@ spec:
           image: ghcr.io/mvaldes14/task-manager:latest
           ports:
             - name: td-port
-              containerPort: 5000
+              containerPort: 3000
           env:
             - name: DATABASE_URL
               valueFrom:
@@ -78,6 +78,6 @@ spec:
           readinessProbe:
             httpGet:
               path: /auth/status
-              port: 5000
+              port: 3000
             initialDelaySeconds: 5
             periodSeconds: 10
