@@ -1,0 +1,14 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: td-ingressroute
+  namespace: td
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - kind: Rule
+      match: Host(`doit-mcp.int.mvaldes.dev`)
+      services:
+        - name: td-deploy-mcp
+          port: 8080

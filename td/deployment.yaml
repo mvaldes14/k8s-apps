@@ -81,3 +81,41 @@ spec:
               port: 3000
             initialDelaySeconds: 5
             periodSeconds: 10
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: td-deploy-mcp
+  namespace: td
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: td-deploy-mcp
+  template:
+    metadata:
+      labels:
+        app: td-deploy-mcp
+    spec:
+      containers:
+        - name: td
+          image: ghcr.io/mvaldes14/task-manager-mcp:latest
+          ports:
+            - name: td-port-mcp
+              containerPort: 8080
+          env:
+            - name: MCP_BASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: td-secret
+                  key: MCP_BASE_URL
+            - name: DOIT_BASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: td-secret
+                  key: DOIT_BASE_URL
+            - name: DOIT_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: td-secret
+                  key: DOIT_API_KEY

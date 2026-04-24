@@ -12,3 +12,18 @@ spec:
       name: td-port
       protocol: TCP
       targetPort: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: td-svc-mcp
+  namespace: td
+spec:
+  selector:
+    app: td-deploy-mcp
+  type: ClusterIP
+  ports:
+    - port: 80
+      name: td-port-mcp
+      protocol: TCP
+      targetPort: 8080
