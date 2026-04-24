@@ -10,5 +10,5 @@ spec:
     - kind: Rule
       match: Host(`doit-mcp.int.mvaldes.dev`)
       services:
-        - name: td-deploy-mcp
-          port: 8080
+        - name: td-svc-mcp
+          port: 80
