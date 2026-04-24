@@ -104,11 +104,6 @@ spec:
             - name: td-port-mcp
               containerPort: 8080
           env:
-            - name: MCP_BASE_URL
-              valueFrom:
-                secretKeyRef:
-                  name: td-secret
-                  key: MCP_BASE_URL
             - name: DOIT_BASE_URL
               valueFrom:
                 secretKeyRef:
