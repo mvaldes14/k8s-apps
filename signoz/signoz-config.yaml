@@ -15,6 +15,14 @@ data:
     clusterName:
     clickhouse:
       enabled: true
+      podDistribution:
+      - type: ShardAntiAffinity
+        topologyKey: kubernetes.io/hostname
+      - type: ReplicaAntiAffinity
+        topologyKey: kubernetes.io/hostname
+      - type: MaxNumberPerNode
+        number: 1
+        topologyKey: kubernetes.io/hostname
       startupProbe:
         failureThreshold: 60
       zookeeper:
