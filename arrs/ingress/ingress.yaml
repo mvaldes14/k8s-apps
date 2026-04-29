@@ -38,8 +38,3 @@ spec:
       services:
         - name: flaresolverr-svc
           port: 80
-    - kind: Rule
-      match: Host(`transmission.int.mvaldes.dev`)
-      services:
-        - name: transmission-svc
-          port: 80

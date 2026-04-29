@@ -7,7 +7,7 @@ apiVersion: source.toolkit.fluxcd.io/v1beta2
 kind: HelmRepository
 metadata:
   name: oauth2-proxy-helm
-  namespace: oauth2-proxy
+  namespace: flux-system
 spec:
   interval: 1h
   url: https://oauth2-proxy.github.io/manifests
@@ -24,11 +24,12 @@ spec:
   chart:
     spec:
       chart: oauth2-proxy
-      version: "10.4.3"
+      version: ">=7.0.0"
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
         name: oauth2-proxy-helm
+        namespace: flux-system
   values:
     fullnameOverride: oauth2-proxy
     config:
@@ -36,26 +37,22 @@ spec:
       existingSecret: "oauth2-proxy-secrets"
     extraArgs:
       provider: keycloak-oidc
-      oidc-issuer-url: "http://keycloak.local.net/realms/homelab"
-      redirect-url: "http://auth.local.net/oauth2/callback"
+      oidc-issuer-url: "https://keycloak.int.mvaldes.dev/realms/homelab"
+      redirect-url: "https://auth.int.mvaldes.dev/oauth2/callback"
       email-domain: "*"
-      upstream: "file:///dev/null"
-      cookie-domain: ".local.net"
-      cookie-secure: "false"
+      upstream: "static://202"
+      cookie-domain: ".int.mvaldes.dev"
+      cookie-secure: "true"
       cookie-refresh: "1m"
       cookie-expire: "30m"
+      whitelist-domain: ".int.mvaldes.dev"
       pass-authorization-header: "true"
       set-authorization-header: "true"
       pass-access-token: "true"
       skip-provider-button: "true"
       code-challenge-method: "S256"
     ingress:
-      enabled: true
-      className: traefik
-      hosts:
-        - auth.local.net
-      path: /oauth2
-      pathType: Prefix
+      enabled: false
     replicaCount: 1
     resources:
       requests:
