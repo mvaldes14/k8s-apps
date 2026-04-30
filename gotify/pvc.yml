@@ -5,6 +5,7 @@ metadata:
   namespace: gotify
 spec:
   storageClassName: nfs-k8s-keep
+  volumeName: gotify
   accessModes:
   - ReadWriteOnce
   resources:
