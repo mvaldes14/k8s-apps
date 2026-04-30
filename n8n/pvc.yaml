@@ -1,4 +1,36 @@
 apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: n8n
+spec:
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 2Gi
+  claimRef:
+    apiVersion: v1
+    kind: PersistentVolumeClaim
+    name: n8n-pvc
+    namespace: n8n
+  csi:
+    driver: nfs.csi.k8s.io
+    volumeAttributes:
+      csi.storage.k8s.io/pv/name: n8n
+      csi.storage.k8s.io/pvc/name: n8n-pvc
+      csi.storage.k8s.io/pvc/namespace: n8n
+      server: 10.14.0.21
+      share: /share/k8s
+      subdir: n8n
+      storage.kubernetes.io/csiProvisionerIdentity: 1757349754008-3337-nfs.csi.k8s.io
+    volumeHandle: 10.14.0.21#share/k8s#n8n##
+  mountOptions:
+    - soft
+    - nfsvers=3
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: nfs-k8s-keep
+  volumeMode: Filesystem
+---
+apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: n8n-pvc
@@ -7,9 +39,9 @@ metadata:
     app: n8n-pvc
 spec:
   storageClassName: nfs-k8s-keep
+  volumeName: n8n
   accessModes:
-  - ReadWriteOnce
+    - ReadWriteOnce
   resources:
     requests:
       storage: 2Gi
-

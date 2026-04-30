@@ -1,10 +1,43 @@
 apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: victorialogs
+spec:
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 2Gi
+  claimRef:
+    apiVersion: v1
+    kind: PersistentVolumeClaim
+    name: victorialogs-pvc
+    namespace: logs
+  csi:
+    driver: nfs.csi.k8s.io
+    volumeAttributes:
+      csi.storage.k8s.io/pv/name: victorialogs
+      csi.storage.k8s.io/pvc/name: victorialogs-pvc
+      csi.storage.k8s.io/pvc/namespace: logs
+      server: 10.14.0.21
+      share: /share/k8s
+      subdir: victorialogs
+      storage.kubernetes.io/csiProvisionerIdentity: 1757349754008-3337-nfs.csi.k8s.io
+    volumeHandle: 10.14.0.21#share/k8s#victorialogs##
+  mountOptions:
+    - soft
+    - nfsvers=3
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: nfs-k8s-keep
+  volumeMode: Filesystem
+---
+apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: victorialogs-pvc
   namespace: logs
 spec:
-  storageClassName: 'nfs-k8s-keep'
+  storageClassName: nfs-k8s-keep
+  volumeName: victorialogs
   accessModes:
     - ReadWriteOnce
   resources:

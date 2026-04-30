@@ -1,0 +1,127 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: signoz-db
+spec:
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 1Gi
+  claimRef:
+    apiVersion: v1
+    kind: PersistentVolumeClaim
+    name: signoz-db-signoz-signoz-helm-0
+    namespace: signoz
+  csi:
+    driver: nfs.csi.k8s.io
+    volumeAttributes:
+      csi.storage.k8s.io/pv/name: signoz-db
+      csi.storage.k8s.io/pvc/name: signoz-db-signoz-signoz-helm-0
+      csi.storage.k8s.io/pvc/namespace: signoz
+      server: 10.14.0.21
+      share: /share/k8s
+      subdir: signoz-db
+      storage.kubernetes.io/csiProvisionerIdentity: 1757349754008-3337-nfs.csi.k8s.io
+    volumeHandle: 10.14.0.21#share/k8s#signoz-db##
+  mountOptions:
+    - soft
+    - nfsvers=3
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: nfs-k8s-keep
+  volumeMode: Filesystem
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: signoz-zookeeper
+spec:
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 8Gi
+  claimRef:
+    apiVersion: v1
+    kind: PersistentVolumeClaim
+    name: data-signoz-signoz-helm-zookeeper-0
+    namespace: signoz
+  csi:
+    driver: nfs.csi.k8s.io
+    volumeAttributes:
+      csi.storage.k8s.io/pv/name: signoz-zookeeper
+      csi.storage.k8s.io/pvc/name: data-signoz-signoz-helm-zookeeper-0
+      csi.storage.k8s.io/pvc/namespace: signoz
+      server: 10.14.0.21
+      share: /share/k8s
+      subdir: signoz-zookeeper
+      storage.kubernetes.io/csiProvisionerIdentity: 1757349754008-3337-nfs.csi.k8s.io
+    volumeHandle: 10.14.0.21#share/k8s#signoz-zookeeper##
+  mountOptions:
+    - soft
+    - nfsvers=3
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: nfs-k8s-keep
+  volumeMode: Filesystem
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: signoz-clickhouse-0-0
+spec:
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 2Gi
+  claimRef:
+    apiVersion: v1
+    kind: PersistentVolumeClaim
+    name: data-volumeclaim-template-chi-signoz-signoz-helm-clickhouse-cluster-0-0-0
+    namespace: signoz
+  csi:
+    driver: nfs.csi.k8s.io
+    volumeAttributes:
+      csi.storage.k8s.io/pv/name: signoz-clickhouse-0-0
+      csi.storage.k8s.io/pvc/name: data-volumeclaim-template-chi-signoz-signoz-helm-clickhouse-cluster-0-0-0
+      csi.storage.k8s.io/pvc/namespace: signoz
+      server: 10.14.0.21
+      share: /share/k8s
+      subdir: signoz-clickhouse-0-0
+      storage.kubernetes.io/csiProvisionerIdentity: 1757349754008-3337-nfs.csi.k8s.io
+    volumeHandle: 10.14.0.21#share/k8s#signoz-clickhouse-0-0##
+  mountOptions:
+    - soft
+    - nfsvers=3
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: nfs-k8s-keep
+  volumeMode: Filesystem
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: signoz-clickhouse-0-1
+spec:
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 2Gi
+  claimRef:
+    apiVersion: v1
+    kind: PersistentVolumeClaim
+    name: data-volumeclaim-template-chi-signoz-signoz-helm-clickhouse-cluster-0-1-0
+    namespace: signoz
+  csi:
+    driver: nfs.csi.k8s.io
+    volumeAttributes:
+      csi.storage.k8s.io/pv/name: signoz-clickhouse-0-1
+      csi.storage.k8s.io/pvc/name: data-volumeclaim-template-chi-signoz-signoz-helm-clickhouse-cluster-0-1-0
+      csi.storage.k8s.io/pvc/namespace: signoz
+      server: 10.14.0.21
+      share: /share/k8s
+      subdir: signoz-clickhouse-0-1
+      storage.kubernetes.io/csiProvisionerIdentity: 1757349754008-3337-nfs.csi.k8s.io
+    volumeHandle: 10.14.0.21#share/k8s#signoz-clickhouse-0-1##
+  mountOptions:
+    - soft
+    - nfsvers=3
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: nfs-k8s-keep
+  volumeMode: Filesystem

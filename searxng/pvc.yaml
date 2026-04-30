@@ -1,4 +1,35 @@
-# https://kubernetes.io/docs/concepts/storage/persistent-volumes/
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: searxng
+spec:
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 1Gi
+  claimRef:
+    apiVersion: v1
+    kind: PersistentVolumeClaim
+    name: search-pvc
+    namespace: search
+  csi:
+    driver: nfs.csi.k8s.io
+    volumeAttributes:
+      csi.storage.k8s.io/pv/name: searxng
+      csi.storage.k8s.io/pvc/name: search-pvc
+      csi.storage.k8s.io/pvc/namespace: search
+      server: 10.14.0.21
+      share: /share/k8s
+      subdir: searxng
+      storage.kubernetes.io/csiProvisionerIdentity: 1757349754008-3337-nfs.csi.k8s.io
+    volumeHandle: 10.14.0.21#share/k8s#searxng##
+  mountOptions:
+    - soft
+    - nfsvers=3
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: nfs-k8s
+  volumeMode: Filesystem
+---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -8,6 +39,7 @@ metadata:
     app: search-pvc
 spec:
   storageClassName: nfs-k8s
+  volumeName: searxng
   accessModes:
     - ReadWriteOnce
   resources:
