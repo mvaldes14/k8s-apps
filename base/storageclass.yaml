@@ -5,13 +5,13 @@ metadata:
 provisioner: nfs.csi.k8s.io
 parameters:
   server: 10.14.0.21
-  share: /k8s
-  # subDir: ${pvc.metadata.namespace}-${pvc.metadata.name}
-reclaimPolicy: Delete # Use "Retain" if you don't want automatic storage deletion
+  share: /share/k8s
+reclaimPolicy: Delete
 volumeBindingMode: Immediate
 mountOptions:
   - soft
   - nfsvers=3
+  - nolock
 ---
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
@@ -19,11 +19,11 @@ metadata:
   name: nfs-k8s-keep
 provisioner: nfs.csi.k8s.io
 parameters:
-  server: 10.14.0.1
-  share: /k8s
-  # subDir: ${pvc.metadata.namespace}-${pvc.metadata.name}
+  server: 10.14.0.21
+  share: /share/k8s
 reclaimPolicy: Retain
 volumeBindingMode: Immediate
 mountOptions:
   - soft
   - nfsvers=3
+  - nolock

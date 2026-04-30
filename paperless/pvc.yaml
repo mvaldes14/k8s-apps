@@ -25,6 +25,7 @@ spec:
   mountOptions:
     - soft
     - nfsvers=3
+    - nolock
   persistentVolumeReclaimPolicy: Retain
   storageClassName: nfs-k8s-keep
   volumeMode: Filesystem
@@ -70,6 +71,7 @@ spec:
   mountOptions:
     - soft
     - nfsvers=3
+    - nolock
   persistentVolumeReclaimPolicy: Retain
   storageClassName: nfs-k8s-keep
   volumeMode: Filesystem
