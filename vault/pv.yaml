@@ -19,10 +19,9 @@ spec:
       csi.storage.k8s.io/pvc/name: data-vault-vault-release-0
       csi.storage.k8s.io/pvc/namespace: vault
       server: 10.14.0.21
-      share: /share/k8s
-      subdir: vault
+      share: /share/k8s/vault
       storage.kubernetes.io/csiProvisionerIdentity: 1757349754008-3337-nfs.csi.k8s.io
-    volumeHandle: 10.14.0.21#share/k8s#vault##
+    volumeHandle: 10.14.0.21#share/k8s/vault##
   mountOptions:
     - soft
     - nfsvers=3

@@ -19,10 +19,9 @@ spec:
       csi.storage.k8s.io/pvc/name: victoriametrics-pvc
       csi.storage.k8s.io/pvc/namespace: metrics
       server: 10.14.0.21
-      share: /share/k8s
-      subdir: victoriametrics
+      share: /share/k8s/victoriametrics
       storage.kubernetes.io/csiProvisionerIdentity: 1757349754008-3337-nfs.csi.k8s.io
-    volumeHandle: 10.14.0.21#share/k8s#victoriametrics##
+    volumeHandle: 10.14.0.21#share/k8s/victoriametrics##
   mountOptions:
     - soft
     - nfsvers=3

@@ -19,10 +19,9 @@ spec:
       csi.storage.k8s.io/pvc/name: n8n-pvc
       csi.storage.k8s.io/pvc/namespace: n8n
       server: 10.14.0.21
-      share: /share/k8s
-      subdir: n8n
+      share: /share/k8s/n8n
       storage.kubernetes.io/csiProvisionerIdentity: 1757349754008-3337-nfs.csi.k8s.io
-    volumeHandle: 10.14.0.21#share/k8s#n8n##
+    volumeHandle: 10.14.0.21#share/k8s/n8n##
   mountOptions:
     - soft
     - nfsvers=3

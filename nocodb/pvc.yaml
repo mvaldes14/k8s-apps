@@ -19,10 +19,9 @@ spec:
       csi.storage.k8s.io/pvc/name: nocodb-pvc
       csi.storage.k8s.io/pvc/namespace: nocodb
       server: 10.14.0.21
-      share: /share/k8s
-      subdir: nocodb
+      share: /share/k8s/nocodb
       storage.kubernetes.io/csiProvisionerIdentity: 1757349754008-3337-nfs.csi.k8s.io
-    volumeHandle: 10.14.0.21#share/k8s#nocodb##
+    volumeHandle: 10.14.0.21#share/k8s/nocodb##
   mountOptions:
     - soft
     - nfsvers=3

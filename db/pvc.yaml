@@ -19,10 +19,9 @@ spec:
       csi.storage.k8s.io/pvc/name: postgres-pvc
       csi.storage.k8s.io/pvc/namespace: db
       server: 10.14.0.21
-      share: /share/k8s
-      subdir: postgres
+      share: /share/k8s/postgres
       storage.kubernetes.io/csiProvisionerIdentity: 1757349754008-3337-nfs.csi.k8s.io
-    volumeHandle: 10.14.0.21#share/k8s#postgres##
+    volumeHandle: 10.14.0.21#share/k8s/postgres##
   mountOptions:
     - soft
     - nfsvers=3
@@ -43,3 +42,48 @@ spec:
   resources:
     requests:
       storage: 5Gi
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: redis
+spec:
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 1Gi
+  claimRef:
+    apiVersion: v1
+    kind: PersistentVolumeClaim
+    name: redis-pvc
+    namespace: db
+  csi:
+    driver: nfs.csi.k8s.io
+    volumeAttributes:
+      csi.storage.k8s.io/pv/name: redis
+      csi.storage.k8s.io/pvc/name: redis-pvc
+      csi.storage.k8s.io/pvc/namespace: db
+      server: 10.14.0.21
+      share: /share/k8s/redis
+      storage.kubernetes.io/csiProvisionerIdentity: 1757349754008-3337-nfs.csi.k8s.io
+    volumeHandle: 10.14.0.21#share/k8s/redis##
+  mountOptions:
+    - soft
+    - nfsvers=3
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: nfs-k8s
+  volumeMode: Filesystem
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: redis-pvc
+  namespace: db
+spec:
+  storageClassName: nfs-k8s
+  volumeName: redis
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi

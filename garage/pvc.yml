@@ -19,10 +19,9 @@ spec:
       csi.storage.k8s.io/pvc/name: garage-pvc-meta
       csi.storage.k8s.io/pvc/namespace: garage
       server: 10.14.0.21
-      share: /share/k8s
-      subdir: garage-meta
+      share: /share/k8s/garage-meta
       storage.kubernetes.io/csiProvisionerIdentity: 1757349754008-3337-nfs.csi.k8s.io
-    volumeHandle: 10.14.0.21#share/k8s#garage-meta##
+    volumeHandle: 10.14.0.21#share/k8s/garage-meta##
   mountOptions:
     - soft
     - nfsvers=3
@@ -67,10 +66,9 @@ spec:
       csi.storage.k8s.io/pvc/name: garage-pvc-data
       csi.storage.k8s.io/pvc/namespace: garage
       server: 10.14.0.21
-      share: /share/k8s
-      subdir: garage-data
+      share: /share/k8s/garage-data
       storage.kubernetes.io/csiProvisionerIdentity: 1757349754008-3337-nfs.csi.k8s.io
-    volumeHandle: 10.14.0.21#share/k8s#garage-data##
+    volumeHandle: 10.14.0.21#share/k8s/garage-data##
   mountOptions:
     - soft
     - nfsvers=3

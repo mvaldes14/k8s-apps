@@ -19,10 +19,9 @@ spec:
       csi.storage.k8s.io/pvc/name: paperless-pvc-media
       csi.storage.k8s.io/pvc/namespace: paperless
       server: 10.14.0.21
-      share: /share/k8s
-      subdir: paperless-media
+      share: /share/k8s/paperless-media
       storage.kubernetes.io/csiProvisionerIdentity: 1757349754008-3337-nfs.csi.k8s.io
-    volumeHandle: 10.14.0.21#share/k8s#paperless-media##
+    volumeHandle: 10.14.0.21#share/k8s/paperless-media##
   mountOptions:
     - soft
     - nfsvers=3
@@ -65,10 +64,9 @@ spec:
       csi.storage.k8s.io/pvc/name: paperless-pvc-data
       csi.storage.k8s.io/pvc/namespace: paperless
       server: 10.14.0.21
-      share: /share/k8s
-      subdir: paperless-data
+      share: /share/k8s/paperless-data
       storage.kubernetes.io/csiProvisionerIdentity: 1757349754008-3337-nfs.csi.k8s.io
-    volumeHandle: 10.14.0.21#share/k8s#paperless-data##
+    volumeHandle: 10.14.0.21#share/k8s/paperless-data##
   mountOptions:
     - soft
     - nfsvers=3

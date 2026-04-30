@@ -19,10 +19,9 @@ spec:
       csi.storage.k8s.io/pvc/name: victorialogs-pvc
       csi.storage.k8s.io/pvc/namespace: logs
       server: 10.14.0.21
-      share: /share/k8s
-      subdir: victorialogs
+      share: /share/k8s/victorialogs
       storage.kubernetes.io/csiProvisionerIdentity: 1757349754008-3337-nfs.csi.k8s.io
-    volumeHandle: 10.14.0.21#share/k8s#victorialogs##
+    volumeHandle: 10.14.0.21#share/k8s/victorialogs##
   mountOptions:
     - soft
     - nfsvers=3

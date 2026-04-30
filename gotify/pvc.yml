@@ -19,10 +19,9 @@ spec:
       csi.storage.k8s.io/pvc/name: gotify-pvc
       csi.storage.k8s.io/pvc/namespace: gotify
       server: 10.14.0.21
-      share: /share/k8s
-      subdir: gotify
+      share: /share/k8s/gotify
       storage.kubernetes.io/csiProvisionerIdentity: 1757349754008-3337-nfs.csi.k8s.io
-    volumeHandle: 10.14.0.21#share/k8s#gotify##
+    volumeHandle: 10.14.0.21#share/k8s/gotify##
   mountOptions:
     - soft
     - nfsvers=3

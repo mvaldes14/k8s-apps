@@ -19,10 +19,9 @@ spec:
       csi.storage.k8s.io/pvc/name: hoa-pvc
       csi.storage.k8s.io/pvc/namespace: hoa
       server: 10.14.0.21
-      share: /share/k8s
-      subdir: hoa
+      share: /share/k8s/hoa
       storage.kubernetes.io/csiProvisionerIdentity: 1757349754008-3337-nfs.csi.k8s.io
-    volumeHandle: 10.14.0.21#share/k8s#hoa##
+    volumeHandle: 10.14.0.21#share/k8s/hoa##
   mountOptions:
     - soft
     - nfsvers=3
