@@ -26,12 +26,16 @@ data:
       service:
         enabled: true
       dataStorage:
-        enabled: true
-        size: 5Gi
-        storageClass: nfs-k8s-keep
-        accessMode: ReadWriteOnce
+        enabled: false
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: vault-pvc
+      volumeMounts:
+        - name: data
+          mountPath: /vault/data
     ui:
      enabled: true
      serviceType: ClusterIP
     injector:
-      enabled: falseo
+      enabled: false

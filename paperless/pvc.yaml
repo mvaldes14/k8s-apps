@@ -18,7 +18,6 @@ metadata:
   namespace: paperless
 spec:
   storageClassName: nfs-k8s-keep
-  volumeName: paperless-data
   accessModes:
     - ReadWriteOnce
   resources:
