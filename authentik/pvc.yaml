@@ -1,45 +1,12 @@
 apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: authentik-media
-spec:
-  accessModes:
-    - ReadWriteOnce
-  capacity:
-    storage: 5Gi
-  claimRef:
-    apiVersion: v1
-    kind: PersistentVolumeClaim
-    name: authentik-media-pvc
-    namespace: authentik
-  csi:
-    driver: nfs.csi.k8s.io
-    volumeAttributes:
-      csi.storage.k8s.io/pv/name: authentik-media
-      csi.storage.k8s.io/pvc/name: authentik-media-pvc
-      csi.storage.k8s.io/pvc/namespace: authentik
-      server: 10.14.0.21
-      share: /share/k8s/authentik-media
-      storage.kubernetes.io/csiProvisionerIdentity: 1757349754008-3337-nfs.csi.k8s.io
-    volumeHandle: 10.14.0.21#share/k8s/authentik-media##
-  mountOptions:
-    - soft
-    - nfsvers=3
-    - nolock
-  persistentVolumeReclaimPolicy: Retain
-  storageClassName: nfs-k8s-keep
-  volumeMode: Filesystem
----
-apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: authentik-media-pvc
+  name: authentik-pvc
   namespace: authentik
   labels:
-    app: authentik-media-pvc
+    app: authentik-pvc
 spec:
   storageClassName: nfs-k8s-keep
-  volumeName: authentik-media
   accessModes:
     - ReadWriteOnce
   resources:

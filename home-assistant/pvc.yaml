@@ -1,43 +1,10 @@
 apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: hoa
-spec:
-  accessModes:
-    - ReadWriteOnce
-  capacity:
-    storage: 2Gi
-  claimRef:
-    apiVersion: v1
-    kind: PersistentVolumeClaim
-    name: hoa-pvc
-    namespace: hoa
-  csi:
-    driver: nfs.csi.k8s.io
-    volumeAttributes:
-      csi.storage.k8s.io/pv/name: hoa
-      csi.storage.k8s.io/pvc/name: hoa-pvc
-      csi.storage.k8s.io/pvc/namespace: hoa
-      server: 10.14.0.21
-      share: /share/k8s/hoa
-      storage.kubernetes.io/csiProvisionerIdentity: 1757349754008-3337-nfs.csi.k8s.io
-    volumeHandle: 10.14.0.21#share/k8s/hoa##
-  mountOptions:
-    - soft
-    - nfsvers=3
-    - nolock
-  persistentVolumeReclaimPolicy: Retain
-  storageClassName: nfs-k8s-keep
-  volumeMode: Filesystem
----
-apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: hoa-pvc
   namespace: hoa
 spec:
   storageClassName: nfs-k8s-keep
-  volumeName: hoa
   accessModes:
     - ReadWriteOnce
   resources:

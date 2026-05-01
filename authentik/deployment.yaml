@@ -52,7 +52,7 @@ spec:
             - containerPort: 9443
               name: https
           volumeMounts:
-            - name: authentik-media-pvc
+            - name: authentik-pvc
               mountPath: /media
           livenessProbe:
             httpGet:
@@ -67,9 +67,9 @@ spec:
             initialDelaySeconds: 30
             periodSeconds: 10
       volumes:
-        - name: authentik-media-pvc
+        - name: authentik-pvc
           persistentVolumeClaim:
-            claimName: authentik-media-pvc
+            claimName: authentik-pvc
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -118,9 +118,9 @@ spec:
             - name: AUTHENTIK_ERROR_REPORTING__ENABLED
               value: "false"
           volumeMounts:
-            - name: authentik-media-pvc
+            - name: authentik-pvc
               mountPath: /media
       volumes:
-        - name: authentik-media-pvc
+        - name: authentik-pvc
           persistentVolumeClaim:
-            claimName: authentik-media-pvc
+            claimName: authentik-pvc

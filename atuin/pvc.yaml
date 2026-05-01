@@ -1,36 +1,4 @@
 apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: atuin
-spec:
-  accessModes:
-    - ReadWriteOnce
-  capacity:
-    storage: 100Mi
-  claimRef:
-    apiVersion: v1
-    kind: PersistentVolumeClaim
-    name: atuin-pvc
-    namespace: atuin
-  csi:
-    driver: nfs.csi.k8s.io
-    volumeAttributes:
-      csi.storage.k8s.io/pv/name: atuin
-      csi.storage.k8s.io/pvc/name: atuin-pvc
-      csi.storage.k8s.io/pvc/namespace: atuin
-      server: 10.14.0.21
-      share: /share/k8s/atuin
-      storage.kubernetes.io/csiProvisionerIdentity: 1757349754008-3337-nfs.csi.k8s.io
-    volumeHandle: 10.14.0.21#share/k8s/atuin##
-  mountOptions:
-    - soft
-    - nfsvers=3
-    - nolock
-  persistentVolumeReclaimPolicy: Retain
-  storageClassName: nfs-k8s-keep
-  volumeMode: Filesystem
----
-apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: atuin-pvc
@@ -39,7 +7,6 @@ metadata:
     app: atuin-pvc
 spec:
   storageClassName: nfs-k8s-keep
-  volumeName: atuin
   accessModes:
     - ReadWriteOnce
   resources:

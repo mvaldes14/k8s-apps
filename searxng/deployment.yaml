@@ -33,10 +33,10 @@ spec:
           ports:
             - containerPort: 8080
           volumeMounts:
-            - name: search-pvc
+            - name: searxng-pvc
               mountPath: /etc/searxng
       volumes:
-        - name: search-pvc
+        - name: searxng-pvc
           persistentVolumeClaim:
-            claimName: search-pvc
+            claimName: searxng-pvc
       restartPolicy: Always

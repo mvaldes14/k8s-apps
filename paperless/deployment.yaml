@@ -56,15 +56,15 @@ spec:
           ports:
             - containerPort: 80
           volumeMounts:
-            - name: paperless-pvc-data
+            - name: paperless-data-pvc
               mountPath: /usr/src/paperless/data
-            - name: paperless-pvc-media
+            - name: paperless-media-pvc
               mountPath: /usr/src/paperless/media
       volumes:
-        - name: paperless-pvc-data
+        - name: paperless-data-pvc
           persistentVolumeClaim:
-            claimName: paperless-pvc-data
-        - name: paperless-pvc-media
+            claimName: paperless-data-pvc
+        - name: paperless-media-pvc
           persistentVolumeClaim:
-            claimName: paperless-pvc-media
+            claimName: paperless-media-pvc
       restartPolicy: Always

@@ -1,85 +1,20 @@
 apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: paperless-media
-spec:
-  accessModes:
-    - ReadWriteOnce
-  capacity:
-    storage: 2Gi
-  claimRef:
-    apiVersion: v1
-    kind: PersistentVolumeClaim
-    name: paperless-pvc-media
-    namespace: paperless
-  csi:
-    driver: nfs.csi.k8s.io
-    volumeAttributes:
-      csi.storage.k8s.io/pv/name: paperless-media
-      csi.storage.k8s.io/pvc/name: paperless-pvc-media
-      csi.storage.k8s.io/pvc/namespace: paperless
-      server: 10.14.0.21
-      share: /share/k8s/paperless-media
-      storage.kubernetes.io/csiProvisionerIdentity: 1757349754008-3337-nfs.csi.k8s.io
-    volumeHandle: 10.14.0.21#share/k8s/paperless-media##
-  mountOptions:
-    - soft
-    - nfsvers=3
-    - nolock
-  persistentVolumeReclaimPolicy: Retain
-  storageClassName: nfs-k8s-keep
-  volumeMode: Filesystem
----
-apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: paperless-pvc-media
+  name: paperless-media-pvc
   namespace: paperless
 spec:
   storageClassName: nfs-k8s-keep
-  volumeName: paperless-media
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 2Gi
----
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: paperless-data
-spec:
-  accessModes:
-    - ReadWriteOnce
-  capacity:
-    storage: 2Gi
-  claimRef:
-    apiVersion: v1
-    kind: PersistentVolumeClaim
-    name: paperless-pvc-data
-    namespace: paperless
-  csi:
-    driver: nfs.csi.k8s.io
-    volumeAttributes:
-      csi.storage.k8s.io/pv/name: paperless-data
-      csi.storage.k8s.io/pvc/name: paperless-pvc-data
-      csi.storage.k8s.io/pvc/namespace: paperless
-      server: 10.14.0.21
-      share: /share/k8s/paperless-data
-      storage.kubernetes.io/csiProvisionerIdentity: 1757349754008-3337-nfs.csi.k8s.io
-    volumeHandle: 10.14.0.21#share/k8s/paperless-data##
-  mountOptions:
-    - soft
-    - nfsvers=3
-    - nolock
-  persistentVolumeReclaimPolicy: Retain
-  storageClassName: nfs-k8s-keep
-  volumeMode: Filesystem
+      storage: 5Gi
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: paperless-pvc-data
+  name: paperless-data-pvc
   namespace: paperless
 spec:
   storageClassName: nfs-k8s-keep
@@ -88,4 +23,4 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 2Gi
+      storage: 5Gi
