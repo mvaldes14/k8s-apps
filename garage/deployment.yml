@@ -24,9 +24,9 @@ spec:
             - containerPort: 3902
             - containerPort: 3903
           volumeMounts:
-            - name: garage-pvc-meta
+            - name: garage-meta-pvc
               mountPath: /mnt/meta
-            - name: garage-pvc-data
+            - name: garage-data-pvc
               mountPath: /mnt/data
             - name: garage-config
               mountPath: /etc/garage.toml
@@ -39,12 +39,12 @@ spec:
             items:
               - key: garage.toml
                 path: garage.toml
-        - name: garage-pvc-meta
+        - name: garage-meta-pvc
           persistentVolumeClaim:
-            claimName: garage-pvc-meta
-        - name: garage-pvc-data
+            claimName: garage-meta-pvc
+        - name: garage-data-pvc
           persistentVolumeClaim:
-            claimName: garage-pvc-data
+            claimName: garage-data-pvc
       restartPolicy: Always
 ---
 apiVersion: apps/v1
