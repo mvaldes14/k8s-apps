@@ -42,7 +42,7 @@ spec:
       binPath: /var/lib/rancher/k3s/data/cni
 
     l2announcements:
-      enable: true
+      enabled: true
 
     MTU: 1450
 
