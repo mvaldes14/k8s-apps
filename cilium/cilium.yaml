@@ -30,7 +30,7 @@ spec:
         kind: HelmRepository
         name: cilium-helm
   values:
-    k8sServiceHost: "10.14.0.22" # TODO: confirm eva01 IP
+    k8sServiceHost: "10.14.0.22"
     k8sServicePort: "6443"
 
     kubeProxyReplacement: true
@@ -93,3 +93,6 @@ spec:
       - key: "node.kubernetes.io/unreachable"
         operator: "Exists"
         effect: "NoExecute"
+      - key: "node.cilium.io/agent-not-ready"
+        operator: "Exists"
+        effect: "NoSchedule"
