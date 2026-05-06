@@ -27,10 +27,10 @@ spec:
           livenessProbe:
             tcpSocket:
               port: 8123
-            initialDelaySeconds: 5
+            initialDelaySeconds: 30
             timeoutSeconds: 5
             successThreshold: 1
-            failureThreshold: 3
+            failureThreshold: 6
             periodSeconds: 10
           ports:
             - containerPort: 8123
