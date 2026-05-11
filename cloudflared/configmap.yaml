@@ -24,9 +24,6 @@ data:
     - hostname: draw.mvaldes.dev
       service: http://excalidraw-service.excalidraw
 
-    - hostname: links.mvaldes.dev
-      service: http://shlink-svc-api.shlink
-
     - hostname: grafana.mvaldes.dev
       service: http://grafana-grafana-release.grafana
 
