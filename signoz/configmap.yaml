@@ -23,7 +23,7 @@ data:
         targets:
           - endpoint: https://grafana.mvaldes.dev
             method: GET
-          - endpoint: https://blog.mvaldes.dev
+          - endpoint: https://blog.mvaldes.dev/en
             method: GET
           - endpoint: https://mvaldes.dev
             method: GET
