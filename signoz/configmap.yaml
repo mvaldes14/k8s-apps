@@ -37,8 +37,6 @@ data:
             method: GET
           - endpoint: https://automate.mvaldes.dev
             method: GET
-          - endpoint: https://hoa.mvaldes.dev
-            method: GET
           - endpoint: https://gotify.mvaldes.dev
             method: GET
           - endpoint: https://signoz.mvaldes.dev
@@ -54,6 +52,8 @@ data:
           - endpoint: https://authentik.int.mvaldes.dev
             method: GET
           - endpoint: https://s3ui.int.mvaldes.dev
+            method: GET
+          - endpoint: https://hoa.int.mvaldes.dev
             method: GET
         collection_interval: 30s
 

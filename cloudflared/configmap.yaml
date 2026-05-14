@@ -33,12 +33,6 @@ data:
     - hostname: bots.mvaldes.dev
       service: http://twitch-svc.bots
 
-    - hostname: hoa-ws.mvaldes.dev
-      service: ws://hoa-svc.hoa:80
-
-    - hostname: hoa.mvaldes.dev
-      service: http://hoa-svc.hoa
-
     - hostname: paperless.mvaldes.dev
       service: http://paperless-svc.paperless
 

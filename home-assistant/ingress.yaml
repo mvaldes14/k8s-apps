@@ -1,0 +1,14 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: hoa-ingressroute
+  namespace: hoa
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - kind: Rule
+      match: Host(`hoa.int.mvaldes.dev`)
+      services:
+        - name: hoa-svc
+          port: 80
