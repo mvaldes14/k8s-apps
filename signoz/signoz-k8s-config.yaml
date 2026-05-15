@@ -61,7 +61,7 @@ data:
         pullPolicy: IfNotPresent
       imagePullSecrets: []
       command:
-        name: /otelcol-contrib
+        name: /signoz-otel-collector
       configMap:
         create: true
       service:
@@ -206,7 +206,7 @@ data:
         repository: signoz/signoz-otel-collector
         tag: v0.144.4
       command:
-        name: /otelcol-contrib
+        name: /signoz-otel-collector
       config:
         receivers:
           k8s_cluster:
