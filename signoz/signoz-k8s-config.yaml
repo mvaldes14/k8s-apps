@@ -209,18 +209,64 @@ data:
           readOnly: true
           mountPropagation: HostToContainer
     otelDeployment:
-      enabled: false
+      enabled: true
       image:
         registry: docker.io
         repository: signoz/signoz-otel-collector
         tag: v0.144.4
       config:
         receivers:
+          k8s_cluster:
+            auth_type: serviceAccount
+            allocatable_types_to_report: [cpu, memory]
+            node_conditions_to_report:
+              - Ready
+              - MemoryPressure
+              - DiskPressure
+              - PIDPressure
+              - NetworkUnavailable
+            resource_attributes:
+              container.runtime:
+                enabled: false
+              container.runtime.version:
+                enabled: false
+              k8s.container.status.last_terminated_reason:
+                enabled: false
+              k8s.kubelet.version:
+                enabled: false
+              k8s.pod.qos_class:
+                enabled: false
+              k8s.namespace.name:
+                enabled: false
         processors:
-        extensions:
+          batch:
+          filter/signoz:
+            error_mode: ignore
+            metrics:
+              datapoint:
+                - 'resource.attributes["node.type"] == worker'
+          transform/signoz:
+            error_mode: ignore
+            metric_statements:
+              - context: metric
+                statements:
+                  - set(name, "signoz.meter.cpu.node.allocatable.usage") where name == "k8s.node.allocatable_cpu"
+                  - set(name, "signoz.meter.memory.node.allocatable.usage") where name == "k8s.node.allocatable_memory"
+          k8sattributes:
+            extract:
+              labels:
+                - tag_name: node.type
+                  key: node.type
+                  from: node
+        exporters:
+          signozclickhousemeter:
+            dsn: tcp://admin:27ff0399-0d3a-4bd8-919d-17c2181e6fb9@signoz-signoz-helm-clickhouse:9000/signoz_meter
+            sending_queue:
+              enabled: false
+            timeout: 45s
         service:
           pipelines:
             metrics/meter:
-              receivers: []
-              processors: []
-              exporters: []
+              receivers: [k8s_cluster]
+              processors: [k8sattributes, filter/signoz, transform/signoz, batch]
+              exporters: [signozclickhousemeter]
