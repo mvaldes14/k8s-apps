@@ -56,8 +56,8 @@ data:
       name: "otel-agent"
       image:
         registry: docker.io
-        repository: otel/opentelemetry-collector-contrib
-        tag: 0.139.0
+        repository: signoz/signoz-otel-collector
+        tag: 0.144.4
         pullPolicy: IfNotPresent
       imagePullSecrets: []
       command:
@@ -210,3 +210,17 @@ data:
           mountPropagation: HostToContainer
     otelDeployment:
       enabled: false
+      image:
+        registry: docker.io
+        repository: signoz/signoz-otel-collector
+        tag: 0.144.4
+      config:
+        receivers:
+        processors:
+        extensions:
+        service:
+          pipelines:
+            metrics/meter:
+              receivers: []
+              processors: []
+              exporters: []
