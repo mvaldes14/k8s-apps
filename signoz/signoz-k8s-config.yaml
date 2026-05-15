@@ -213,7 +213,7 @@ data:
       image:
         registry: docker.io
         repository: signoz/signoz-otel-collector
-        tag: 0.144.4
+        tag: v0.144.4
       config:
         receivers:
         processors:
