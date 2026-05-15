@@ -634,13 +634,6 @@ data:
             timeout: 45s
             sending_queue:
               enabled: false
-          otlphttp/victoriametrics:
-            compression: gzip
-            encoding: proto
-            metrics_endpoint: http://victoriametrics-svc.metrics:8428/opentelemetry/v1/metrics
-            logs_endpoint: http://victorialogs-svc.logs:9428/insert/opentelemetry/v1/logs
-            tls:
-              insecure: true
         service:
           telemetry:
             logs:
@@ -654,11 +647,11 @@ data:
             metrics:
               receivers: [otlp, k8s_cluster]
               processors: [batch, k8sattributes]
-              exporters: [metadataexporter, signozclickhousemetrics, otlphttp/victoriametrics, signozmeter]
+              exporters: [metadataexporter, signozclickhousemetrics, signozmeter]
             logs:
               receivers: [otlp]
               processors: [batch, k8sattributes]
-              exporters: [clickhouselogsexporter, metadataexporter, otlphttp/victoriametrics, signozmeter]
+              exporters: [clickhouselogsexporter, metadataexporter, signozmeter]
             metrics/meter:
               receivers: [signozmeter]
               processors: [batch/meter]
