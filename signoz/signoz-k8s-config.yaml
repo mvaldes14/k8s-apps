@@ -214,6 +214,8 @@ data:
         registry: docker.io
         repository: signoz/signoz-otel-collector
         tag: v0.144.4
+      command:
+        name: /otelcol-contrib
       config:
         receivers:
           k8s_cluster:
