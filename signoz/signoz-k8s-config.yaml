@@ -199,15 +199,6 @@ data:
               exporters: [otlphttp]
             logs:
               exporters: [otlphttp]
-      extraVolumes:
-        - name: hostfs
-          hostPath:
-            path: /
-      extraVolumeMounts:
-        - name: hostfs
-          mountPath: /hostfs
-          readOnly: true
-          mountPropagation: HostToContainer
     otelDeployment:
       enabled: true
       image:
