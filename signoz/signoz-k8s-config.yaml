@@ -233,11 +233,15 @@ data:
                 enabled: false
         processors:
           batch:
+            send_batch_size: 50000
+            timeout: 5s
           filter/signoz:
             error_mode: ignore
             metrics:
               datapoint:
-                - 'resource.attributes["node.type"] == worker'
+                - 'resource.attributes["node.type"] != "worker"'
+              metric:
+                - 'name != "signoz.meter.cpu.node.allocatable.usage" and name != "signoz.meter.memory.node.allocatable.usage"'
           transform/signoz:
             error_mode: ignore
             metric_statements:
@@ -245,6 +249,8 @@ data:
                 statements:
                   - set(name, "signoz.meter.cpu.node.allocatable.usage") where name == "k8s.node.allocatable_cpu"
                   - set(name, "signoz.meter.memory.node.allocatable.usage") where name == "k8s.node.allocatable_memory"
+                  - convert_gauge_to_sum("cumulative", true) where name == "signoz.meter.cpu.node.allocatable.usage"
+                  - convert_gauge_to_sum("cumulative", true) where name == "signoz.meter.memory.node.allocatable.usage"
           k8sattributes:
             extract:
               labels:
@@ -261,5 +267,5 @@ data:
           pipelines:
             metrics/meter:
               receivers: [k8s_cluster]
-              processors: [k8sattributes, filter/signoz, transform/signoz, batch]
+              processors: [k8sattributes, transform/signoz, filter/signoz, batch]
               exporters: [signozclickhousemeter]
