@@ -13,6 +13,6 @@ metadata:
   name: cilium-l2adv
 spec:
   interfaces:
-    - eno1
+    - ^en.+
   externalIPs: true
   loadBalancerIPs: true
