@@ -602,6 +602,8 @@ data:
         extensions:
           health_check:
             endpoint: 0.0.0.0:13133
+          pprof:
+            endpoint: localhost:1777
         exporters:
           clickhousetraces:
             datasource: tcp://${env:CLICKHOUSE_USER}:${env:CLICKHOUSE_PASSWORD}@${env:CLICKHOUSE_HOST}:${env:CLICKHOUSE_PORT}/${env:CLICKHOUSE_TRACE_DATABASE}
@@ -638,7 +640,7 @@ data:
           telemetry:
             logs:
               encoding: json
-          extensions: [health_check]
+          extensions: [health_check, pprof]
           pipelines:
             traces:
               receivers: [otlp]
