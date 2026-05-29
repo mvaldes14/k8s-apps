@@ -442,7 +442,7 @@ data:
       lowCardinalityExceptionGrouping: false
       minReadySeconds: 5
       progressDeadlineSeconds: 600
-      replicaCount: 1
+      replicaCount: 2
       clusterRole:
         create: true
         annotations: {}
