@@ -241,16 +241,13 @@ data:
               datapoint:
                 - 'resource.attributes["node.type"] != "worker"'
               metric:
-                - 'name != "signoz.meter.cpu.node.allocatable.usage" and name != "signoz.meter.memory.node.allocatable.usage"'
+                - 'name != "signoz.meter.cpu.node.allocatable.usage"
           transform/signoz:
             error_mode: ignore
             metric_statements:
               - context: metric
                 statements:
                   - set(name, "signoz.meter.cpu.node.allocatable.usage") where name == "k8s.node.allocatable_cpu"
-                  - set(name, "signoz.meter.memory.node.allocatable.usage") where name == "k8s.node.allocatable_memory"
-                  - convert_gauge_to_sum("cumulative", true) where name == "signoz.meter.cpu.node.allocatable.usage"
-                  - convert_gauge_to_sum("cumulative", true) where name == "signoz.meter.memory.node.allocatable.usage"
           k8sattributes:
             extract:
               labels:
