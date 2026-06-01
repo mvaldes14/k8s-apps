@@ -209,67 +209,59 @@ data:
         name: /signoz-otel-collector
       config:
         receivers:
-          k8s_cluster:
+          k8s_cluster/meter:
             auth_type: serviceAccount
-            allocatable_types_to_report: [cpu, memory]
-            node_conditions_to_report:
-              - Ready
-              - MemoryPressure
-              - DiskPressure
-              - PIDPressure
-              - NetworkUnavailable
+            # collection_interval: 1h
+            allocatable_types_to_report: [cpu]
+            node_conditions_to_report: []
             resource_attributes:
-              container.runtime:
-                enabled: false
-              container.runtime.version:
-                enabled: false
-              k8s.container.status.last_terminated_reason:
-                enabled: false
-              k8s.kubelet.version:
-                enabled: false
-              k8s.pod.qos_class:
-                enabled: false
-              k8s.namespace.name:
-                enabled: false
+              container.runtime: { enabled: false }
+              container.runtime.version: { enabled: false }
+              k8s.container.status.last_terminated_reason: { enabled: false }
+              k8s.kubelet.version: { enabled: false }
+              k8s.pod.qos_class: { enabled: false }
+              k8s.namespace.name: { enabled: false }
         processors:
-          batch/meter:
-            send_batch_size: 50000
-            timeout: 5s
-          filter/meter-signoz:
-            error_mode: ignore
-            metrics:
-              datapoint:
-                - 'resource.attributes["node.type"] != "worker"'
-              metric:
-                - 'name != "signoz.meter.cpu.node.allocatable.usage"
-          transform/signoz:
+          k8sattributes/meter:
+            extract:
+              metadata:
+                - k8s.namespace.name
+                - k8s.node.name
+                - k8s.pod.name
+            filter:
+              namespace: signoz
+            pod_association:
+              - sources:
+                  - from: resource_attribute
+                    name: k8s.node.name
+          transform/meter:
             error_mode: ignore
             metric_statements:
               - context: metric
                 statements:
                   - set(name, "signoz.meter.cpu.node.allocatable.usage") where name == "k8s.node.allocatable_cpu"
-          k8sattributes:
-            extract:
-              labels:
-                - tag_name: node.type
-                  key: node.type
-                  from: node
-          filter/meter-metrics:
+          filter/meter:
             error_mode: ignore
             metrics:
               metric:
-                - name != "signoz.meter.cpu.node.allocatable.usage"
+                - 'name != "signoz.meter.cpu.node.allocatable.usage"'
               datapoint:
                 - 'resource.attributes["k8s.namespace.name"] != "signoz"'
+          batch/meter:
+            send_batch_size: 50000
+            timeout: 5s
         exporters:
           signozclickhousemeter:
-            dsn: tcp://admin:27ff0399-0d3a-4bd8-919d-17c2181e6fb9@signoz-signoz-helm-clickhouse:9000/signoz_meter
+            dsn: tcp://admin:27ff0399-0d3a-4bd8-919d-17c2181e6fb9@signoz-clickhouse:9000/signoz_meter
             sending_queue:
               enabled: false
             timeout: 45s
         service:
           pipelines:
             metrics/meter:
-              receivers: [k8s_cluster]
-              processors: [k8sattributes/meter, transform/meter, filter/meter-signoz, filter/meter-metrics, batch/meter]
+              receivers: [k8s_cluster/meter]
+              processors: [k8sattributes/meter, transform/meter, filter/meter, batch/meter]
               exporters: [signozclickhousemeter]
+          telemetry:
+            logs:
+              encoding: json
