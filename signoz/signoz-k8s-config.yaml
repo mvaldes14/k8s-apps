@@ -252,7 +252,7 @@ data:
             timeout: 5s
         exporters:
           signozclickhousemeter:
-            dsn: tcp://admin:27ff0399-0d3a-4bd8-919d-17c2181e6fb9@signoz-clickhouse:9000/signoz_meter
+            dsn: tcp://admin:27ff0399-0d3a-4bd8-919d-17c2181e6fb9@signoz-signoz-helm-clickhouse:9000/signoz_meter
             sending_queue:
               enabled: false
             timeout: 45s
