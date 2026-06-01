@@ -57,7 +57,7 @@ data:
       image:
         registry: docker.io
         repository: signoz/signoz-otel-collector
-        tag: v0.144.4
+        tag: v0.144.5
         pullPolicy: IfNotPresent
       imagePullSecrets: []
       command:
@@ -204,7 +204,7 @@ data:
       image:
         registry: docker.io
         repository: signoz/signoz-otel-collector
-        tag: v0.144.4
+        tag: v0.144.5
       command:
         name: /signoz-otel-collector
       config:
