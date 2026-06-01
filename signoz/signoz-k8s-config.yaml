@@ -228,6 +228,10 @@ data:
                 - k8s.namespace.name
                 - k8s.node.name
                 - k8s.pod.name
+              labels:
+                - tag_name: node.type
+                  key: node.type
+                  from: node
             filter:
               namespace: signoz
             pod_association:
@@ -247,6 +251,11 @@ data:
                 - 'name != "signoz.meter.cpu.node.allocatable.usage"'
               datapoint:
                 - 'resource.attributes["k8s.namespace.name"] != "signoz"'
+          filter/signoz:
+            error_mode: ignore
+            metrics:
+              datapoint:
+                - 'resource.attributes["node.type"] == nil'
           batch/meter:
             send_batch_size: 50000
             timeout: 5s
@@ -260,7 +269,7 @@ data:
           pipelines:
             metrics/meter:
               receivers: [k8s_cluster/meter]
-              processors: [k8sattributes/meter, transform/meter, filter/meter, batch/meter]
+              processors: [k8sattributes/meter, transform/meter, filter/meter, filter/signoz, batch/meter]
               exporters: [signozclickhousemeter]
           telemetry:
             logs:
