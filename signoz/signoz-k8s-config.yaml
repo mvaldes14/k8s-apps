@@ -232,10 +232,10 @@ data:
               k8s.namespace.name:
                 enabled: false
         processors:
-          batch:
+          batch/meter:
             send_batch_size: 50000
             timeout: 5s
-          filter/signoz:
+          filter/meter-signoz:
             error_mode: ignore
             metrics:
               datapoint:
@@ -254,6 +254,13 @@ data:
                 - tag_name: node.type
                   key: node.type
                   from: node
+          filter/meter-metrics:
+            error_mode: ignore
+            metrics:
+              metric:
+                - name != "signoz.meter.cpu.node.allocatable.usage"
+              datapoint:
+                - 'resource.attributes["k8s.namespace.name"] != "signoz"'
         exporters:
           signozclickhousemeter:
             dsn: tcp://admin:27ff0399-0d3a-4bd8-919d-17c2181e6fb9@signoz-signoz-helm-clickhouse:9000/signoz_meter
@@ -264,5 +271,5 @@ data:
           pipelines:
             metrics/meter:
               receivers: [k8s_cluster]
-              processors: [k8sattributes, transform/signoz, filter/signoz, batch]
+              processors: [k8sattributes/meter, transform/meter, filter/meter-signoz, filter/meter-metrics, batch/meter]
               exporters: [signozclickhousemeter]
