@@ -30,7 +30,6 @@ spec:
         - name: atuin-server
           image: ghcr.io/atuinsh/atuin:latest
           args:
-            - server
             - start
           imagePullPolicy: IfNotPresent
           livenessProbe:
