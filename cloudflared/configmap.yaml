@@ -56,8 +56,8 @@ data:
 
     - hostname: doit.mvaldes.dev
       service: http://td-svc.td
-
-    - hostname: wger.mvaldes.dev
-      service: http://wger-svc.wger
+    
+    - hostname: chi.mvaldes.dev
+      service: http://quinela.test
 
     - service: http_status:404

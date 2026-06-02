@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: nocobdb-deploy
-          image: nocodb/nocodb:0.301.3
+          image: nocodb/nocodb:latest
           imagePullPolicy: IfNotPresent
           env:
             - name: DB_HOST
