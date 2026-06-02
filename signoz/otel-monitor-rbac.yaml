@@ -1,0 +1,30 @@
+# Additive RBAC for the otel-monitor collector (SA: signoz-signoz-helm-otel-collector).
+# The cilium-hubble scrape job in otel-monitor-config uses kubernetes_sd role: endpoints
+# (Hubble's :9965 shares the cilium-agent pod, so a single prometheus.io/port annotation
+# can't reach it). The Helm-managed collector ClusterRole only covers role: pod discovery,
+# so endpoint discovery is forbidden. This grant is kept separate from the Helm chart so it
+# is not reverted on reconcile.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: otel-monitor-endpoints-reader
+rules:
+  - apiGroups: [""]
+    resources: ["endpoints", "services"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["discovery.k8s.io"]
+    resources: ["endpointslices"]
+    verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: otel-monitor-endpoints-reader
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: otel-monitor-endpoints-reader
+subjects:
+  - kind: ServiceAccount
+    name: signoz-signoz-helm-otel-collector
+    namespace: signoz
