@@ -24,7 +24,7 @@ data:
         number: 1
         topologyKey: kubernetes.io/hostname
       startupProbe:
-        failureThreshold: 60
+        failureThreshold: 90
       zookeeper:
         enabled: true
         podAnnotations:
