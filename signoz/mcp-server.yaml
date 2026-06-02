@@ -48,12 +48,6 @@ spec:
               value: "8000"
           ports:
             - containerPort: 8000
-          resources:
-            requests:
-              cpu: 10m
-              memory: 256Mi
-            limits:
-              memory: 512Mi
       restartPolicy: Always
 ---
 apiVersion: v1
