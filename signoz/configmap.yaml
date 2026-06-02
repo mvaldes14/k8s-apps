@@ -78,6 +78,20 @@ data:
                   replacement: $1:$2
                   target_label: __address__
 
+            # Scrape Hubble metrics (9965) — same pod as cilium-agent, so the
+            # single prometheus.io/port annotation can't cover it. Target the
+            # hubble-metrics headless service endpoints directly instead.
+            - job_name: cilium-hubble
+              kubernetes_sd_configs:
+                - role: endpoints
+              relabel_configs:
+                - source_labels:
+                    - __meta_kubernetes_namespace
+                    - __meta_kubernetes_service_name
+                    - __meta_kubernetes_endpoint_port_name
+                  action: keep
+                  regex: kube-system;hubble-metrics;hubble-metrics
+
             # Scrape pods with signoz.io/* annotations (SigNoz components)
             - job_name: k8s-pods-signoz
               kubernetes_sd_configs:

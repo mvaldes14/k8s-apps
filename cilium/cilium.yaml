@@ -55,17 +55,44 @@ spec:
 
     tunnelProtocol: vxlan
 
+    # cilium-agent metrics (port 9962, /metrics)
+    prometheus:
+      enabled: true
+      port: 9962
+      serviceMonitor:
+        enabled: false
+
+    # cilium-operator metrics (port 9963, /metrics)
+    # operator.prometheus block is defined under the operator: key below
+
     hubble:
       relay:
         enabled: true
       ui:
-        enabled: true
+        enabled: false
+      # hubble flow/network metrics (port 9965, /metrics)
+      metrics:
+        enabled:
+          - dns
+          - drop
+          - tcp
+          - flow
+          - port-distribution
+          - icmp
+        serviceMonitor:
+          enabled: false
     bpf:
       masquerade: true
       hostLegacyRouting: true
 
     operator:
       replicas: 1
+      # cilium-operator metrics (port 9963, /metrics)
+      prometheus:
+        enabled: true
+        port: 9963
+        serviceMonitor:
+          enabled: false
       tolerations:
         - key: "node-role.kubernetes.io/control-plane"
           operator: "Exists"
