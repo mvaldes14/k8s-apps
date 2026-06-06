@@ -56,8 +56,11 @@ data:
 
     - hostname: doit.mvaldes.dev
       service: http://td-svc.td
-    
+
     - hostname: chi.mvaldes.dev
       service: http://quinela.test
+
+    - hostname: argo.mvaldes.dev
+      service: http://argocd-server.argocd
 
     - service: http_status:404
