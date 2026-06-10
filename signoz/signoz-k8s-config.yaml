@@ -251,11 +251,13 @@ data:
                 - 'name != "signoz.meter.cpu.node.allocatable.usage"'
               datapoint:
                 - 'resource.attributes["k8s.namespace.name"] != "signoz"'
-          filter/signoz:
-            error_mode: ignore
-            metrics:
-              datapoint:
                 - 'resource.attributes["node.type"] == nil'
+          transform/cleanup:
+            error_mode: ignore
+            metric_statements:
+              - context: resource
+                statements:
+                  - delete_key(attributes, "k8s.namespace.name")
           batch/meter:
             send_batch_size: 50000
             timeout: 5s
@@ -269,7 +271,7 @@ data:
           pipelines:
             metrics/meter:
               receivers: [k8s_cluster/meter]
-              processors: [k8sattributes/meter, transform/meter, filter/meter, filter/signoz, batch/meter]
+              processors: [k8sattributes/meter, transform/meter, filter/meter, transform/cleanup, batch/meter]
               exporters: [signozclickhousemeter]
           telemetry:
             logs:
