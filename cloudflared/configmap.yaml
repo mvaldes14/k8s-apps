@@ -58,7 +58,7 @@ data:
       service: http://td-svc.td
 
     - hostname: chi.mvaldes.dev
-      service: http://quinela.test
+      service: http://quinela.chi
 
     - hostname: argo.mvaldes.dev
       service: http://argocd-server.argocd
