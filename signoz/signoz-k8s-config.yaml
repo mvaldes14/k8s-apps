@@ -229,8 +229,8 @@ data:
                 - k8s.node.name
                 - k8s.pod.name
               labels:
-                - tag_name: node.type
-                  key: node.type
+                - tag_name: signoz.io/workload
+                  key: signoz.io/workload
                   from: node
             filter:
               namespace: signoz
@@ -251,7 +251,7 @@ data:
                 - 'name != "signoz.meter.cpu.node.allocatable.usage"'
               datapoint:
                 - 'resource.attributes["k8s.namespace.name"] != "signoz"'
-                - 'resource.attributes["node.type"] == nil'
+                - 'resource.attributes["signoz.io/workload"] == nil'
           transform/cleanup:
             error_mode: ignore
             metric_statements:
