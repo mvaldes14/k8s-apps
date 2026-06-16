@@ -1,25 +1,30 @@
-apiVersion: v1
-kind: ConfigMap
+apiVersion: opentelemetry.io/v1beta1
+kind: OpenTelemetryCollector
 metadata:
-  name: otel-monitor-config
+  name: otel-internal-monitor
   namespace: signoz
-data:
-  otel-collector-config.yaml: |
+  labels:
+    app: otel-internal-monitor
+spec:
+  mode: deployment
+  image: signoz/signoz-otel-collector:v0.144.5
+  serviceAccount: signoz-signoz-helm-otel-collector
+  config:
     receivers:
       httpcheck:
         metrics:
-              httpcheck.dns.lookup.duration:
-                enabled: true
-              httpcheck.client.connection.duration:
-                enabled: true
-              httpcheck.tls.handshake.duration:
-                enabled: true
-              httpcheck.client.request.duration:
-                enabled: true
-              httpcheck.response.duration:
-                enabled: true
-              httpcheck.tls.cert_remaining:
-                enabled: true
+          httpcheck.dns.lookup.duration:
+            enabled: true
+          httpcheck.client.connection.duration:
+            enabled: true
+          httpcheck.tls.handshake.duration:
+            enabled: true
+          httpcheck.client.request.duration:
+            enabled: true
+          httpcheck.response.duration:
+            enabled: true
+          httpcheck.tls.cert_remaining:
+            enabled: true
         targets:
           - endpoint: https://grafana.mvaldes.dev
             method: GET
@@ -65,14 +70,20 @@ data:
               kubernetes_sd_configs:
                 - role: pod
               relabel_configs:
-                - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+                - source_labels:
+                    [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
                   action: keep
                   regex: "true"
-                - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+                - source_labels:
+                    [__meta_kubernetes_pod_annotation_prometheus_io_path]
                   action: replace
                   target_label: __metrics_path__
                   regex: (.+)
-                - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
+                - source_labels:
+                    [
+                      __address__,
+                      __meta_kubernetes_pod_annotation_prometheus_io_port,
+                    ]
                   action: replace
                   regex: ([^:]+)(?::\d+)?;(\d+)
                   replacement: $1:$2
@@ -97,14 +108,20 @@ data:
               kubernetes_sd_configs:
                 - role: pod
               relabel_configs:
-                - source_labels: [__meta_kubernetes_pod_annotation_signoz_io_scrape]
+                - source_labels:
+                    [__meta_kubernetes_pod_annotation_signoz_io_scrape]
                   action: keep
                   regex: "true"
-                - source_labels: [__meta_kubernetes_pod_annotation_signoz_io_path]
+                - source_labels:
+                    [__meta_kubernetes_pod_annotation_signoz_io_path]
                   action: replace
                   target_label: __metrics_path__
                   regex: (.+)
-                - source_labels: [__address__, __meta_kubernetes_pod_annotation_signoz_io_port]
+                - source_labels:
+                    [
+                      __address__,
+                      __meta_kubernetes_pod_annotation_signoz_io_port,
+                    ]
                   action: replace
                   regex: ([^:]+)(?::\d+)?;(\d+)
                   replacement: $1:$2
@@ -140,3 +157,34 @@ data:
       telemetry:
         logs:
           level: info
+---
+# Additive RBAC for this collector (SA: signoz-signoz-helm-otel-collector).
+# The cilium-hubble scrape job above uses kubernetes_sd role: endpoints
+# (Hubble's :9965 shares the cilium-agent pod, so a single prometheus.io/port annotation
+# can't reach it). The Helm-managed collector ClusterRole only covers role: pod discovery,
+# so endpoint discovery is forbidden. This grant is kept separate from the Helm chart so it
+# is not reverted on reconcile.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: otel-monitor-endpoints-reader
+rules:
+  - apiGroups: [""]
+    resources: ["endpoints", "services"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["discovery.k8s.io"]
+    resources: ["endpointslices"]
+    verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: otel-monitor-endpoints-reader
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: otel-monitor-endpoints-reader
+subjects:
+  - kind: ServiceAccount
+    name: signoz-signoz-helm-otel-collector
+    namespace: signoz
