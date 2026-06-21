@@ -1,0 +1,39 @@
+apiVersion: clickhouse.com/v1alpha1
+kind: ClickHouseCluster
+metadata:
+  name: ck-cluster
+  namespace: clickhouse
+spec:
+  replicas: 1
+  shards: 1
+  podTemplate:
+    nodeHostnameKey: kubernetes.io/hostname
+  keeperClusterRef:
+    name: ck-keeper
+  dataVolumeClaimSpec:
+    storageClassName: nfs-k8s-keep
+    resources:
+      requests:
+        storage: 5Gi
+  containerTemplate:
+    resources:
+      requests:
+        cpu: "1"
+        memory: "4Gi"
+      limits:
+        memory: "4Gi"
+---
+apiVersion: clickhouse.com/v1alpha1
+kind: KeeperCluster
+metadata:
+  name: ck-keeper
+  namespace: clickhouse
+spec:
+  replicas: 1
+  podTemplate:
+    nodeHostnameKey: kubernetes.io/hostname
+  dataVolumeClaimSpec:
+    storageClassName: nfs-k8s-keep
+    resources:
+      requests:
+        storage: 1Gi
