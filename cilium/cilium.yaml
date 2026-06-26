@@ -44,7 +44,9 @@ spec:
     l2announcements:
       enabled: true
 
-    MTU: 1450
+    # Capped to the Tailscale tunnel MTU (1280) so pod egress fits the tunnel
+    # without relying on PMTUD — fixes Cilium LB VIPs hanging over the tailnet.
+    MTU: 1280
 
     ipam:
       mode: cluster-pool
