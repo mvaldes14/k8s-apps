@@ -9,6 +9,9 @@ data:
     credentials-file: /etc/cloudflared/creds/tunnel.json
     metrics: 0.0.0.0:2000
     no-autoupdate: false
+    # QUIC (default) blackholes over the 1280 cilium pod MTU (UDP can't be MSS-clamped);
+    # http2 runs over TCP and works at reduced MTU. See Logs/2026-07-06.
+    protocol: http2
     originRequest:
       connectionTimeout: 30s
     ingress:
@@ -62,5 +65,8 @@ data:
 
     - hostname: argo.mvaldes.dev
       service: http://argocd-server.argocd
+
+    - hostname: tkd.mvaldes.dev
+      service: http://frontend.tkd
 
     - service: http_status:404
