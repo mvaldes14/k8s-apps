@@ -27,9 +27,6 @@ data:
     - hostname: draw.mvaldes.dev
       service: http://excalidraw-service.excalidraw
 
-    - hostname: grafana.mvaldes.dev
-      service: http://grafana-grafana-release.grafana
-
     - hostname: umami.mvaldes.dev
       service: http://umami-svc.umami
 
