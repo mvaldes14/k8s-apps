@@ -67,6 +67,6 @@ data:
       service: http://argocd-server.argocd
 
     - hostname: tkd.mvaldes.dev
-      service: http://frontend.tkd
+      service: http://frontend.chi
 
     - service: http_status:404
