@@ -20,6 +20,8 @@ spec:
           image: nocodb/nocodb:latest
           imagePullPolicy: IfNotPresent
           env:
+            - name: NC_ALLOW_LOCAL_HOSTS
+              value: "true"
             - name: DB_HOST
               valueFrom:
                 secretKeyRef:
