@@ -66,4 +66,7 @@ data:
     - hostname: tkd.mvaldes.dev
       service: http://frontend.chi
 
+    - hostname: auth.mvaldes.dev
+      service: http://authentik-svc.authentik
+
     - service: http_status:404
