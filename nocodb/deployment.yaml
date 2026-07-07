@@ -20,7 +20,7 @@ spec:
           image: nocodb/nocodb:latest
           imagePullPolicy: IfNotPresent
           env:
-            - name: NC_ALLOW_LOCAL_HOSTS
+            - name: NC_ALLOW_LOCAL_EXTERNAL_DBS
               value: "true"
             - name: DB_HOST
               valueFrom:
