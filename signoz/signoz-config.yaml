@@ -79,7 +79,7 @@ data:
       image:
         registry: docker.io
         repository: clickhouse/clickhouse-server
-        tag: 25.5.6
+        tag: 25.12.5.44
         pullPolicy: IfNotPresent
       imagePullSecrets: []
       podAnnotations:
