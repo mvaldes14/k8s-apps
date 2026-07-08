@@ -1,0 +1,26 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: homelab-db
+  namespace: db
+spec:
+  instances: 1
+  imageName: ghcr.io/cloudnative-pg/postgresql:16.4
+  storage:
+    size: 2Gi
+    storageClass: nfs-k8s-keep
+  walStorage:
+    size: 1Gi
+    storageClass: nfs-k8s
+  bootstrap:
+    initdb:
+      database: personal
+      owner: admin
+      secret:
+        name: db-secret
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "500m"
+    limits:
+      memory: "1Gi"
