@@ -13,6 +13,22 @@ data:
     configs:
       cm:
         users.anonymous.enabled: "false"
+        # OIDC via Authentik — see wiki: Inbox/argocd-access.md
+        oidc.config: |
+          name: Authentik
+          issuer: https://auth.mvaldes.dev/application/o/argocd/
+          clientID: WBmrwNHR7Cs0SpBP3OuluT6nTMr4WKujp27Mn8WH
+          clientSecret: $oidc.authentik.clientSecret
+          requestedScopes: [openid, profile, email, groups]
+          requestedIDTokenClaims:
+            groups: {essential: true}
+      rbac:
+        policy.default: role:''
+        scopes: '[groups]'
+        policy.csv: |
+          p, role:guest-syncer, applications, get,  guest-project/myapp, allow
+          p, role:guest-syncer, applications, sync, guest-project/myapp, allow
+          g, argocd-guests, role:guest-syncer
       params:
         server.insecure: true  # TLS terminated at Cloudflare
       secret:

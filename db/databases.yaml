@@ -1,0 +1,77 @@
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: atuin-db
+  namespace: db
+spec:
+  name: atuin
+  owner: admin
+  cluster:
+    name: homelab-db
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: authentik-db
+  namespace: db
+spec:
+  name: authentik
+  owner: admin
+  cluster:
+    name: homelab-db
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: n8n-db
+  namespace: db
+spec:
+  name: n8n
+  owner: admin
+  cluster:
+    name: homelab-db
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: nocodb-db
+  namespace: db
+spec:
+  name: nocodb
+  owner: admin
+  cluster:
+    name: homelab-db
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: paperless-db
+  namespace: db
+spec:
+  name: paperless
+  owner: admin
+  cluster:
+    name: homelab-db
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: td-db
+  namespace: db
+spec:
+  name: td
+  owner: admin
+  cluster:
+    name: homelab-db
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: umami-db
+  namespace: db
+spec:
+  name: umami
+  owner: admin
+  cluster:
+    name: homelab-db
