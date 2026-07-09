@@ -18,6 +18,29 @@ spec:
       owner: admin
       secret:
         name: db-secret
+      import:
+        type: monolith
+        databases:
+          - atuin
+          - authentik
+          - n8n
+          - paperless
+          - personal
+          - td
+          - umami
+        roles:
+          - admin
+        source:
+          externalCluster: legacy-pg
+  externalClusters:
+    - name: legacy-pg
+      connectionParameters:
+        host: postgres-svc
+        user: admin
+        dbname: postgres
+      password:
+        name: db-secret
+        key: password
   resources:
     requests:
       memory: "512Mi"
