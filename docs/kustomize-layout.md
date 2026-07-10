@@ -1,7 +1,8 @@
 # Proposed Kustomize Layout
 
 A proposal for restructuring `k8s-apps` so that shared functionality is defined
-once and reused, instead of being copy-pasted across ~35 app directories.
+once in a **`base/`** folder and each app becomes a thin **overlay**, instead of
+copy-pasting the same manifests across ~35 app directories.
 
 > **Status:** proposal / design doc. No manifests are changed by this document.
 > Migration is meant to happen incrementally, app by app (see
@@ -39,69 +40,75 @@ There is also **inconsistency** that a shared layout would fix:
   (`authentik/namespace.yaml`), or not at all.
 - File extensions are mixed: `garage/` and `gotify/` use `.yml`, everything
   else uses `.yaml`.
-- Only `arrs/` and `cert-manager/` use kustomize today. `arrs/` is actually a
-  good base/overlay example (`arrs/base` + per-app overlays with `namePrefix`
-  and patches) — the rest of the repo should look more like it.
+- Only `arrs/` and `cert-manager/` use kustomize today. `arrs/` is already a
+  good **base + overlay** example (`arrs/base` + per-app overlays that reference
+  it via `resources:` and patch it) — the rest of the repo should look like it.
 
 ---
 
 ## 2. Target layout
 
+Everything reusable lives under `base/`; every app under `apps/` is an overlay
+that pulls the bases it needs in via `resources:` and patches the few fields
+that differ. This is the same mechanism `arrs/` already uses, extended to the
+cross-cutting resources (ExternalSecret, Traefik route, PVC).
+
 ```
-components/                 # reusable kustomize Components (cross-cutting concerns)
-  external-secret/          #   Vault-backed ExternalSecret template
+base/                       # shared, reusable resources
+  crds/                     #   (existing) cluster CRDs
+  storageclass.yaml         #   (existing) cluster StorageClass
+  external-secret/          #   reusable Vault-backed ExternalSecret base
     kustomization.yaml
     externalsecret.yaml
-  traefik-route/            #   websecure IngressRoute template
+  traefik-route/            #   reusable websecure IngressRoute base
     kustomization.yaml
     ingressroute.yaml
-  nfs-pvc/                  #   nfs-k8s-keep PVC defaults
+  nfs-pvc/                  #   reusable nfs-k8s-keep PVC base
     kustomization.yaml
     pvc.yaml
 
-base/                       # shared CLUSTER resources (unchanged): storageclass, crds
-
 apps/
-  <app>/
-    kustomization.yaml      # namespace: <app>; lists resources + components + patches
+  <app>/                    # overlay: references the bases it needs + its own workload
+    kustomization.yaml      #   namespace: <app>; resources: [base refs + deployment/service]; patches
     deployment.yaml
     service.yaml
-    # no per-file namespace, no standalone external-secrets/ingress/pvc boilerplate
+    # no per-file namespace; no standalone external-secret/ingress/pvc boilerplate
 
 arrs/                       # already base/overlay; keep as the reference implementation
 fluxcd/                     # unchanged in this proposal (see section 5)
 ```
 
-Two reuse mechanisms, used for two different situations:
+**One mechanism everywhere: base + overlay.**
 
-- **Base + overlay** — for *families of near-identical apps*. `arrs/` is the
-  model: one `arrs/base` Deployment/Service, and each app (`sonarr`, `radarr`,
-  …) is a thin overlay that patches the image, ports, and volumes. Use this
-  when the apps themselves are variations on one another.
+- A **base** is a self-contained, buildable kustomization — a directory with its
+  own `kustomization.yaml` listing one canonical resource with all the
+  never-changes fields baked in. You can `kustomize build base/external-secret`
+  on its own.
+- An **overlay** (each app) lists those bases under `resources:` alongside its
+  own `deployment.yaml`/`service.yaml`, sets `namespace: <app>` once, and patches
+  only the handful of fields that vary. Each overlay gets its own independent
+  copy of the base, so there are no cross-app collisions.
 
-- **Components** — for a *cross-cutting concern mixed into otherwise unrelated
-  apps*. An `ExternalSecret`, a Traefik route, and an NFS PVC show up in
-  `atuin`, `paperless`, `n8n`, `garage`, … which are not variations of each
-  other. A [kustomize Component](https://kubectl.docs.kubernetes.io/guides/config_management/components/)
-  is the right tool: each app opts in with one line and supplies only the bits
-  that differ.
+This keeps the repo on a single, familiar pattern (the one `arrs/` already
+demonstrates) rather than mixing bases and components.
 
 ---
 
-## 3. The reusable pieces
+## 3. The reusable bases
 
 ### 3.1 Per-app namespace (biggest, cheapest win)
 
-Set the namespace **once** in the app's `kustomization.yaml` and delete it from
-every individual resource:
+Set the namespace **once** in the app overlay and delete it from every
+individual resource — it also propagates to the resources pulled in from the
+bases:
 
 ```yaml
 # apps/atuin/kustomization.yaml
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: atuin           # <-- rewrites metadata.namespace on every resource below
+namespace: atuin           # <-- rewrites metadata.namespace on every resource, base refs included
 resources:
-  - namespace.yaml         # or generate via a shared component
+  - namespace.yaml         # the Namespace object itself
   - deployment.yaml
   - service.yaml
 ```
@@ -109,12 +116,12 @@ resources:
 This alone removes the repeated `namespace:` line from ~5 files per app and
 ends the inline-vs-separate-vs-missing inconsistency.
 
-### 3.2 `components/external-secret`
+### 3.2 `base/external-secret`
 
 The canonical ExternalSecret, with everything that never changes baked in:
 
 ```yaml
-# components/external-secret/externalsecret.yaml
+# base/external-secret/externalsecret.yaml
 apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
@@ -135,22 +142,22 @@ spec:
 ```
 
 ```yaml
-# components/external-secret/kustomization.yaml
-apiVersion: kustomize.config.k8s.io/v1alpha1
-kind: Component
+# base/external-secret/kustomization.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
 resources:
   - externalsecret.yaml
 ```
 
-The only per-app variable is the Vault key `apps/<app>`. Because the app already
-sets `namespace: <app>` and the key is always `apps/<namespace>`, an app can
-derive it automatically with a `replacements` rule (no hand-editing at all):
+The only per-app variable is the Vault key `apps/<app>`. Because the overlay
+already sets `namespace: <app>` and the key is always `apps/<namespace>`, an app
+can derive it automatically with a `replacements` rule (no hand-editing at all):
 
 ```yaml
 # apps/atuin/kustomization.yaml (excerpt)
 namespace: atuin
-components:
-  - ../../components/external-secret
+resources:
+  - ../../base/external-secret
 replacements:
   - source: { kind: ExternalSecret, fieldPath: metadata.namespace }
     targets:
@@ -168,10 +175,10 @@ alternative is a 4-line patch per app setting the key — still far less than th
 > the migration; each app's Deployment `secretKeyRef.name` is updated to match
 > when it is converted. See the migration checklist.
 
-### 3.3 `components/traefik-route`
+### 3.3 `base/traefik-route`
 
 ```yaml
-# components/traefik-route/ingressroute.yaml
+# base/traefik-route/ingressroute.yaml
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
@@ -187,12 +194,20 @@ spec:
           port: 80
 ```
 
+```yaml
+# base/traefik-route/kustomization.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ingressroute.yaml
+```
+
 Per app, patch only the `Host()` and the target service name:
 
 ```yaml
 # apps/atuin/kustomization.yaml (excerpt)
-components:
-  - ../../components/traefik-route
+resources:
+  - ../../base/traefik-route
 patches:
   - target: { kind: IngressRoute }
     patch: |-
@@ -204,10 +219,10 @@ patches:
         value: atuin-svc
 ```
 
-### 3.4 `components/nfs-pvc`
+### 3.4 `base/nfs-pvc`
 
 ```yaml
-# components/nfs-pvc/pvc.yaml
+# base/nfs-pvc/pvc.yaml
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -220,9 +235,17 @@ spec:
       storage: 1Gi        # overridden per app
 ```
 
+```yaml
+# base/nfs-pvc/kustomization.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - pvc.yaml
+```
+
 Apps override only name + size via a small patch. Apps with multiple volumes
 (e.g. `paperless` has `-media` and `-data`) still declare those PVCs locally —
-the component covers the common single-volume case, which is the majority.
+the base covers the common single-volume case, which is the majority.
 
 ---
 
@@ -239,11 +262,13 @@ atuin/
   ingress.yaml            # websecure + tls + one host route
 ```
 
-**After** — app-specific manifests plus opt-in components:
+**After** — app-specific manifests plus the shared bases pulled in as
+`resources:`:
 
 ```
 apps/atuin/
   kustomization.yaml
+  namespace.yaml          # the Namespace object
   deployment.yaml         # just the Deployment (no Namespace, no namespace: field)
   service.yaml            # just the Service
 ```
@@ -254,12 +279,12 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: atuin
 resources:
+  - namespace.yaml
   - deployment.yaml
   - service.yaml
-components:
-  - ../../components/external-secret
-  - ../../components/traefik-route
-  - ../../components/nfs-pvc
+  - ../../base/external-secret
+  - ../../base/traefik-route
+  - ../../base/nfs-pvc
 replacements:
   - source: { kind: ExternalSecret, fieldPath: metadata.namespace }
     targets:
@@ -282,9 +307,9 @@ patches:
         value: 100Mi
 ```
 
-The three cross-cutting resources are now defined once in `components/`. When
-you need to change the Vault store, the Traefik entrypoint, or the storage
-class, you edit one file instead of ~19 / ~7 / ~15.
+The three cross-cutting resources are now defined once under `base/`. When you
+need to change the Vault store, the Traefik entrypoint, or the storage class,
+you edit one file instead of ~19 / ~7 / ~15.
 
 ### Verifying equivalence
 
@@ -292,12 +317,11 @@ The migration is safe to do incrementally because you can prove the rendered
 output matches what is deployed today before you merge:
 
 ```bash
-# render the new layout and diff against the live cluster
+# render the new overlay and diff against the live cluster
 kustomize build apps/atuin | kubectl diff -f -
 
-# or compare two renders offline (old dir vs new dir)
-kustomize build apps/atuin > /tmp/new.yaml
-# (hand-render / kubectl apply --dry-run=client the old atuin/ for comparison)
+# or render offline to eyeball the output
+kustomize build apps/atuin
 ```
 
 Flux keeps pointing at the same path, so once the diff is empty the switch is a
@@ -332,7 +356,7 @@ here as options to decide separately:
 | --- | --- | --- |
 | **Keep per-app** (status quo) | Max granularity: independent prune, health, and `dependsOn` per app; smallest blast radius | 29 files of copy-paste |
 | **Group into a few Kustomizations** (`infra` / `apps` / `media`) | Far less boilerplate | Coarser pruning + a failure in one app can stall the group's reconcile |
-| **Generate per-app Kustomizations** from a shared template | Keeps per-app granularity *and* removes copy-paste | Adds a generation step / component to the repo |
+| **Generate per-app Kustomizations** from a shared template | Keeps per-app granularity *and* removes copy-paste | Adds a generation step to the repo |
 
 **Recommendation:** the generated-per-app approach is the best long-term
 middle ground — it preserves the per-app pruning/health you have now while
@@ -346,16 +370,17 @@ above has landed.
 Incremental and low-risk — do one app at a time, on a branch, and verify each
 with `kustomize build` before merging.
 
-1. **Add `components/`** (`external-secret`, `traefik-route`, `nfs-pvc`) and a
-   top-level `apps/` directory. Nothing references them yet, so this is inert.
-2. **Pilot 2–3 apps** that exercise all three components. Good candidates:
+1. **Add the bases** under `base/` (`external-secret`, `traefik-route`,
+   `nfs-pvc`) and a top-level `apps/` directory. Nothing references them yet, so
+   this is inert.
+2. **Pilot 2–3 apps** that exercise all three bases. Good candidates:
    - `atuin` — namespace + deployment + service + PVC + ExternalSecret + IngressRoute (full house)
    - `td` — ExternalSecret + IngressRoute, no PVC
    - `paperless` — ExternalSecret + multi-PVC (proves the "local PVC" escape hatch)
 3. For each app: move its Deployment/Service into `apps/<app>/`, add the
-   `kustomization.yaml`, delete the boilerplate resources, and point the app's
-   Flux `Kustomization` `path` at `./apps/<app>`. Run
-   `kustomize build apps/<app> | kubectl diff -f -` and confirm an empty diff.
+   overlay `kustomization.yaml` referencing the bases, delete the boilerplate
+   resources, and point the app's Flux `Kustomization` `path` at `./apps/<app>`.
+   Run `kustomize build apps/<app> | kubectl diff -f -` and confirm an empty diff.
 4. **Standardize as you go:** `.yml` → `.yaml`, secret names → `app-secret`,
    namespace via the `namespace:` field.
 5. Repeat for the remaining apps. Leave `arrs/` as-is (it already follows the
@@ -365,9 +390,10 @@ with `kustomize build` before merging.
 
 - [ ] `apps/<app>/kustomization.yaml` with `namespace: <app>`
 - [ ] Deployment + Service moved in; `namespace:` fields removed
-- [ ] ExternalSecret replaced by the component (+ Vault key via `replacements`)
-- [ ] IngressRoute replaced by the component (+ Host/service patch), if any
-- [ ] Single PVC replaced by the component (+ size patch); multi-PVC kept local
+- [ ] ExternalSecret replaced by `../../base/external-secret` (+ Vault key via `replacements`)
+- [ ] IngressRoute replaced by `../../base/traefik-route` (+ Host/service patch), if any
+- [ ] Single PVC replaced by `../../base/nfs-pvc` (+ size patch); multi-PVC kept local
 - [ ] Deployment `secretKeyRef.name` updated to `app-secret`
 - [ ] Flux `Kustomization` `path` updated to `./apps/<app>`
 - [ ] `kustomize build apps/<app> | kubectl diff -f -` is empty
+```
