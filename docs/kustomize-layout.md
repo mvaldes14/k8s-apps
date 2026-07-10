@@ -48,14 +48,27 @@ There is also **inconsistency** that a shared layout would fix:
 
 ## 2. Target layout
 
-Everything reusable lives under `base/`; every app under `apps/` is an overlay
-that pulls the bases it needs in via `resources:` and patches the few fields
-that differ. This is the same mechanism `arrs/` already uses, extended to the
-cross-cutting resources (ExternalSecret, Traefik route, PVC).
+The repo splits into three layers, applied in order by Flux: a **platform
+layer** (`infrastructure/`) for CRDs and operators, shared **bases** (`base/`)
+for reusable app resources, and the **apps** themselves (`apps/`) as overlays.
+Each app pulls the bases it needs in via `resources:` and patches the few fields
+that differ — the same mechanism `arrs/` already uses.
 
 ```
-base/                       # shared, reusable resources
-  crds/                     #   (existing) cluster CRDs
+infrastructure/             # PLATFORM layer — CRDs + operators (see section 5)
+  crds/                     #   raw CRD bundles not owned by a chart
+    external-secrets/
+    elastic/
+    traefik/
+    kustomization.yaml
+  controllers/              #   operators/controllers, installed via Flux HelmReleases
+    external-secrets/       #     (moved out of the flat ./external-secrets dir)
+    cert-manager/
+    cilium/
+    vault/
+    ...
+
+base/                       # shared, reusable APP resources
   storageclass.yaml         #   (existing) cluster StorageClass
   external-secret/          #   reusable Vault-backed ExternalSecret base
     kustomization.yaml
@@ -75,7 +88,7 @@ apps/
     # no per-file namespace; no standalone external-secret/ingress/pvc boilerplate
 
 arrs/                       # already base/overlay; keep as the reference implementation
-fluxcd/                     # unchanged in this proposal (see section 5)
+fluxcd/                     # Flux Kustomizations + sources (see section 6)
 ```
 
 **One mechanism everywhere: base + overlay.**
@@ -329,7 +342,97 @@ no-op to the cluster.
 
 ---
 
-## 5. The 29 Flux `Kustomization` files (recommendation only)
+## 5. CRDs & operators (the platform layer)
+
+### What's there today
+
+Operators are **already in GitOps** — they're Flux `HelmRelease`s — but the
+manifests are scattered inside the flat app directories and mix concerns.
+`external-secrets/`, `cert-manager/`, `cilium/`, `vault/`, `grafana/`,
+`signoz/`, `atlantis/`, and `argo/` each bundle their own `HelmRepository` +
+`HelmRelease` (+ `Namespace`) alongside no clear ordering.
+
+CRDs are the weak spot:
+
+- `base/crds/` holds two large **raw CRD bundles** (`external-secrets.yaml`
+  ~1.4 MB, `elastic-crds.yaml` ~0.5 MB).
+- The Flux `Kustomization` `crds-flux` points at **`path: "./crds"` — a
+  directory that does not exist** (the bundles live in `base/crds/`). So that
+  reconciler applies nothing, which is why CRDs ended up installed by hand.
+- Traefik's CRDs (`IngressRoute`, used by 7 apps) aren't in the repo at all —
+  they came in with the cluster/Traefik install, so they're not reproducible
+  either.
+
+### Proposed platform layer
+
+Give CRDs and operators a dedicated home, separate from workloads, applied
+**before** anything that depends on them:
+
+```
+infrastructure/
+  crds/                     # raw CRD bundles that no chart installs for us
+    external-secrets/       #   (moved from base/crds/external-secrets.yaml)
+    elastic/                #   (moved from base/crds/elastic-crds.yaml)
+    traefik/                #   ADD Traefik CRDs so IngressRoute is reproducible
+    kustomization.yaml      #   lists the three bundles
+  controllers/              # operators, each its own HelmRepository + HelmRelease
+    external-secrets/
+    cert-manager/
+    cilium/
+    vault/
+    ...
+```
+
+Guidelines:
+
+- **Let charts own their CRDs where they can.** `cert-manager` (`crds:` in its
+  values) and the `external-secrets` chart can both install their own CRDs. If
+  you enable that, the giant `base/crds/external-secrets.yaml` bundle becomes
+  redundant and can be deleted — only keep raw bundles under
+  `infrastructure/crds/` for CRDs **no chart installs** (e.g. Traefik, ECK/
+  elastic if nothing manages them).
+- **One operator per directory**, moved out of the workload dirs. The workload
+  that *uses* an operator (e.g. the `ExternalSecret`s, the `ClusterSecretStore`)
+  stays in `apps/` / `base/`; only the controller install moves to
+  `infrastructure/controllers/`.
+
+### Ordering with Flux `dependsOn`
+
+Replace the dangling `crds-flux` with a proper dependency chain so a fresh
+cluster converges in the right order without manual steps:
+
+```yaml
+# crds must exist before controllers reconcile
+# infrastructure-crds (path ./infrastructure/crds)
+#        ▼ dependsOn
+# infrastructure-controllers (path ./infrastructure/controllers)
+#        ▼ dependsOn
+# apps (the per-app Kustomizations)
+```
+
+```yaml
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: infrastructure-controllers
+  namespace: flux-system
+spec:
+  dependsOn:
+    - name: infrastructure-crds     # <-- wait for CRDs first
+  interval: 10m
+  sourceRef: { kind: GitRepository, name: homelab-repository }
+  path: "./infrastructure/controllers"
+  prune: true
+  wait: true
+```
+
+App-level Kustomizations then `dependsOn: [{ name: infrastructure-controllers }]`.
+This is what fixes "I installed most of those manually": the CRDs and operators
+become an ordered, reproducible part of the GitOps flow.
+
+---
+
+## 6. The 29 Flux `Kustomization` files (recommendation only)
 
 `fluxcd/kustomizations/` holds 29 files that are identical apart from `name`
 and `path`:
@@ -365,26 +468,43 @@ above has landed.
 
 ---
 
-## 6. Migration path
+## 7. Migration path
 
 Incremental and low-risk — do one app at a time, on a branch, and verify each
 with `kustomize build` before merging.
 
-1. **Add the bases** under `base/` (`external-secret`, `traefik-route`,
+**Platform layer first (fixes the manual-install problem):**
+
+1. **Create `infrastructure/crds/`** and move the `base/crds/` bundles into it
+   (`external-secrets/`, `elastic/`), add `traefik/` CRDs, and give it a
+   `kustomization.yaml`. Repoint the Flux `crds-flux` Kustomization at
+   `./infrastructure/crds` (fixing the dangling `./crds` path) — or rename it to
+   `infrastructure-crds`.
+2. **Create `infrastructure/controllers/`** and move each operator's
+   `HelmRepository`+`HelmRelease` there (`external-secrets`, `cert-manager`,
+   `cilium`, `vault`, …). Add `dependsOn: [infrastructure-crds]` and
+   `dependsOn: [infrastructure-controllers]` on the app Kustomizations so a
+   fresh cluster orders itself.
+3. Where a chart can install its own CRDs (cert-manager, external-secrets),
+   enable that and delete the corresponding raw bundle.
+
+**Then the app refactor:**
+
+4. **Add the bases** under `base/` (`external-secret`, `traefik-route`,
    `nfs-pvc`) and a top-level `apps/` directory. Nothing references them yet, so
    this is inert.
-2. **Pilot 2–3 apps** that exercise all three bases. Good candidates:
+5. **Pilot 2–3 apps** that exercise all three bases. Good candidates:
    - `atuin` — namespace + deployment + service + PVC + ExternalSecret + IngressRoute (full house)
    - `td` — ExternalSecret + IngressRoute, no PVC
    - `paperless` — ExternalSecret + multi-PVC (proves the "local PVC" escape hatch)
-3. For each app: move its Deployment/Service into `apps/<app>/`, add the
+6. For each app: move its Deployment/Service into `apps/<app>/`, add the
    overlay `kustomization.yaml` referencing the bases, delete the boilerplate
    resources, and point the app's Flux `Kustomization` `path` at `./apps/<app>`.
    Run `kustomize build apps/<app> | kubectl diff -f -` and confirm an empty diff.
-4. **Standardize as you go:** `.yml` → `.yaml`, secret names → `app-secret`,
+7. **Standardize as you go:** `.yml` → `.yaml`, secret names → `app-secret`,
    namespace via the `namespace:` field.
-5. Repeat for the remaining apps. Leave `arrs/` as-is (it already follows the
-   pattern) and revisit the Flux consolidation (section 5) at the end.
+8. Repeat for the remaining apps. Leave `arrs/` as-is (it already follows the
+   pattern) and revisit the Flux consolidation (section 6) at the end.
 
 ### Per-app conversion checklist
 
@@ -396,4 +516,3 @@ with `kustomize build` before merging.
 - [ ] Deployment `secretKeyRef.name` updated to `app-secret`
 - [ ] Flux `Kustomization` `path` updated to `./apps/<app>`
 - [ ] `kustomize build apps/<app> | kubectl diff -f -` is empty
-```
