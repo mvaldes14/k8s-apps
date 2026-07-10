@@ -35,6 +35,10 @@ spec:
             - -c
             - sleep 5; n8n start
           env:
+            - name: GENERIC_TIMEZONE
+              value: America/Chicago
+            - name: TZ
+              value: America/Chicago
             - name: DB_TYPE
               value: postgresdb
             - name: DB_POSTGRESDB_HOST
