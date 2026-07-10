@@ -18,29 +18,26 @@ spec:
       owner: admin
       secret:
         name: db-secret
-      import:
-        type: monolith
-        databases:
-          - atuin
-          - authentik
-          - n8n
-          - paperless
-          - personal
-          - td
-          - umami
-        roles:
-          - admin
-        source:
-          externalCluster: legacy-pg
-  externalClusters:
-    - name: legacy-pg
-      connectionParameters:
-        host: postgres-svc
-        user: admin
-        dbname: postgres
-      password:
-        name: db-secret
-        key: password
+  # TODO: object-storage backups. Fill in endpoint/bucket and create the
+  # `pg-backup-creds` secret (keys: ACCESS_KEY_ID, ACCESS_SECRET_KEY) via
+  # SOPS or ExternalSecrets before enabling. Paired ScheduledBackup lives in
+  # db/scheduledbackup.yaml.
+  backup:
+    retentionPolicy: "30d"
+    barmanObjectStore:
+      destinationPath: s3://CHANGEME-bucket/homelab-db   # TODO: real bucket/path
+      endpointURL: https://CHANGEME-endpoint             # TODO: MinIO/S3/GCS endpoint
+      s3Credentials:
+        accessKeyId:
+          name: pg-backup-creds
+          key: ACCESS_KEY_ID
+        secretAccessKey:
+          name: pg-backup-creds
+          key: ACCESS_SECRET_KEY
+      wal:
+        compression: gzip
+      data:
+        compression: gzip
   resources:
     requests:
       memory: "512Mi"
