@@ -443,7 +443,7 @@ data:
       lowCardinalityExceptionGrouping: false
       minReadySeconds: 5
       progressDeadlineSeconds: 600
-      replicaCount: 2
+      replicaCount: 1
       clusterRole:
         create: true
         annotations: {}
