@@ -69,7 +69,7 @@ spec:
 
     hubble:
       relay:
-        enabled: true
+        enabled: false
       ui:
         enabled: false
       # hubble flow/network metrics (port 9965, /metrics)
