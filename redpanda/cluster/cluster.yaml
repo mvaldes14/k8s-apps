@@ -1,0 +1,27 @@
+apiVersion: cluster.redpanda.com/v1alpha2
+kind: Redpanda
+metadata:
+  name: redpanda
+  namespace: redpanda
+spec:
+  clusterSpec:
+    statefulset:
+      replicas: 1
+    # Single-node dev cluster: plaintext, no external access, no console.
+    tls:
+      enabled: false
+    external:
+      enabled: false
+    console:
+      enabled: false
+    resources:
+      cpu:
+        cores: 1
+      memory:
+        container:
+          max: 2.5Gi
+    storage:
+      persistentVolume:
+        enabled: true
+        size: 5Gi
+        storageClass: "nfs-k8s-keep"

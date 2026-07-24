@@ -1,0 +1,13 @@
+apiVersion: cluster.redpanda.com/v1alpha2
+kind: Topic
+metadata:
+  name: events
+  namespace: redpanda
+spec:
+  clusterRef:
+    name: redpanda
+  partitions: 3
+  replicationFactor: 1
+  additionalConfig:
+    retention.ms: "604800000"
+    cleanup.policy: delete
