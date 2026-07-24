@@ -69,4 +69,7 @@ data:
     - hostname: auth.mvaldes.dev
       service: http://authentik-svc.authentik
 
+    - hostname: grafana.mvaldes.dev
+      service: http://grafana-grafana-release.grafana
+
     - service: http_status:404
