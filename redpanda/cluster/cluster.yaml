@@ -24,4 +24,4 @@ spec:
       persistentVolume:
         enabled: true
         size: 5Gi
-        storageClass: "nfs-k8s-keep"
+        storageClass: "local-path"
