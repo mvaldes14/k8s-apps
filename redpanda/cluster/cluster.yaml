@@ -7,6 +7,23 @@ spec:
   clusterSpec:
     statefulset:
       replicas: 1
+      podTemplate:
+        annotations:
+          # Scraped by otel-internal-monitor's k8s-pods-prometheus job.
+          # /public_metrics is the curated set; /metrics is per-shard seastar
+          # internals and is deliberately not scraped (cardinality).
+          prometheus.io/scrape: "true"
+          prometheus.io/port: "9644"
+          prometheus.io/path: "/public_metrics"
+    # consumer_lag adds redpanda_kafka_consumer_group_lag_{max,sum}; the chart
+    # default (group, partition) only exposes committed offsets. Collection loop
+    # runs on consumer_group_lag_collection_interval_sec (60s default).
+    config:
+      cluster:
+        enable_consumer_group_metrics:
+          - group
+          - partition
+          - consumer_lag
     # Single-node dev cluster: plaintext, no external access, no console.
     tls:
       enabled: false
