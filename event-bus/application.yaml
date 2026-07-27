@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: homelab-events
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/mvaldes14/homelab-events
+    targetRevision: main
+    path: deploy
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: homelab-events
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
