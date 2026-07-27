@@ -1,12 +1,12 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: homelab-events
+  name: eventbus
   namespace: argocd
 spec:
   project: default
   source:
-    repoURL: https://github.com/mvaldes14/homelab-events
+    repoURL: https://github.com/mvaldes14/eventbus
     targetRevision: main
     path: deploy
   destination:
