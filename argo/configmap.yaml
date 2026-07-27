@@ -53,12 +53,15 @@ data:
     # ---------------------------------------------------------------------------
     controller:
       replicas: 1
+      # The controller holds an informer cache of every resource in the cluster,
+      # so its footprint tracks cluster size, not app count. 512Mi OOMKilled it
+      # mid-sync (~90s per restart, never reached the Deployment task).
       resources:
         requests:
           cpu: 100m
-          memory: 256Mi
-        limits:
           memory: 512Mi
+        limits:
+          memory: 2Gi
 
     server:
       replicas: 1

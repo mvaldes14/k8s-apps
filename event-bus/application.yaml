@@ -6,12 +6,12 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/mvaldes14/eventbus
+    repoURL: git@github.com:mvaldes14/eventbus.git
     targetRevision: main
     path: deploy
   destination:
     server: https://kubernetes.default.svc
-    namespace: homelab-events
+    namespace: events
   syncPolicy:
     automated:
       prune: true
