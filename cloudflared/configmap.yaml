@@ -71,5 +71,8 @@ data:
 
     - hostname: grafana.mvaldes.dev
       service: http://grafana-grafana-release.grafana
+    
+    - hostname: events.mvaldes.dev
+      service: http://eventbus.events:8080
 
     - service: http_status:404
