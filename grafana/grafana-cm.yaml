@@ -32,10 +32,47 @@ data:
     - victoriametrics-metrics-datasource
     - victoriametrics-logs-datasource
 
+    # OIDC credentials from the Vault-backed grafana-secret
+    envValueFrom:
+      GF_AUTH_GENERIC_OAUTH_CLIENT_ID:
+        secretKeyRef:
+          name: grafana-secret
+          key: oidc-client-id
+      GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET:
+        secretKeyRef:
+          name: grafana-secret
+          key: oidc-client-secret
+
     # ini
     grafana.ini:
+      server:
+        root_url: https://grafana.mvaldes.dev
       feature_toggles:
         provisioning: false
         kubernetesDashboards: true
         grafanaAdvisor: true
         alertingListViewV2: true
+      users:
+        allow_sign_up: false
+      auth:
+        signout_redirect_url: https://auth.mvaldes.dev/application/o/grafana/end-session/
+        oauth_auto_login: false
+      auth.generic_oauth:
+        enabled: true
+        name: Authentik
+        # auto-provision on first login; access is gated by the
+        # application binding in Authentik, not by Grafana
+        allow_sign_up: true
+        auto_login: false
+        scopes: "openid email profile"
+        auth_url: https://auth.mvaldes.dev/application/o/authorize/
+        token_url: https://auth.mvaldes.dev/application/o/token/
+        api_url: https://auth.mvaldes.dev/application/o/userinfo/
+        login_attribute_path: preferred_username
+        name_attribute_path: name
+        email_attribute_path: email
+        use_pkce: true
+        use_refresh_token: true
+        # every authenticated user gets Admin
+        role_attribute_path: "'Admin'"
+        role_attribute_strict: false
