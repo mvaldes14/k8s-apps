@@ -23,12 +23,19 @@ data:
           requestedIDTokenClaims:
             groups: {essential: true}
       rbac:
-        policy.default: role:''
+        # Deny by default; every grant below is explicit.
+        policy.default: ''
         scopes: '[groups]'
+        # Group names must match Authentik group names exactly — they arrive in
+        # the `groups` claim, emitted by the default OpenID 'profile' scope.
         policy.csv: |
-          p, role:guest-syncer, applications, get,  guest-project/myapp, allow
-          p, role:guest-syncer, applications, sync, guest-project/myapp, allow
-          g, argocd-guests, role:guest-syncer
+          g, argocd-admins, role:admin
+
+          p, role:chi-dev, projects,     get,  chi,   allow
+          p, role:chi-dev, applications, get,  chi/*, allow
+          p, role:chi-dev, applications, sync, chi/*, allow
+          p, role:chi-dev, logs,         get,  chi/*, allow
+          g, argocd-users, role:chi-dev
       params:
         server.insecure: true  # TLS terminated at Cloudflare
       secret:

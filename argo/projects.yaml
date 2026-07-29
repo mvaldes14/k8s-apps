@@ -1,0 +1,36 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: homelab
+  namespace: argocd
+spec:
+  description: Admin-managed homelab apps
+  sourceRepos:
+    - '*'
+  destinations:
+    - server: https://kubernetes.default.svc
+      namespace: '*'
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: chi
+  namespace: argocd
+spec:
+  description: Apps owned by chi
+  # Fail closed. The repo-creds template in repositories.yaml is prefix-matched
+  # and therefore grants the PAT to ANY repo under github.com/mvaldes14, so this
+  # list is the only thing scoping what chi can deploy. '*' here would expose
+  # every private repo on the account. Add chi's repos explicitly.
+  sourceRepos: []
+  destinations:
+    - server: https://kubernetes.default.svc
+      namespace: chi
+  # Namespaced resources only: no CRDs, ClusterRoles, or namespace creation.
+  clusterResourceWhitelist: []
+  namespaceResourceWhitelist:
+    - group: '*'
+      kind: '*'

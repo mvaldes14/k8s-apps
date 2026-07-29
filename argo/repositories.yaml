@@ -1,0 +1,59 @@
+# Argo CD repositories are Secrets labelled `argocd.argoproj.io/secret-type`,
+# not CRDs. Two kinds are in play here:
+#
+#   repo-creds  — a credential TEMPLATE matched by URL prefix. One PAT covers
+#                 every private repo under github.com/mvaldes14.
+#   repository  — a specific repo. Carries NO credentials: Argo CD falls back to
+#                 the prefix-matching repo-creds above. Its only job is to pin
+#                 the repo to a project.
+#
+# Because the repository entries hold no secret material they live in git as
+# plain manifests. Only the PAT comes from Vault.
+#
+# Auth is HTTPS + PAT: GitHub dropped account-password auth in Aug 2021, but a
+# PAT in `password` is fully supported.
+#
+# NOTE: `url` must match the Application's spec.source.repoURL exactly.
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: argocd-repo-creds-github
+  namespace: argocd
+spec:
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: vault-store-apps
+  refreshPolicy: Periodic
+  refreshInterval: 1h
+  target:
+    name: argocd-repo-creds-github
+    creationPolicy: Owner
+    deletionPolicy: Delete
+    template:
+      engineVersion: v2
+      metadata:
+        labels:
+          argocd.argoproj.io/secret-type: repo-creds
+      data:
+        # Prefix, not a full repo URL — matches every repo under the account.
+        url: https://github.com/mvaldes14
+        username: mvaldes14
+        password: "{{ .githubPat }}"
+  data:
+    - secretKey: githubPat
+      remoteRef:
+        key: apps/argo
+        property: github-pat
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: repo-eventbus
+  namespace: argocd
+  labels:
+    argocd.argoproj.io/secret-type: repository
+stringData:
+  type: git
+  url: https://github.com/mvaldes14/eventbus.git
+  project: homelab

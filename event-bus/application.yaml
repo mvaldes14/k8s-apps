@@ -4,9 +4,9 @@ metadata:
   name: eventbus
   namespace: argocd
 spec:
-  project: default
+  project: homelab
   source:
-    repoURL: git@github.com:mvaldes14/eventbus.git
+    repoURL: https://github.com/mvaldes14/eventbus.git
     targetRevision: main
     path: deploy
   destination:
