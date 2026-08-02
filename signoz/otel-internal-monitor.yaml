@@ -11,6 +11,12 @@ spec:
   serviceAccount: signoz-signoz-helm-otel-collector
   config:
     receivers:
+      kafka/metrics:
+        brokers: redpanda.redpanda.svc.cluster.local:9093
+        group_id: default-otel-collector
+        metrics:
+          topics: metrics
+
       httpcheck:
         metrics:
           httpcheck.dns.lookup.duration:
@@ -150,20 +156,13 @@ spec:
     service:
       pipelines:
         metrics:
-          receivers: [httpcheck, prometheus]
+          receivers: [httpcheck, prometheus, kafka/metrics]
           processors: [resource, batch]
           exporters: [otlp]
-
       telemetry:
         logs:
           level: info
 ---
-# Additive RBAC for this collector (SA: signoz-signoz-helm-otel-collector).
-# The cilium-hubble scrape job above uses kubernetes_sd role: endpoints
-# (Hubble's :9965 shares the cilium-agent pod, so a single prometheus.io/port annotation
-# can't reach it). The Helm-managed collector ClusterRole only covers role: pod discovery,
-# so endpoint discovery is forbidden. This grant is kept separate from the Helm chart so it
-# is not reverted on reconcile.
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
