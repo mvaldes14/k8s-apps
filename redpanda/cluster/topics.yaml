@@ -42,6 +42,7 @@ spec:
   additionalConfig:
     retention.ms: "86400000"
     cleanup.policy: delete
+    max.message.bytes: "8388608"
 ---
 apiVersion: cluster.redpanda.com/v1alpha2
 kind: Topic
@@ -57,6 +58,7 @@ spec:
   additionalConfig:
     retention.ms: "86400000"
     cleanup.policy: delete
+    max.message.bytes: "8388608"
 ---
 apiVersion: cluster.redpanda.com/v1alpha2
 kind: Topic
@@ -72,3 +74,4 @@ spec:
   additionalConfig:
     retention.ms: "86400000"
     cleanup.policy: delete
+    max.message.bytes: "8388608"
