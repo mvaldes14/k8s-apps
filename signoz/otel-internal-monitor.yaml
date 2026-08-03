@@ -16,7 +16,16 @@ spec:
         group_id: default-otel-collector
         metrics:
           topics: metrics
-
+      kafka/logs:
+        brokers: redpanda.redpanda.svc.cluster.local:9093
+        group_id: default-otel-collector
+        logs:
+          topics: metrics
+      kafka/traces:
+        brokers: redpanda.redpanda.svc.cluster.local:9093
+        group_id: default-otel-collector
+        traces:
+          topics: metrics
       httpcheck:
         metrics:
           httpcheck.dns.lookup.duration:
@@ -157,6 +166,14 @@ spec:
       pipelines:
         metrics:
           receivers: [httpcheck, prometheus, kafka/metrics]
+          processors: [resource, batch]
+          exporters: [otlp]
+        logs:
+          receivers: [kafka/logs]
+          processors: [resource, batch]
+          exporters: [otlp]
+        traces:
+          receivers: [kafka/traces]
           processors: [resource, batch]
           exporters: [otlp]
       telemetry:
