@@ -13,17 +13,17 @@ spec:
     receivers:
       kafka/metrics:
         brokers: redpanda.redpanda.svc.cluster.local:9093
-        group_id: default-otel-collector
+        group_id: default-otel-collector-metrics
         metrics:
           topics: metrics
       kafka/logs:
         brokers: redpanda.redpanda.svc.cluster.local:9093
-        group_id: default-otel-collector
+        group_id: default-otel-collector-logs
         logs:
           topics: metrics
       kafka/traces:
         brokers: redpanda.redpanda.svc.cluster.local:9093
-        group_id: default-otel-collector
+        group_id: default-otel-collector-traces
         traces:
           topics: metrics
       httpcheck:
