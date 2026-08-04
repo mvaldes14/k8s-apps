@@ -20,12 +20,12 @@ spec:
         brokers: redpanda.redpanda.svc.cluster.local:9093
         group_id: default-otel-collector-logs
         logs:
-          topics: metrics
+          topics: logs
       kafka/traces:
         brokers: redpanda.redpanda.svc.cluster.local:9093
         group_id: default-otel-collector-traces
         traces:
-          topics: metrics
+          topics: traces
       httpcheck:
         metrics:
           httpcheck.dns.lookup.duration:
