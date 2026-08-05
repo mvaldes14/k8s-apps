@@ -568,7 +568,7 @@ data:
             node_conditions_to_report: [Ready, DiskPressure, MemoryPressure, PIDPressure, NetworkUnavailable]
             metrics:
               k8s.pod.status_reason:
-                enabled :true
+                enabled: true
               k8s.container.status.reason:
                 enabled: true
         processors:
