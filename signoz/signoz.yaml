@@ -3,7 +3,7 @@ kind: Namespace
 metadata:
   name: signoz
 ---
-apiVersion: source.toolkit.fluxcd.io/v1beta2
+apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
 metadata:
   name: signoz-helm
@@ -12,14 +12,20 @@ spec:
   interval: 1m0s
   url: https://charts.signoz.io
 ---
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: signoz-helm
   namespace: signoz
 spec:
   targetNamespace: signoz
-  timeout: 30m
+  timeout: 10m
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    remediation:
+      retries: 3
   chart:
     spec:
       chart: signoz
@@ -33,13 +39,20 @@ spec:
     - kind: ConfigMap
       name: signoz-cm
 ---
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: k8s-helm
   namespace: signoz
 spec:
   targetNamespace: signoz
+  timeout: 10m
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    remediation:
+      retries: 3
   chart:
     spec:
       chart: k8s-infra
