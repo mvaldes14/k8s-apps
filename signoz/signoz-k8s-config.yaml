@@ -44,7 +44,7 @@ data:
       kubernetesAttributes:
         enabled: true
       clusterMetrics:
-        enabled: true
+        enabled: false
       prometheus:
         enabled: false
       resourceDetection:
