@@ -337,6 +337,7 @@ data:
         signoz_prometheus_active_query_tracker_enabled: false
         signoz_alertmanager_provider: signoz
         signoz_alertmanager_signoz_external__url: http://localhost:8080
+        signoz_global_mcp__url: http://signoz-mcp.int.mvaldes.dev
       initContainers:
         init:
           enabled: true
