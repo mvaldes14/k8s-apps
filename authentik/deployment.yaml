@@ -46,6 +46,31 @@ spec:
                   key: SECRET_KEY
             - name: AUTHENTIK_ERROR_REPORTING__ENABLED
               value: "false"
+            - name: AUTHENTIK_EMAIL__HOST
+              valueFrom:
+                secretKeyRef:
+                  name: authentik-secret
+                  key: SMTP_HOSTNAME
+            - name: AUTHENTIK_EMAIL__USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: authentik-secret
+                  key: SMTP_USER
+            - name: AUTHENTIK_EMAIL__PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: authentik-secret
+                  key: SMTP_PASSWORD
+            - name: AUTHENTIK_EMAIL__PORT
+              value: "587"
+            - name: AUTHENTIK_EMAIL__USE_TLS
+              value: "true"
+            - name: AUTHENTIK_EMAIL__USE_SSL
+              value: "false"
+            - name: AUTHENTIK_EMAIL__TIMEOUT
+              value: "30"
+            - name: AUTHENTIK_EMAIL__FROM
+              value: admin@mvaldes.dev
           ports:
             - containerPort: 9000
               name: http
@@ -126,6 +151,31 @@ spec:
                   key: SECRET_KEY
             - name: AUTHENTIK_ERROR_REPORTING__ENABLED
               value: "false"
+            - name: AUTHENTIK_EMAIL__HOST
+              valueFrom:
+                secretKeyRef:
+                  name: authentik-secret
+                  key: SMTP_HOSTNAME
+            - name: AUTHENTIK_EMAIL__USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: authentik-secret
+                  key: SMTP_USER
+            - name: AUTHENTIK_EMAIL__PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: authentik-secret
+                  key: SMTP_PASSWORD
+            - name: AUTHENTIK_EMAIL__PORT
+              value: "587"
+            - name: AUTHENTIK_EMAIL__USE_TLS
+              value: "true"
+            - name: AUTHENTIK_EMAIL__USE_SSL
+              value: "false"
+            - name: AUTHENTIK_EMAIL__TIMEOUT
+              value: "30"
+            - name: AUTHENTIK_EMAIL__FROM
+              value: admin@mvaldes.dev
           volumeMounts:
             - name: authentik-pvc
               mountPath: /media

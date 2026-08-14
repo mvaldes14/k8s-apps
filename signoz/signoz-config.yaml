@@ -337,6 +337,22 @@ data:
         signoz_prometheus_active_query_tracker_enabled: false
         signoz_alertmanager_provider: signoz
         signoz_alertmanager_signoz_external__url: http://localhost:8080
+        signoz_alertmanager_signoz_global_smtp__from: admin@mvaldes.dev
+        signoz_alertmanager_signoz_global_smtp__smarthost:
+          valueFrom:
+            secretKeyRef:
+              name: signoz-mcp-secrets
+              key: SMTP_HOSTNAME
+        signoz_alertmanager_signoz_global_smtp__auth__username:
+          valueFrom:
+            secretKeyRef:
+              name: signoz-mcp-secrets
+              key: SMTP_USER
+        signoz_alertmanager_signoz_global_smtp__auth__password:
+          valueFrom:
+            secretKeyRef:
+              name: signoz-mcp-secrets
+              key: SMTP_PASSWORD
         signoz_global_mcp__url: http://signoz-mcp.int.mvaldes.dev
       initContainers:
         init:
