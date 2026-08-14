@@ -337,7 +337,7 @@ data:
         signoz_prometheus_active_query_tracker_enabled: false
         signoz_alertmanager_provider: signoz
         signoz_alertmanager_signoz_external__url: http://localhost:8080
-        signoz_alertmanager_signoz_global_smtp__from: admin@mvaldes.dev
+        signoz_alertmanager_signoz_global_smtp__from: alerts@mvaldes.dev
         signoz_alertmanager_signoz_global_smtp__smarthost:
           valueFrom:
             secretKeyRef:
