@@ -17,11 +17,8 @@ spec:
     spec:
       containers:
         - name: nocodb-deploy
-          image: nocodb/nocodb:latest
+          image: nocodb/nocodb:2026.08.0
           imagePullPolicy: IfNotPresent
-          # Metadata store is SQLite (noco.db) on the nocodb-pvc mounted at
-          # /usr/app/data. NocoDB only uses Postgres if NC_DB is set to a
-          # connection string; DB_HOST alone is ignored, so it was removed.
           env:
             - name: NC_ALLOW_LOCAL_EXTERNAL_DBS
               value: "true"
