@@ -60,14 +60,14 @@ spec:
         collection_interval: 30s
         root_path: /hostfs
         scrapers:
-          cpu:
-          memory:
-          disk:
-          filesystem:
-          load:
-          network:
-          paging:
-          processes:
+          cpu: {}
+          memory: {}
+          disk: {}
+          filesystem: {}
+          load: {}
+          network: {}
+          paging: {}
+          processes: {}
     processors:
       memory_limiter:
         check_interval: 1s
