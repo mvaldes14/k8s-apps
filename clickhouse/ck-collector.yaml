@@ -44,6 +44,53 @@ spec:
       readOnly: true
   config:
     receivers:
+      hostmetrics:
+        root_path: /hostfs
+        collection_interval: 30s
+        scrapers:
+          cpu:
+          load:
+          memory:
+          network:
+          disk:
+          paging:
+          processes:
+          # system.uptime is the node-liveness signal Grafana alerts on.
+          system:
+          filesystem:
+            # mountpoint is reported as the host sees it, without the
+            # root_path prefix.
+            exclude_mount_points:
+              match_type: regexp
+              mount_points:
+                - /(dev|proc|sys)($|/.*)
+                - /run/k3s/containerd/.*
+                - /var/lib/kubelet/.*
+                - /snap/.*
+            exclude_fs_types:
+              match_type: strict
+              fs_types:
+                - autofs
+                - binfmt_misc
+                - bpf
+                - cgroup2
+                - configfs
+                - debugfs
+                - devpts
+                - devtmpfs
+                - fusectl
+                - hugetlbfs
+                - mqueue
+                - nsfs
+                - overlay
+                - proc
+                - procfs
+                - pstore
+                - securityfs
+                - selinuxfs
+                - squashfs
+                - sysfs
+                - tracefs
       filelog:
         include:
           - /var/log/syslog
@@ -83,6 +130,8 @@ spec:
           - key: k8s.node.name
             value: ${env:K8S_NODE_NAME}
             action: upsert
+    # ttl only takes effect when create_schema builds a table for the first
+    # time; existing tables need ALTER TABLE ... MODIFY TTL.
     exporters:
       clickhouse/logs_map:
         endpoint: tcp://ck-cluster-clickhouse-headless:9000?dial_timeout=10s&compress=lz4
