@@ -29,10 +29,10 @@ spec:
       asynchronous_metric_log:
         ttl: event_date + INTERVAL 3 DAY DELETE
   dataVolumeClaimSpec:
-    storageClassName: nfs-k8s-keep
+    storageClassName: local-direct
     resources:
       requests:
-        storage: 5Gi
+        storage: 50Gi
   containerTemplate:
     resources:
       requests:
