@@ -18,8 +18,6 @@ spec:
       valueFrom:
         fieldRef:
           fieldPath: spec.nodeName
-    # Redundant with hostmetrics root_path, but kept so gopsutil resolves
-    # the host's procfs/sysfs even if root_path handling changes.
     - name: HOST_PROC
       value: /hostfs/proc
     - name: HOST_SYS
@@ -28,18 +26,22 @@ spec:
     - name: varlog
       hostPath:
         path: /var/log
-    # hostmetrics reads the node's /proc and /sys through root_path.
-    - name: hostfs
+    - name: hostproc
       hostPath:
-        path: /
+        path: /proc
+    - name: hostsys
+      hostPath:
+        path: /sys
   volumeMounts:
     - name: varlog
       mountPath: /var/log
       readOnly: true
-    - name: hostfs
-      mountPath: /hostfs
+    - name: hostproc
+      mountPath: /hostfs/proc
       readOnly: true
-      mountPropagation: HostToContainer
+    - name: hostsys
+      mountPath: /hostfs/sys
+      readOnly: true
   config:
     receivers:
       hostmetrics:
@@ -101,6 +103,18 @@ spec:
         include_file_path: true
         retry_on_failure:
           enabled: true
+      hostmetrics:
+        collection_interval: 30s
+        root_path: /hostfs
+        scrapers:
+          cpu: {}
+          memory: {}
+          disk: {}
+          filesystem: {}
+          load: {}
+          network: {}
+          paging: {}
+          processes: {}
     processors:
       memory_limiter:
         check_interval: 1s
@@ -119,32 +133,28 @@ spec:
     # ttl only takes effect when create_schema builds a table for the first
     # time; existing tables need ALTER TABLE ... MODIFY TTL.
     exporters:
-      clickhouse/map:
+      clickhouse/logs_map:
         endpoint: tcp://ck-cluster-clickhouse-headless:9000?dial_timeout=10s&compress=lz4
         database: homelab
         logs_table_name: log_map
         create_schema: true
-        ttl: 360h
-      clickhouse/json:
+      clickhouse/logs_json:
         endpoint: tcp://ck-cluster-clickhouse-headless:9000?dial_timeout=10s&compress=lz4
         database: homelab
         json: true
         logs_table_name: log_json
         create_schema: true
-        ttl: 360h
-      # Table names are left at the exporter defaults (otel_metrics_gauge,
-      # otel_metrics_sum, ...), which is what already exists in homelab.
       clickhouse/metrics:
         endpoint: tcp://ck-cluster-clickhouse-headless:9000?dial_timeout=10s&compress=lz4
         database: homelab
+        metrics_table_name: otel_metrics
         create_schema: true
-        ttl: 360h
     service:
       pipelines:
         logs:
           receivers: [filelog]
           processors: [memory_limiter, resourcedetection, resource]
-          exporters: [clickhouse/map, clickhouse/json]
+          exporters: [clickhouse/logs_map, clickhouse/logs_json]
         metrics:
           receivers: [hostmetrics]
           processors: [memory_limiter, resourcedetection, resource]

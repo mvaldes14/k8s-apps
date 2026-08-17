@@ -75,4 +75,7 @@ data:
     - hostname: events.mvaldes.dev
       service: http://eventbus.events:8080
 
+    - hostname: git.mvaldes.dev
+      service: http://forgejo-svc.forgejo
+
     - service: http_status:404
