@@ -45,7 +45,7 @@ spec:
             - grafana-mcp.int.mvaldes.dev,grafana-mcp.int.mvaldes.dev:443
           env:
             - name: GRAFANA_URL
-              value: http://grafana-release
+              value: http://grafana-grafana-release.grafana.svc.cluster.local
             - name: GRAFANA_SERVICE_ACCOUNT_TOKEN
               valueFrom:
                 secretKeyRef:
