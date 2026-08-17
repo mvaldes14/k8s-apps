@@ -188,28 +188,26 @@ data:
         exporters:
           otlphttp:
             endpoint: http://signoz-signoz-helm-otel-collector.signoz.svc.cluster.local:4318
-          clickhouse/traces:
-            endpoint: tcp://ck-cluster-clickhouse-headless.clickhouse.svc.cluster.local:9000?dial_timeout=10s&compress=lz4
-            database: traces
-            create_schema: true
-          clickhouse/metrics:
-            endpoint: tcp://ck-cluster-clickhouse-headless.clickhouse.svc.cluster.local:9000?dial_timeout=10s&compress=lz4
-            database: metrics
-            create_schema: true
-          clickhouse/logs:
-            endpoint: tcp://ck-cluster-clickhouse-headless.clickhouse.svc.cluster.local:9000?dial_timeout=10s&compress=lz4
-            database: logs
-            create_schema: true
+          clickhousetraces:
+            datasource: tcp://ck-cluster-clickhouse-headless.clickhouse.svc.cluster.local:9000/traces
+            use_new_schema: true
+          signozclickhousemetrics:
+            dsn: tcp://ck-cluster-clickhouse-headless.clickhouse.svc.cluster.local:9000/metrics
+            timeout: 45s
+          clickhouselogsexporter:
+            dsn: tcp://ck-cluster-clickhouse-headless.clickhouse.svc.cluster.local:9000/logs
+            timeout: 30s
+            use_new_schema: true
         service:
           telemetry:
             logs:
               encoding: json
           pipelines:
             traces:
-              exporters: [otlphttp, clickhouse/traces]
+              exporters: [otlphttp, clickhousetraces]
             metrics:
-              exporters: [otlphttp, clickhouse/metrics]
+              exporters: [otlphttp, signozclickhousemetrics]
             logs:
-              exporters: [otlphttp, clickhouse/logs]
+              exporters: [otlphttp, clickhouselogsexporter]
     otelDeployment:
       enabled: false
