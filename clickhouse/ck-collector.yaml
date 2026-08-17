@@ -98,6 +98,7 @@ spec:
       clickhouse/metrics:
         endpoint: tcp://ck-cluster-clickhouse-headless:9000?dial_timeout=10s&compress=lz4
         database: homelab
+        metrics_table_name: otel_metrics
         create_schema: true
     service:
       pipelines:
