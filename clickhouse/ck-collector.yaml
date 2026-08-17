@@ -18,13 +18,29 @@ spec:
       valueFrom:
         fieldRef:
           fieldPath: spec.nodeName
+    - name: HOST_PROC
+      value: /hostfs/proc
+    - name: HOST_SYS
+      value: /hostfs/sys
   volumes:
     - name: varlog
       hostPath:
         path: /var/log
+    - name: hostproc
+      hostPath:
+        path: /proc
+    - name: hostsys
+      hostPath:
+        path: /sys
   volumeMounts:
     - name: varlog
       mountPath: /var/log
+      readOnly: true
+    - name: hostproc
+      mountPath: /hostfs/proc
+      readOnly: true
+    - name: hostsys
+      mountPath: /hostfs/sys
       readOnly: true
   config:
     receivers:
@@ -40,6 +56,18 @@ spec:
         include_file_path: true
         retry_on_failure:
           enabled: true
+      hostmetrics:
+        collection_interval: 30s
+        root_path: /hostfs
+        scrapers:
+          cpu:
+          memory:
+          disk:
+          filesystem:
+          load:
+          network:
+          paging:
+          processes:
     processors:
       memory_limiter:
         check_interval: 1s
@@ -56,20 +84,28 @@ spec:
             value: ${env:K8S_NODE_NAME}
             action: upsert
     exporters:
-      clickhouse/map:
+      clickhouse/logs_map:
         endpoint: tcp://ck-cluster-clickhouse-headless:9000?dial_timeout=10s&compress=lz4
         database: homelab
         logs_table_name: log_map
         create_schema: true
-      clickhouse/json:
+      clickhouse/logs_json:
         endpoint: tcp://ck-cluster-clickhouse-headless:9000?dial_timeout=10s&compress=lz4
         database: homelab
         json: true
         logs_table_name: log_json
+        create_schema: true
+      clickhouse/metrics:
+        endpoint: tcp://ck-cluster-clickhouse-headless:9000?dial_timeout=10s&compress=lz4
+        database: homelab
         create_schema: true
     service:
       pipelines:
         logs:
           receivers: [filelog]
           processors: [memory_limiter, resourcedetection, resource]
-          exporters: [clickhouse/map, clickhouse/json]
+          exporters: [clickhouse/logs_map, clickhouse/logs_json]
+        metrics:
+          receivers: [hostmetrics]
+          processors: [memory_limiter, resourcedetection, resource]
+          exporters: [clickhouse/metrics]

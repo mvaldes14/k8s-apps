@@ -4,10 +4,10 @@
 apiVersion: postgresql.cnpg.io/v1
 kind: Database
 metadata:
-  name: atuin-db
+  name: git-db
   namespace: db
 spec:
-  name: atuin
+  name: git
   owner: admin
   cluster:
     name: homelab-db
