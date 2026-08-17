@@ -15,10 +15,6 @@ spec:
       labels:
         app: forgejo
     spec:
-      securityContext:
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 1000
       containers:
         - name: forgejo-pod
           image: codeberg.org/forgejo/forgejo:16
