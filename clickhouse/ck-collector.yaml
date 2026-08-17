@@ -48,15 +48,15 @@ spec:
         root_path: /hostfs
         collection_interval: 30s
         scrapers:
-          cpu:
-          load:
-          memory:
-          network:
-          disk:
-          paging:
-          processes:
+          cpu: {}
+          load: {}
+          memory: {}
+          network: {}
+          disk: {}
+          paging: {}
+          processes: {}
           # system.uptime is the node-liveness signal Grafana alerts on.
-          system:
+          system: {}
           filesystem:
             # mountpoint is reported as the host sees it, without the
             # root_path prefix.
@@ -103,18 +103,6 @@ spec:
         include_file_path: true
         retry_on_failure:
           enabled: true
-      hostmetrics:
-        collection_interval: 30s
-        root_path: /hostfs
-        scrapers:
-          cpu: {}
-          memory: {}
-          disk: {}
-          filesystem: {}
-          load: {}
-          network: {}
-          paging: {}
-          processes: {}
     processors:
       memory_limiter:
         check_interval: 1s
