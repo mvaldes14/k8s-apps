@@ -42,7 +42,7 @@ spec:
             - -t
             - streamable-http
             - --allowed-hosts
-            - grafana-mcp.int.mvaldes.dev
+            - grafana-mcp.int.mvaldes.dev,grafana-mcp.int.mvaldes.dev:443
           env:
             - name: GRAFANA_URL
               value: http://grafana-release
