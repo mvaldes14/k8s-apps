@@ -98,7 +98,8 @@ data:
       secure: false
       verify: false
       externalZookeeper: {}
-      nodeSelector: {}
+      nodeSelector:
+        kubernetes.io/hostname: eva04
       tolerations: []
       affinity: {}
       resources:
@@ -121,10 +122,10 @@ data:
       persistence:
         enabled: true
         existingClaim: ""
-        storageClass: null
+        storageClass: local-direct
         accessModes:
           - ReadWriteOnce
-        size: 2Gi
+        size: 50Gi
       profiles: {}
       defaultProfiles:
         default/allow_experimental_window_functions: "1"
