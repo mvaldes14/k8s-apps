@@ -31,6 +31,7 @@ data:
     - grafana-advisor-app
     - victoriametrics-metrics-datasource
     - victoriametrics-logs-datasource
+    - grafana-clickhouse-datasource
 
     # Set via env, not grafana.ini: the ini parser strips the surrounding
     # single quotes, leaving a JMESPath field lookup that never matches.

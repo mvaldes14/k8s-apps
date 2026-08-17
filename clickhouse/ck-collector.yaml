@@ -18,16 +18,77 @@ spec:
       valueFrom:
         fieldRef:
           fieldPath: spec.nodeName
+    # Redundant with hostmetrics root_path, but kept so gopsutil resolves
+    # the host's procfs/sysfs even if root_path handling changes.
+    - name: HOST_PROC
+      value: /hostfs/proc
+    - name: HOST_SYS
+      value: /hostfs/sys
   volumes:
     - name: varlog
       hostPath:
         path: /var/log
+    # hostmetrics reads the node's /proc and /sys through root_path.
+    - name: hostfs
+      hostPath:
+        path: /
   volumeMounts:
     - name: varlog
       mountPath: /var/log
       readOnly: true
+    - name: hostfs
+      mountPath: /hostfs
+      readOnly: true
+      mountPropagation: HostToContainer
   config:
     receivers:
+      hostmetrics:
+        root_path: /hostfs
+        collection_interval: 30s
+        scrapers:
+          cpu:
+          load:
+          memory:
+          network:
+          disk:
+          paging:
+          processes:
+          # system.uptime is the node-liveness signal Grafana alerts on.
+          system:
+          filesystem:
+            # mountpoint is reported as the host sees it, without the
+            # root_path prefix.
+            exclude_mount_points:
+              match_type: regexp
+              mount_points:
+                - /(dev|proc|sys)($|/.*)
+                - /run/k3s/containerd/.*
+                - /var/lib/kubelet/.*
+                - /snap/.*
+            exclude_fs_types:
+              match_type: strict
+              fs_types:
+                - autofs
+                - binfmt_misc
+                - bpf
+                - cgroup2
+                - configfs
+                - debugfs
+                - devpts
+                - devtmpfs
+                - fusectl
+                - hugetlbfs
+                - mqueue
+                - nsfs
+                - overlay
+                - proc
+                - procfs
+                - pstore
+                - securityfs
+                - selinuxfs
+                - squashfs
+                - sysfs
+                - tracefs
       filelog:
         include:
           - /var/log/syslog
@@ -55,21 +116,36 @@ spec:
           - key: k8s.node.name
             value: ${env:K8S_NODE_NAME}
             action: upsert
+    # ttl only takes effect when create_schema builds a table for the first
+    # time; existing tables need ALTER TABLE ... MODIFY TTL.
     exporters:
       clickhouse/map:
         endpoint: tcp://ck-cluster-clickhouse-headless:9000?dial_timeout=10s&compress=lz4
         database: homelab
         logs_table_name: log_map
         create_schema: true
+        ttl: 360h
       clickhouse/json:
         endpoint: tcp://ck-cluster-clickhouse-headless:9000?dial_timeout=10s&compress=lz4
         database: homelab
         json: true
         logs_table_name: log_json
         create_schema: true
+        ttl: 360h
+      # Table names are left at the exporter defaults (otel_metrics_gauge,
+      # otel_metrics_sum, ...), which is what already exists in homelab.
+      clickhouse/metrics:
+        endpoint: tcp://ck-cluster-clickhouse-headless:9000?dial_timeout=10s&compress=lz4
+        database: homelab
+        create_schema: true
+        ttl: 360h
     service:
       pipelines:
         logs:
           receivers: [filelog]
           processors: [memory_limiter, resourcedetection, resource]
           exporters: [clickhouse/map, clickhouse/json]
+        metrics:
+          receivers: [hostmetrics]
+          processors: [memory_limiter, resourcedetection, resource]
+          exporters: [clickhouse/metrics]
