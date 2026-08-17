@@ -41,6 +41,8 @@ spec:
           args:
             - -t
             - streamable-http
+            - --allowed-hosts
+            - grafana-mcp.int.mvaldes.dev
           env:
             - name: GRAFANA_URL
               value: http://grafana-release
