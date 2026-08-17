@@ -216,6 +216,33 @@ data:
           </clickhouse>
         config.d/system_log.xml: |
           <clickhouse>
+            <!-- system.* logs ran to 33GiB on a 41GiB store (zookeeper_log alone
+                 was 14.8GiB / 403M rows at the stock 30d TTL). These are debug
+                 aids we don't use here, and flushing them to NFS was a material
+                 share of the write I/O that stalled ingestion. -->
+
+            <!-- Disabled outright: pure noise for this deployment. -->
+            <zookeeper_log remove="1"/>
+            <aggregated_zookeeper_log remove="1"/>
+            <asynchronous_metric_log remove="1"/>
+            <processors_profile_log remove="1"/>
+            <background_schedule_pool_log remove="1"/>
+            <query_views_log remove="1"/>
+
+            <!-- Kept for diagnostics, on short TTLs. -->
+            <query_log>
+              <ttl>event_date + INTERVAL 3 DAY DELETE</ttl>
+            </query_log>
+            <part_log>
+              <ttl>event_date + INTERVAL 3 DAY DELETE</ttl>
+            </part_log>
+            <metric_log>
+              <ttl>event_date + INTERVAL 3 DAY DELETE</ttl>
+            </metric_log>
+            <trace_log>
+              <ttl>event_date + INTERVAL 1 DAY DELETE</ttl>
+            </trace_log>
+
             <text_log>
               <ttl>event_date + INTERVAL 3 DAY DELETE</ttl>
             </text_log>
@@ -223,7 +250,7 @@ data:
               <ttl>event_date + INTERVAL 3 DAY DELETE</ttl>
             </latency_log>
             <error_log>
-              <ttl>event_date + INTERVAL 7 DAY DELETE</ttl>
+              <ttl>event_date + INTERVAL 3 DAY DELETE</ttl>
             </error_log>
             <query_metric_log>
               <ttl>event_date + INTERVAL 3 DAY DELETE</ttl>
