@@ -14,6 +14,20 @@ spec:
       kubernetes.io/hostname: eva06
   keeperClusterRef:
     name: ck-keeper
+  settings:
+    logger:
+      level: information
+    extraConfig:
+      query_log:
+        ttl: event_date + INTERVAL 3 DAY DELETE
+      part_log:
+        ttl: event_date + INTERVAL 3 DAY DELETE
+      text_log:
+        ttl: event_date + INTERVAL 3 DAY DELETE
+      metric_log:
+        ttl: event_date + INTERVAL 3 DAY DELETE
+      asynchronous_metric_log:
+        ttl: event_date + INTERVAL 3 DAY DELETE
   dataVolumeClaimSpec:
     storageClassName: nfs-k8s-keep
     resources:
