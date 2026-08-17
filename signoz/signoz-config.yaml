@@ -121,8 +121,8 @@ data:
         - "192.168.0.0/16"
       persistence:
         enabled: true
-        existingClaim: ""
-        storageClass: local-direct
+        existingClaim: signoz-clickhouse-data
+        storageClass: null
         accessModes:
           - ReadWriteOnce
         size: 50Gi
