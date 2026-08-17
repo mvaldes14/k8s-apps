@@ -189,13 +189,13 @@ data:
           otlphttp:
             endpoint: http://signoz-signoz-helm-otel-collector.signoz.svc.cluster.local:4318
           clickhousetraces:
-            datasource: tcp://ck-cluster-clickhouse-headless.clickhouse.svc.cluster.local:9000/traces
+            datasource: tcp://ck-cluster-clickhouse-headless.clickhouse.svc.cluster.local:9000/signoz_traces
             use_new_schema: true
           signozclickhousemetrics:
-            dsn: tcp://ck-cluster-clickhouse-headless.clickhouse.svc.cluster.local:9000/metrics
+            dsn: tcp://ck-cluster-clickhouse-headless.clickhouse.svc.cluster.local:9000/signoz_metrics
             timeout: 45s
           clickhouselogsexporter:
-            dsn: tcp://ck-cluster-clickhouse-headless.clickhouse.svc.cluster.local:9000/logs
+            dsn: tcp://ck-cluster-clickhouse-headless.clickhouse.svc.cluster.local:9000/signoz_logs
             timeout: 30s
             use_new_schema: true
         service:
