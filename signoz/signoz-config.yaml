@@ -229,20 +229,23 @@ data:
             <background_schedule_pool_log remove="1"/>
             <query_views_log remove="1"/>
 
-            <!-- Kept for diagnostics, on short TTLs. -->
+            <!-- Kept for diagnostics, on short TTLs. These four already declare
+                 <engine>, so the TTL has to live inside it - a sibling <ttl> is
+                 rejected with "Code: 36 ... ttl setting doesn't make sense". -->
             <query_log>
-              <ttl>event_date + INTERVAL 3 DAY DELETE</ttl>
+              <engine replace="replace">Engine = MergeTree PARTITION BY event_date ORDER BY event_time TTL event_date + interval 3 day</engine>
             </query_log>
             <part_log>
-              <ttl>event_date + INTERVAL 3 DAY DELETE</ttl>
+              <engine replace="replace">Engine = MergeTree PARTITION BY event_date ORDER BY event_time TTL event_date + interval 3 day</engine>
             </part_log>
             <metric_log>
-              <ttl>event_date + INTERVAL 3 DAY DELETE</ttl>
+              <engine replace="replace">Engine = MergeTree PARTITION BY event_date ORDER BY event_time TTL event_date + interval 3 day</engine>
             </metric_log>
             <trace_log>
-              <ttl>event_date + INTERVAL 1 DAY DELETE</ttl>
+              <engine replace="replace">Engine = MergeTree PARTITION BY event_date ORDER BY event_time TTL event_date + interval 1 day</engine>
             </trace_log>
 
+            <!-- These declare no <engine>, so a plain <ttl> is correct. -->
             <text_log>
               <ttl>event_date + INTERVAL 3 DAY DELETE</ttl>
             </text_log>
