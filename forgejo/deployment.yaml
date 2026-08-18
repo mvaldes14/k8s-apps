@@ -96,7 +96,7 @@ spec:
             appArmorProfile: { type: Unconfined }   # modern field form; drops the deprecated annotation
             runAsNonRoot: true
             runAsUser: 1000
-            allowPrivilegeEscalation: false         # rootless: no priv-esc, no privileged flag
+            allowPrivilegeEscalation: true # rootless: no priv-esc, no privileged flag
           resources:
             requests: { cpu: "500m", memory: 1Gi }
             limits: { memory: 4Gi }
