@@ -10,3 +10,15 @@ spec:
   resources:
     requests:
       storage: 5Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: buildkitd-cache
+  namespace: forgejo
+spec:
+  accessModes: ["ReadWriteMany"]
+  storageClassName: nfs-k8s-keep
+  resources:
+    requests:
+      storage: 5Gi

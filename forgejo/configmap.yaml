@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: buildkitd-config
+  namespace: forgejo
+data:
+  buildkitd.toml: |
+    # native snapshotter does full copies instead of overlay/fuse-overlayfs.
+    # slower + more disk, but it's the one that behaves on an NFS-backed state dir.
+    [worker.oci]
+      enabled = true
+      snapshotter = "native"
+    [worker.containerd]
+      enabled = false
