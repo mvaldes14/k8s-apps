@@ -139,5 +139,5 @@ spec:
             requests: { cpu: "100m", memory: 128Mi }
             limits: { memory: 512Mi }
       volumes:
-        - { name: config, secret: { secretName: "forgejo-runner-config"}}
-        - { name: data, persistentVolumeClaim: { claimName: "forgejo-runner-config"}}
+        - { name: config, secret: { secretName: "forgejo-runner-secrets"}}
+        - { name: data, emptyDir: {}}

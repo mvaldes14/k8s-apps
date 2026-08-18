@@ -22,15 +22,3 @@ spec:
   resources:
     requests:
       storage: 5Gi
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: forgejo-runner-config
-  namespace: forgejo
-spec:
-  accessModes: ["ReadWriteMany"]
-  storageClassName: nfs-k8s-keep
-  resources:
-    requests:
-      storage: 250Mi
