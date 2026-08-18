@@ -55,32 +55,32 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: buildkitd
+  name: forgejo-ci
   namespace: forgejo
-  labels: { app: buildkitd }
+  labels: { app: forgejo-ci }
 spec:
   replicas: 1
   strategy:
     type: Recreate            # RWX removes the mount deadlock, but never let two
                               # daemons touch one state dir — that corrupts the cache
   selector:
-    matchLabels: { app: buildkitd }
+    matchLabels: { app: forgejo-ci }
   template:
     metadata:
-      labels: { app: buildkitd }
+      labels: { app: forgejo-ci }
     spec:
       securityContext:
         runAsUser: 1000
         runAsGroup: 1000
         fsGroup: 1000          # makes the NFS cache writable by the rootless user
       containers:
-        - name: buildkitd
+        - name: forgejo-ci
           image: moby/buildkit:v0.19.0-rootless   # check for the current stable tag
           args:
-            - --addr=unix:///run/user/1000/buildkit/buildkitd.sock
+            - --addr=unix:///run/user/1000/buildkit/forgejo-ci.sock
             - --addr=tcp://0.0.0.0:1234
             - --oci-worker-no-process-sandbox
-            - --config=/home/user/.config/buildkit/buildkitd.toml
+            - --config=/home/user/.config/buildkit/forgejo-ci.toml
           ports:
             - containerPort: 1234
           readinessProbe:
@@ -106,8 +106,8 @@ spec:
             - { name: runtime, mountPath: /run/user/1000 }
       volumes:
         - name: cache
-          persistentVolumeClaim: { claimName: buildkitd-cache }
+          persistentVolumeClaim: { claimName: forgejo-ci-cache }
         - name: config
-          configMap: { name: buildkitd-config }
+          configMap: { name: forgejo-ci-config }
         - name: runtime
           emptyDir: { medium: Memory }

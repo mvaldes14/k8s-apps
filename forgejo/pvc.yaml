@@ -14,7 +14,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: buildkitd-cache
+  name: forgejo-ci-cache
   namespace: forgejo
 spec:
   accessModes: ["ReadWriteMany"]

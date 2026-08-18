@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: buildkitd-config
+  name: forgejo-ci-config
   namespace: forgejo
 data:
   buildkitd.toml: |
