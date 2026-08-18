@@ -17,7 +17,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: forgejo-runner-config
-  namespace: ci
+  namespace: forgejo
 data:
   config.yaml: |
     log:
