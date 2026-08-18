@@ -111,3 +111,34 @@ spec:
           configMap: { name: forgejo-ci-config }
         - name: runtime
           emptyDir: { medium: Memory }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: forgejo-runner
+  namespace: forgejo
+  labels: { app: forgejo-runner, role: forgejo-runner }   # role matches the CiliumNetworkPolicy
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app: forgejo-runner }
+  template:
+    metadata:
+      labels: { app: forgejo-runner, role: forgejo-runner }
+    spec:
+      containers:
+        - name: runner
+          image: code.forgejo.org/forgejo/runner:6.3.1   # check current tag
+          command: ["forgejo-runner", "daemon", "--config", "/config/config.yaml"]
+          env:
+            - name: FORGEJO_INSTANCE_URL
+              value: https://git.mvaldes.dev
+            - name: FORGEJO_RUNNER_REGISTRATION_TOKEN
+              valueFrom:
+                secretKeyRef: { name: runner-token, key: token }
+          volumeMounts:
+            - { name: config, mountPath: /config }
+            - { name: data, mountPath: /data }
+      volumes:
+        - { name: config, configMap: { name: runner-config } }
+        - { name: data, emptyDir: {} }
