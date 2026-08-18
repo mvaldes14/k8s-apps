@@ -130,7 +130,7 @@ spec:
         fsGroup: 1000
       containers:
         - name: runner
-          image: code.forgejo.org/forgejo/runner:6.3.1
+          image: data.forgejo.org/forgejo/runner:13
           command: ["forgejo-runner", "daemon", "--config", "/config/config.yaml"]
           volumeMounts:
             - { name: config, mountPath: /config }
