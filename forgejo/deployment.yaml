@@ -132,7 +132,7 @@ spec:
         - name: runner
           image: data.forgejo.org/forgejo/runner:13
           command: ["forgejo-runner", "daemon", "--config", "/config/config.yaml"]
-          environment:
+          env:
             - name: DOCKER_HOST
               value: tcp://forgejo-ci-svc:1234
           volumeMounts:
