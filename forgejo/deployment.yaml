@@ -128,39 +128,9 @@ spec:
     spec:
       securityContext:
         fsGroup: 1000
-      initContainers:
-        - name: register
-          image: code.forgejo.org/forgejo/runner:6.3.1
-          command: ["sh", "-c"]
-          args:
-            - |
-              set -e
-              if [ -d /data/.runner ]; then
-                echo "removing stray .runner directory"; rm -rf /data/.runner
-              fi
-              if [ ! -f /data/.runner ]; then
-                echo "registering runner..."
-                forgejo-runner register --no-interactive \
-                  --instance "$FORGEJO_INSTANCE_URL" \
-                  --token "$FORGEJO_RUNNER_REGISTRATION_TOKEN" \
-                  --name "homelab-runner" \
-                  --labels "docker:host" \
-                  --config /config/config.yaml
-              else
-                echo ".runner already present, skipping registration"
-              fi
-          env:
-            - name: FORGEJO_INSTANCE_URL
-              value: https://git.mvaldes.dev
-            - name: FORGEJO_RUNNER_REGISTRATION_TOKEN
-              valueFrom:
-                secretKeyRef: { name: forgejo-secrets , key: token }
-          volumeMounts:
-            - { name: config, mountPath: /config }
-            - { name: data, mountPath: /data }
       containers:
         - name: runner
-          image: code.forgejo.org/forgejo/runner:6.3.1   # check current tag
+          image: code.forgejo.org/forgejo/runner:6.3.1
           command: ["forgejo-runner", "daemon", "--config", "/config/config.yaml"]
           volumeMounts:
             - { name: config, mountPath: /config }
@@ -169,5 +139,5 @@ spec:
             requests: { cpu: "100m", memory: 128Mi }
             limits: { memory: 512Mi }
       volumes:
-        - { name: config, configMap: { name: forgejo-runner-config } }
+        - { name: config, secret: { secretName: "forgejo-running-config"}}
         - { name: data, persistentVolumeClaim: { claimName: "forgejo-runner-config"}}
