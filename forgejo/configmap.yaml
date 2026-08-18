@@ -12,3 +12,46 @@ data:
       snapshotter = "native"
     [worker.containerd]
       enabled = false
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: forgejo-runner-config
+  namespace: ci
+data:
+  config.yaml: |
+    log:
+      level: info
+
+    runner:
+      # must match the /data mount in the Deployment (emptyDir or PVC)
+      file: /data/.runner
+      # concurrent jobs; bump if you want parallel builds hitting buildkitd
+      capacity: 2
+      timeout: 1h
+      shutdown_timeout: 3h        # let in-flight builds drain on rollout
+      insecure: false             # true only if Forgejo has a self-signed cert
+      fetch_timeout: 5s
+      fetch_interval: 2s
+      labels:
+        - docker:host             # runs-on: docker → executes on the runner, no container backend
+
+    cache:
+      enabled: true               # backs actions/cache; harmless if unused
+      dir: /data/cache
+      # leave host/port empty to auto-detect. In host mode jobs share the
+      # runner's netns so localhost resolves fine; if the cache server ever
+      # fails to advertise a reachable IP, pin host: to the pod IP.
+      host: ""
+      port: 0
+
+    container:
+      # we build via remote buildkitd, so the runner needs NO docker socket.
+      # "-" disables auto-detection so it won't error looking for one.
+      docker_host: "-"
+      privileged: false
+      valid_volumes: []
+
+    host:
+      # where job working dirs land inside the runner container
+      workdir_parent: /data/workdir
