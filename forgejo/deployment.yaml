@@ -135,7 +135,7 @@ spec:
               value: https://git.mvaldes.dev
             - name: FORGEJO_RUNNER_REGISTRATION_TOKEN
               valueFrom:
-                secretKeyRef: { name: runner-token, key: token }
+                secretKeyRef: { name: forgejo-secrets , key: token }
           volumeMounts:
             - { name: config, mountPath: /config }
             - { name: data, mountPath: /data }
