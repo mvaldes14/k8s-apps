@@ -141,4 +141,4 @@ spec:
             - { name: data, mountPath: /data }
       volumes:
         - { name: config, configMap: { name: forgejo-runner-config } }
-        - { name: data, emptyDir: {} }
+        - { name: data, persistentVolumeClaim: { claimName: "forgejo-runner-config"}}
