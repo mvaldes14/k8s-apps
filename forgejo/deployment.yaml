@@ -69,7 +69,7 @@ spec:
       nodeSelector:
         kubernetes.io/hostname: eva02
       securityContext:
-        fsGroup: 1000
+        runAsUser: 0
       containers:
         - name: runner
           image: data.forgejo.org/forgejo/runner:13
