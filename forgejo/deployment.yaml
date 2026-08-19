@@ -70,30 +70,6 @@ spec:
         kubernetes.io/hostname: eva02
       securityContext:
         fsGroup: 1000
-      initContainers:
-        - name: register
-          image: code.forgejo.org/forgejo/runner:6.3.1
-          command: ["sh", "-c"]
-          args:
-            - |
-              set -e
-              [ -d /data/.runner ] && rm -rf /data/.runner
-              if [ ! -f /data/.runner ]; then
-                cd /data
-                forgejo-runner register --no-interactive \
-                  --instance "$FORGEJO_INSTANCE_URL" \
-                  --token "$TOKEN" \
-                  --name eva-docker-runner \
-                  --labels "docker:docker://catthehacker/ubuntu:act-latest"
-              fi
-          env:
-            - name: FORGEJO_INSTANCE_URL
-              value: http://forgejo-svc
-            - name: TOKEN
-              valueFrom:
-                secretKeyRef: { name: forgejo-runner-secrets, key: token }
-          volumeMounts:
-            - { name: data, mountPath: /data }
       containers:
         - name: runner
           image: data.forgejo.org/forgejo/runner:13
@@ -106,6 +82,6 @@ spec:
             requests: { cpu: "100m", memory: 128Mi }
             limits: { memory: 512Mi }
       volumes:
-        - { name: config, configMap: { name: forgejo-runner-config }}
-        - { name: data, persistentVolumeClaim: { claimName: forgejo-runner-data }}
+        - { name: config, secret: { secretName: forgejo-runner-secrets }}
+        - { name: data, emptyDir: {} }
         - { name: docker-sock, hostPath: { path: /var/run/docker.sock , type: Socket }}
