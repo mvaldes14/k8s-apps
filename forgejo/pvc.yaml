@@ -15,7 +15,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: forgejo-runner-data
-  namespace: ci
+  namespace: forgejo
 spec:
   accessModes: ["ReadWriteOnce"]
   storageClassName: nfs-k8s-keep
