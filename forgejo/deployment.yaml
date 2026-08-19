@@ -88,7 +88,7 @@ spec:
               fi
           env:
             - name: FORGEJO_INSTANCE_URL
-              value: http://forgejo.forgejo:3000
+              value: http://forgejo-svc
             - name: TOKEN
               valueFrom:
                 secretKeyRef: { name: forgejo-runner-secrets, key: token }
