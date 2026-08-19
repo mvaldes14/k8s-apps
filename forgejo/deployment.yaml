@@ -117,30 +117,57 @@ kind: Deployment
 metadata:
   name: forgejo-runner
   namespace: forgejo
-  labels: { app: forgejo-runner, role: forgejo-runner }   # role matches the CiliumNetworkPolicy
+  labels: { app: forgejo-runner, role: forgejo-runner }
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels: { app: forgejo-runner }
   template:
     metadata:
       labels: { app: forgejo-runner, role: forgejo-runner }
     spec:
+      nodeSelector:
+        kubernetes.io/hostname: eva02
       securityContext:
         fsGroup: 1000
+      initContainers:
+        - name: register
+          image: code.forgejo.org/forgejo/runner:6.3.1
+          command: ["sh", "-c"]
+          args:
+            - |
+              set -e
+              [ -d /data/.runner ] && rm -rf /data/.runner
+              if [ ! -f /data/.runner ]; then
+                cd /data
+                forgejo-runner register --no-interactive \
+                  --instance "$FORGEJO_INSTANCE_URL" \
+                  --token "$TOKEN" \
+                  --name eva-docker-runner \
+                  --labels "docker:docker://catthehacker/ubuntu:act-latest"
+              fi
+          env:
+            - name: FORGEJO_INSTANCE_URL
+              value: http://forgejo.forgejo:3000
+            - name: TOKEN
+              valueFrom:
+                secretKeyRef: { name: forgejo-runner-token, key: token }
+          volumeMounts:
+            - { name: data, mountPath: /data }
       containers:
         - name: runner
           image: data.forgejo.org/forgejo/runner:13
           command: ["forgejo-runner", "daemon", "--config", "/config/config.yaml"]
-          env:
-            - name: DOCKER_HOST
-              value: tcp://forgejo-ci-svc:1234
           volumeMounts:
             - { name: config, mountPath: /config }
             - { name: data, mountPath: /data }
+            - { name: docker-sock, mountPath: /var/run/docker.sock }
           resources:
             requests: { cpu: "100m", memory: 128Mi }
             limits: { memory: 512Mi }
       volumes:
         - { name: config, secret: { secretName: "forgejo-runner-secrets"}}
-        - { name: data, emptyDir: {}}
+        - { name: data, persistentVolumeClaim: { claimName: forgejo-runner-data }}
+        - { name: docker-sock, hostPath: { path: /var/run/docker.sock , type: Socket }}
