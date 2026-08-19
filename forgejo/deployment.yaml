@@ -55,73 +55,11 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: forgejo-ci
-  namespace: forgejo
-  labels: { app: forgejo-ci }
-spec:
-  replicas: 1
-  strategy:
-    type: Recreate            # RWX removes the mount deadlock, but never let two
-                              # daemons touch one state dir — that corrupts the cache
-  selector:
-    matchLabels: { app: forgejo-ci }
-  template:
-    metadata:
-      labels: { app: forgejo-ci }
-    spec:
-      securityContext:
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 1000          # makes the NFS cache writable by the rootless user
-      containers:
-        - name: forgejo-ci
-          image: moby/buildkit:v0.19.0-rootless   # check for the current stable tag
-          args:
-            - --addr=unix:///run/user/1000/buildkit/forgejo-ci.sock
-            - --addr=tcp://0.0.0.0:1234
-            - --oci-worker-no-process-sandbox
-            - --config=/home/user/.config/buildkit/forgejo-ci.toml
-          ports:
-            - containerPort: 1234
-          readinessProbe:
-            tcpSocket: { port: 1234 }
-            initialDelaySeconds: 5
-            periodSeconds: 15
-          livenessProbe:
-            tcpSocket: { port: 1234 }
-            initialDelaySeconds: 10
-            periodSeconds: 30
-          securityContext:
-            seccompProfile: { type: Unconfined }
-            appArmorProfile: { type: Unconfined }   # modern field form; drops the deprecated annotation
-            runAsNonRoot: true
-            runAsUser: 1000
-            allowPrivilegeEscalation: true # rootless: no priv-esc, no privileged flag
-          resources:
-            requests: { cpu: "500m", memory: 1Gi }
-            limits: { memory: 4Gi }
-          volumeMounts:
-            - { name: cache, mountPath: /home/user/.local/share/buildkit }
-            - { name: config, mountPath: /home/user/.config/buildkit }
-            - { name: runtime, mountPath: /run/user/1000 }
-      volumes:
-        - name: cache
-          persistentVolumeClaim: { claimName: forgejo-ci-cache }
-        - name: config
-          configMap: { name: forgejo-ci-config }
-        - name: runtime
-          emptyDir: { medium: Memory }
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
   name: forgejo-runner
   namespace: forgejo
   labels: { app: forgejo-runner, role: forgejo-runner }
 spec:
   replicas: 1
-  strategy:
-    type: Recreate
   selector:
     matchLabels: { app: forgejo-runner }
   template:
