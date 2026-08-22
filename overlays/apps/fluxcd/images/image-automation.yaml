@@ -1,0 +1,71 @@
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageUpdateAutomation
+metadata:
+  name: bot-automation
+  namespace: flux-system
+spec:
+  git:
+    checkout:
+      ref:
+        branch: main
+    commit:
+      author:
+        email: fluxcdbot@mvaldes.dev
+        name: fluxcdbot
+      messageTemplate: "{{range .Changed.Changes}}{{print .OldValue}} -> {{println .NewValue}}{{end}}"
+    push:
+      branch: main
+  interval: 30m0s
+  sourceRef:
+    kind: GitRepository
+    name: homelab-repository
+  update:
+    path: ./bots
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageUpdateAutomation
+metadata:
+  name: blog-automation
+  namespace: flux-system
+spec:
+  git:
+    checkout:
+      ref:
+        branch: main
+    commit:
+      author:
+        email: fluxcdbot@mvaldes.dev
+        name: fluxcdbot
+      messageTemplate: "{{range .Changed.Changes}}{{print .OldValue}} -> {{println .NewValue}}{{end}}"
+    push:
+      branch: main
+  interval: 30m0s
+  sourceRef:
+    kind: GitRepository
+    name: homelab-repository
+  update:
+    path: ./blog
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageUpdateAutomation
+metadata:
+  name: td-automation
+  namespace: flux-system
+spec:
+  git:
+    checkout:
+      ref:
+        branch: main
+    commit:
+      author:
+        email: fluxcdbot@mvaldes.dev
+        name: fluxcdbot
+      messageTemplate: "{{range .Changed.Changes}}{{print .OldValue}} -> {{println .NewValue}}{{end}}"
+    push:
+      branch: main
+  interval: 30m0s
+  sourceRef:
+    kind: GitRepository
+    name: homelab-repository
+  update:
+    path: ./td

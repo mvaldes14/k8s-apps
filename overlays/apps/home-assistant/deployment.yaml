@@ -1,0 +1,44 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: hoa
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hoa-deploy
+  namespace: hoa
+spec:
+  selector:
+    matchLabels:
+      app: hoa
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: hoa
+    spec:
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      containers:
+        - name: hoa
+          image: ghcr.io/home-assistant/home-assistant:2026.2.1
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            tcpSocket:
+              port: 8123
+            initialDelaySeconds: 30
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 6
+            periodSeconds: 10
+          ports:
+            - containerPort: 8123
+          volumeMounts:
+            - name: config
+              mountPath: /config
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: hoa-pvc
+      restartPolicy: Always

@@ -1,0 +1,75 @@
+apiVersion: opentelemetry.io/v1beta1
+kind: OpenTelemetryCollector
+metadata:
+  name: ck-collector
+  namespace: clickhouse
+spec:
+  mode: daemonset
+  image: otel/opentelemetry-collector-contrib:0.154.0
+  # Run as root so /var/log/auth.log, kern.log, etc. (root:adm) are readable.
+  securityContext:
+    runAsUser: 0
+    runAsGroup: 0
+  # Run on every node, including tainted control-plane / server nodes.
+  tolerations:
+    - operator: Exists
+  env:
+    - name: K8S_NODE_NAME
+      valueFrom:
+        fieldRef:
+          fieldPath: spec.nodeName
+  volumes:
+    - name: varlog
+      hostPath:
+        path: /var/log
+  volumeMounts:
+    - name: varlog
+      mountPath: /var/log
+      readOnly: true
+  config:
+    receivers:
+      filelog:
+        include:
+          - /var/log/syslog
+          - /var/log/auth.log
+          - /var/log/kern.log
+        exclude:
+          - /var/log/pods/**
+          - /var/log/containers/**
+        start_at: end
+        include_file_path: true
+        retry_on_failure:
+          enabled: true
+    processors:
+      memory_limiter:
+        check_interval: 1s
+        limit_percentage: 80
+        spike_limit_percentage: 25
+      resourcedetection:
+        detectors: [env, system]
+        system:
+          hostname_sources: [os]
+        override: false
+      resource:
+        attributes:
+          - key: k8s.node.name
+            value: ${env:K8S_NODE_NAME}
+            action: upsert
+    exporters:
+      clickhouse/map:
+        endpoint: tcp://ck-cluster-clickhouse-headless:9000?dial_timeout=10s&compress=lz4
+        database: otel_map
+        logs_table_name: otel_logs
+        create_schema: true
+      clickhouse/json:
+        endpoint: tcp://ck-cluster-clickhouse-headless:9000?dial_timeout=10s&compress=lz4
+        database: otel_json
+        json: true
+        logs_table_name: otel_logs
+        create_schema: true
+    service:
+      pipelines:
+        logs:
+          receivers: [filelog]
+          processors: [memory_limiter, resourcedetection, resource]
+          exporters: [clickhouse/map, clickhouse/json]

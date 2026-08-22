@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: vault
+spec:
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 5Gi
+  claimRef:
+    apiVersion: v1
+    kind: PersistentVolumeClaim
+    name: vault-pvc
+    namespace: vault
+  csi:
+    driver: nfs.csi.k8s.io
+    volumeAttributes:
+      server: 10.14.0.21
+      share: /share/k8s/vault-vault-pvc
+    volumeHandle: 10.14.0.21#share/k8s/vault-vault-pvc##
+  mountOptions:
+    - soft
+    - nfsvers=3
+    - nolock
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: nfs-k8s-keep
+  volumeMode: Filesystem

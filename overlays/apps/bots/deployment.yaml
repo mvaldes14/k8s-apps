@@ -1,0 +1,92 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: twitch-bot
+  namespace: bots
+spec:
+  selector:
+    matchLabels:
+      app: twitch-bot
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: twitch-bot
+    spec:
+      containers:
+        - name: twtich-bot
+          image: docker.io/rorix/twitch-bot:20260214-174655@sha256:ce55297ebbaf360f122c3ad4b4358f29cbfa2fb200225b1be2189276744b82f2 # {"$imagepolicy": "flux-system:bot-policy"}
+          imagePullPolicy: Always
+          resources:
+            requests:
+              cpu: 200m
+              memory: 200Mi
+            limits:
+              cpu: 200m
+              memory: 200Mi
+          env:
+            - name: ADMIN_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: bots-secrets
+                  key: ADMIN_TOKEN
+            - name: DISCORD_WEBHOOK
+              valueFrom:
+                secretKeyRef:
+                  name: bots-secrets
+                  key: DISCORD_WEBHOOK
+            - name: REDIS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: bots-secrets
+                  key: REDIS_URL
+            - name: SPOTIFY_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: bots-secrets
+                  key: SPOTIFY_CLIENT_ID
+            - name: SPOTIFY_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: bots-secrets
+                  key: SPOTIFY_CLIENT_SECRET
+            - name: SPOTIFY_REFRESH_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: bots-secrets
+                  key: SPOTIFY_REFRESH_TOKEN
+            - name: TWITCH_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: bots-secrets
+                  key: TWITCH_CLIENT_ID
+            - name: TWITCH_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: bots-secrets
+                  key: TWITCH_CLIENT_SECRET
+            - name: TWITCH_USER_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: bots-secrets
+                  key: TWITCH_USER_TOKEN
+            - name: TWITCH_REFRESH_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: bots-secrets
+                  key: TWITCH_REFRESH_TOKEN
+            - name: GOTIFY_APPLICATION_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: bots-secrets
+                  key: GOTIFY_APPLICATION_TOKEN
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: signoz-signoz-helm-otel-collector.signoz:4318
+            - name: OTEL_ENVIRONMENT
+              value: "production"
+            - name: OTEL_INSECURE_ENDPOINT
+              value: "true"
+          ports:
+            - name: http
+              containerPort: 3000
+      restartPolicy: Always

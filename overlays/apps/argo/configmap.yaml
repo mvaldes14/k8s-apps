@@ -1,0 +1,106 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-values
+  namespace: argocd
+data:
+  values.yaml: |
+    global:
+      domain: argo.mvaldes.dev
+    # ---------------------------------------------------------------------------
+    # Core config
+    # ---------------------------------------------------------------------------
+    configs:
+      cm:
+        users.anonymous.enabled: "false"
+        # OIDC via Authentik — see wiki: Inbox/argocd-access.md
+        oidc.config: |
+          name: Authentik
+          issuer: https://auth.mvaldes.dev/application/o/argocd/
+          clientID: WBmrwNHR7Cs0SpBP3OuluT6nTMr4WKujp27Mn8WH
+          clientSecret: $oidc.authentik.clientSecret
+          requestedScopes: [openid, profile, email, groups]
+          requestedIDTokenClaims:
+            groups: {essential: true}
+      rbac:
+        policy.default: role:''
+        scopes: '[groups]'
+        policy.csv: |
+          p, role:guest-syncer, applications, get,  guest-project/myapp, allow
+          p, role:guest-syncer, applications, sync, guest-project/myapp, allow
+          g, argocd-guests, role:guest-syncer
+      params:
+        server.insecure: true  # TLS terminated at Cloudflare
+      secret:
+        createSecret: false    # ESO owns argocd-secret
+    # ---------------------------------------------------------------------------
+    # Disable bundled Redis
+    # ---------------------------------------------------------------------------
+    redis:
+      enabled: false
+    redis-ha:
+      enabled: false
+    externalRedis:
+      host: redis-svc.db
+      port: 6379
+    # ---------------------------------------------------------------------------
+    # Disable Dex
+    # ---------------------------------------------------------------------------
+    dex:
+      enabled: false
+    # ---------------------------------------------------------------------------
+    # Single-replica components
+    # ---------------------------------------------------------------------------
+    controller:
+      replicas: 1
+      resources:
+        requests:
+          cpu: 100m
+          memory: 256Mi
+        limits:
+          memory: 512Mi
+
+    server:
+      replicas: 1
+      resources:
+        requests:
+          cpu: 50m
+          memory: 128Mi
+        limits:
+          memory: 256Mi
+
+      # No ingress — cloudflared points directly at the ClusterIP service
+      ingress:
+        enabled: false
+
+      service:
+        type: ClusterIP
+        servicePortHttp: 80
+        servicePortHttps: 443
+
+    repoServer:
+      replicas: 1
+      resources:
+        requests:
+          cpu: 50m
+          memory: 128Mi
+        limits:
+          memory: 256Mi
+
+    applicationSet:
+      replicas: 1
+      resources:
+        requests:
+          cpu: 25m
+          memory: 64Mi
+        limits:
+          memory: 128Mi
+
+    notifications:
+      enabled: true
+      resources:
+        requests:
+          cpu: 25m
+          memory: 64Mi
+        limits:
+          memory: 128Mi

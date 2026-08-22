@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nocodb-deploy
+  namespace: nocodb
+  labels:
+    app: nocodb-deploy
+spec:
+  selector:
+    matchLabels:
+      app: nocodb-deploy
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: nocodb-deploy
+    spec:
+      containers:
+        - name: nocodb-deploy
+          image: nocodb/nocodb:latest
+          imagePullPolicy: IfNotPresent
+          # Metadata store is SQLite (noco.db) on the nocodb-pvc mounted at
+          # /usr/app/data. NocoDB only uses Postgres if NC_DB is set to a
+          # connection string; DB_HOST alone is ignored, so it was removed.
+          env:
+            - name: NC_ALLOW_LOCAL_EXTERNAL_DBS
+              value: "true"
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: data
+              mountPath: /usr/app/data
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: nocodb-pvc

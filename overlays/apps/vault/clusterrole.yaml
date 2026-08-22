@@ -1,0 +1,30 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: vault-kubernetes-secrets-manager
+rules:
+  # Permissions for creating/managing Service Accounts (if Vault needs to create them)
+  - apiGroups: [""]
+    resources: ["serviceaccounts", "serviceaccounts/token"] # serviceaccounts/token for generating SA tokens
+    verbs: ["create", "update", "delete", "get", "list", "watch"]
+  # Permissions for creating/managing Roles and RoleBindings
+  - apiGroups: ["rbac.authorization.k8s.io"]
+    resources: ["roles", "rolebindings", "clusterroles", "clusterrolebindings"]
+    verbs: ["create", "update", "delete", "get", "list", "watch"]
+  # Permissions to get namespaces (if Vault needs to inspect namespaces)
+  - apiGroups: [""]
+    resources: ["namespaces"]
+    verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: vault-kubernetes-secrets-manager-binding
+subjects:
+  - kind: ServiceAccount
+    name: vault-vault-release # This MUST match the service account name exactly
+    namespace: vault # This MUST match the namespace where Vault is deployed
+roleRef:
+  kind: ClusterRole
+  name: vault-kubernetes-secrets-manager # This MUST match the ClusterRole name
+  apiGroup: rbac.authorization.k8s.io
