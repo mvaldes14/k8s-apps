@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nocodb-deploy
+  labels:
+    app: nocodb-deploy
+spec:
+  selector:
+    matchLabels:
+      app: nocodb-deploy
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: nocodb-deploy
+    spec:
+      containers:
+        - name: nocodb-deploy
+          image: nocodb/nocodb:2026.08.0
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: NC_ALLOW_LOCAL_EXTERNAL_DBS
+              value: "true"
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: data
+              mountPath: /usr/app/data
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: nocodb-pvc

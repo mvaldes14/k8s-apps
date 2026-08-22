@@ -1,0 +1,31 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: bot-repository
+spec:
+  interval: 30m
+  ref:
+    branch: main
+  url: https://github.com/mvaldes14/twitch-bot
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: homelab-repository
+spec:
+  interval: 30m
+  ref:
+    branch: main
+  url: https://github.com/mvaldes14/k8s-apps
+  secretRef:
+    name: github-source-secret
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: td-repository
+spec:
+  interval: 30m
+  ref:
+    branch: main
+  url: https://github.com/mvaldes14/task-manager

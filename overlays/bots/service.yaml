@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: twitch-svc
+spec:
+  selector:
+    app: twitch-bot
+  type: ClusterIP
+  ports:
+  - name: twitch-bot
+    protocol: TCP
+    port: 80
+    targetPort: 3000
+---
+

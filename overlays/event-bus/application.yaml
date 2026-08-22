@@ -1,0 +1,17 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: eventbus
+spec:
+  project: homelab
+  source:
+    repoURL: https://github.com/mvaldes14/eventbus.git
+    targetRevision: main
+    path: deploy
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: events
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

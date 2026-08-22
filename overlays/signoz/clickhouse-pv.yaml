@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: signoz-clickhouse-data-eva04
+  labels:
+    app: signoz-clickhouse
+spec:
+  capacity:
+    storage: 50Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-direct
+  volumeMode: Filesystem
+  local:
+    path: /var/lib/local-pv/signoz-clickhouse
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - eva04
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: signoz-clickhouse-data
+  labels:
+    app: signoz-clickhouse
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-direct
+  volumeName: signoz-clickhouse-data-eva04
+  resources:
+    requests:
+      storage: 50Gi

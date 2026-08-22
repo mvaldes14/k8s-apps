@@ -1,0 +1,15 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: event-bus-flux
+spec:
+  interval: 30m
+  sourceRef:
+    kind: GitRepository
+    name: homelab-repository
+  path: "./overlays/event-bus"
+  prune: true
+  timeout: 5m
+  # The Application references project "homelab", which argo-flux creates.
+  dependsOn:
+    - name: argo-flux

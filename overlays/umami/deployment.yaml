@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: umami-deploy
+  labels:
+    app: umami
+spec:
+  selector:
+    matchLabels:
+      app: umami
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: umami
+    spec:
+      containers:
+        - name: umami-pod
+          image: ghcr.io/umami-software/umami:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: DATABASE_TYPE
+              value: postgresql
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: umami-secrets
+                  key: DATABASE_URL
+            - name: APP_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: umami-secrets
+                  key: APP_SECRET
+          ports:
+            - containerPort: 3000
+      restartPolicy: Always

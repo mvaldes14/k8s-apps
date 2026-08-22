@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: blog
+  labels:
+    app: blog
+spec:
+  selector:
+    matchLabels:
+      app: blog
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: blog
+    spec:
+      containers:
+      - name: blog
+        image: docker.io/rorix/blog:20260817-192514@sha256:a63d23ac960929e04581a3237e188d4b6cd381a0f5a1fea5e0a0e01ca96965af # {"$imagepolicy" : "flux-system:blog-policy"}
+        imagePullPolicy:
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            cpu: 100m
+            memory: 100Mi
+        livenessProbe:
+          tcpSocket:
+            port: 80
+          initialDelaySeconds: 5
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 3
+          periodSeconds: 10
+        ports:
+        - containerPort: 80
+      restartPolicy: Always
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: about
+  labels:
+    app: about
+spec:
+  selector:
+    matchLabels:
+      app: about
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: about
+    spec:
+      containers:
+      - name: about
+        image: rorix/about:latest
+        imagePullPolicy:
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            cpu: 100m
+            memory: 100Mi
+        livenessProbe:
+          tcpSocket:
+            port: 80
+          initialDelaySeconds: 5
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 3
+          periodSeconds: 10
+        ports:
+        - containerPort: 80
+      restartPolicy: Always

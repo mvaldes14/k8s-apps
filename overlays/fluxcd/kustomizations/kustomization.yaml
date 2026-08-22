@@ -1,0 +1,34 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: flux-system
+resources:
+  - argo.yaml
+  - arrs.yaml
+  - atlantis.yaml
+  - atuin.yaml
+  - authentik.yaml
+  - blog.yaml
+  - bots.yaml
+  - cert-manager.yaml
+  - cilium.yaml
+  - clickhouse.yaml
+  - cloudflared.yaml
+  - cronjobs.yaml
+  - event-bus.yaml
+  - excalidraw.yaml
+  - external-secrets.yaml
+  - forgejo.yaml
+  - garage.yaml
+  - gotify.yaml
+  - grafana.yaml
+  - hoa.yaml
+  - kustomizations.yaml
+  - n8n.yaml
+  - nocodb.yaml
+  - paperless.yaml
+  - redpanda.yaml
+  - searxng.yaml
+  - signoz.yaml
+  - td.yaml
+  - umami.yaml
+  - vault.yaml

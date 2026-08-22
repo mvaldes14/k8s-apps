@@ -1,0 +1,12 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: atuin-flux
+spec:
+  interval: 30m
+  sourceRef:
+    kind: GitRepository
+    name: homelab-repository
+  path: "./overlays/atuin"
+  prune: true
+  timeout: 5m

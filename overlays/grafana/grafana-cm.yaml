@@ -1,0 +1,82 @@
+# https://kubernetes.io/docs/concepts/configuration/configmap/
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-cm-new
+data:
+  values.yaml: |
+    persistence:
+      type: pvc
+      enabled: true
+      storageClassName: nfs-k8s-keep
+      accessModes:
+        - ReadWriteOnce
+      size: 5Gi
+      finalizers:
+        - kubernetes.io/pvc-protection
+
+    # Use an existing secret for the admin user.
+    admin:
+      ## Name of the secret. Can be templated.
+      existingSecret: "grafana-secret"
+      userKey: admin-user
+      passwordKey: admin-password
+
+    # extra plugins to install
+    plugins:
+    - grafana-github-datasource
+    - magnesium-wordcloud-panel
+    - yesoreyeram-infinity-datasource
+    - grafana-advisor-app
+    - victoriametrics-metrics-datasource
+    - victoriametrics-logs-datasource
+    - grafana-clickhouse-datasource
+
+    # Set via env, not grafana.ini: the ini parser strips the surrounding
+    # single quotes, leaving a JMESPath field lookup that never matches.
+    env:
+      GF_AUTH_GENERIC_OAUTH_ROLE_ATTRIBUTE_PATH: "'Admin'"
+
+    # OIDC credentials from the Vault-backed grafana-secret
+    envValueFrom:
+      GF_AUTH_GENERIC_OAUTH_CLIENT_ID:
+        secretKeyRef:
+          name: grafana-secret
+          key: oidc-client-id
+      GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET:
+        secretKeyRef:
+          name: grafana-secret
+          key: oidc-client-secret
+
+    # ini
+    grafana.ini:
+      server:
+        root_url: https://grafana.mvaldes.dev
+      feature_toggles:
+        provisioning: false
+        kubernetesDashboards: true
+        grafanaAdvisor: true
+        alertingListViewV2: true
+      users:
+        allow_sign_up: false
+      auth:
+        signout_redirect_url: https://auth.mvaldes.dev/application/o/grafana/end-session/
+        oauth_auto_login: false
+      auth.generic_oauth:
+        enabled: true
+        name: Authentik
+        # auto-provision on first login; access is gated by the
+        # application binding in Authentik, not by Grafana
+        allow_sign_up: true
+        auto_login: false
+        scopes: "openid email profile"
+        auth_url: https://auth.mvaldes.dev/application/o/authorize/
+        token_url: https://auth.mvaldes.dev/application/o/token/
+        api_url: https://auth.mvaldes.dev/application/o/userinfo/
+        login_attribute_path: preferred_username
+        name_attribute_path: name
+        email_attribute_path: email
+        use_pkce: true
+        use_refresh_token: true
+        # role_attribute_path is set via env (see above)
+        role_attribute_strict: false

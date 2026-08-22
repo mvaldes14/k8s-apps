@@ -1,0 +1,26 @@
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageRepository
+metadata:
+  name: bot-repository
+spec:
+  image: docker.io/rorix/twitch-bot
+  interval: 30m
+  provider: generic
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageRepository
+metadata:
+  name: blog-repository
+spec:
+  image: docker.io/rorix/blog
+  interval: 30m
+  provider: generic
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageRepository
+metadata:
+  name: td-repository
+spec:
+  image: ghcr.io/mvaldes14/task-manager
+  interval: 30m
+  provider: generic
