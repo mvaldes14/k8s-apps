@@ -19,7 +19,7 @@ spec:
     kind: GitRepository
     name: homelab-repository
   update:
-    path: ./bots
+    path: ./overlays/bots
 ---
 apiVersion: image.toolkit.fluxcd.io/v1beta2
 kind: ImageUpdateAutomation
@@ -42,7 +42,7 @@ spec:
     kind: GitRepository
     name: homelab-repository
   update:
-    path: ./blog
+    path: ./overlays/blog
 ---
 apiVersion: image.toolkit.fluxcd.io/v1beta2
 kind: ImageUpdateAutomation
@@ -65,4 +65,4 @@ spec:
     kind: GitRepository
     name: homelab-repository
   update:
-    path: ./td
+    path: ./overlays/td
