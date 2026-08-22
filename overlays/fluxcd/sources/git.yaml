@@ -2,9 +2,8 @@ apiVersion: source.toolkit.fluxcd.io/v1
 kind: GitRepository
 metadata:
   name: bot-repository
-  namespace: flux-system
 spec:
-  interval: 1m
+  interval: 30m
   ref:
     branch: main
   url: https://github.com/mvaldes14/twitch-bot
@@ -13,9 +12,8 @@ apiVersion: source.toolkit.fluxcd.io/v1
 kind: GitRepository
 metadata:
   name: homelab-repository
-  namespace: flux-system
 spec:
-  interval: 1m
+  interval: 30m
   ref:
     branch: main
   url: https://github.com/mvaldes14/k8s-apps
@@ -26,9 +24,8 @@ apiVersion: source.toolkit.fluxcd.io/v1
 kind: GitRepository
 metadata:
   name: td-repository
-  namespace: flux-system
 spec:
-  interval: 1m
+  interval: 30m
   ref:
     branch: main
   url: https://github.com/mvaldes14/task-manager

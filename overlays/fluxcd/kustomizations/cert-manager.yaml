@@ -2,13 +2,12 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: cert-manager-flux
-  namespace: flux-system
 spec:
-  interval: 10m
+  interval: 30m
   sourceRef:
     kind: GitRepository
     name: homelab-repository
-  path: "./cert-manager"
+  path: "./overlays/cert-manager"
   prune: true
   timeout: 10m
   healthChecks:
@@ -21,13 +20,12 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: cert-manager-config-flux
-  namespace: flux-system
 spec:
-  interval: 10m
+  interval: 30m
   sourceRef:
     kind: GitRepository
     name: homelab-repository
-  path: "./cert-manager/config"
+  path: "./overlays/cert-manager/config"
   prune: true
   timeout: 10m
   dependsOn:

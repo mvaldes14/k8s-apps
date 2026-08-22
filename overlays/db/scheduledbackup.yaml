@@ -2,7 +2,6 @@ apiVersion: postgresql.cnpg.io/v1
 kind: ScheduledBackup
 metadata:
   name: homelab-db-daily
-  namespace: db
 spec:
   # 6-field cron (leading seconds field). Daily at 03:00.
   schedule: "0 0 3 * * *"

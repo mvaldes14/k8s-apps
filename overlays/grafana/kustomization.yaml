@@ -1,0 +1,9 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: grafana
+resources:
+  - external-secrets.yaml
+  - grafana-cm.yaml
+  - grafana.yaml
+  - mcp-server.yaml
+  - pv.yaml

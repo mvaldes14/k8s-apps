@@ -7,7 +7,6 @@ apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
 metadata:
   name: signoz-helm
-  namespace: signoz
 spec:
   interval: 1m0s
   url: https://charts.signoz.io
@@ -16,7 +15,6 @@ apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: signoz-helm
-  namespace: signoz
 spec:
   targetNamespace: signoz
   timeout: 10m
@@ -43,7 +41,6 @@ apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: k8s-helm
-  namespace: signoz
 spec:
   targetNamespace: signoz
   timeout: 10m

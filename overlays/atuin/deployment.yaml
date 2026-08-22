@@ -7,7 +7,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: atuin-server
-  namespace: atuin
   labels:
     app: atuin-server
 spec:

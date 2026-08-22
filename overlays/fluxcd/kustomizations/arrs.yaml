@@ -2,13 +2,12 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: bazarr-flux
-  namespace: flux-system
 spec:
-  interval: 10m
+  interval: 30m
   sourceRef:
     kind: GitRepository
     name: homelab-repository
-  path: "./arrs/bazarr"
+  path: "./overlays/arrs/bazarr"
   prune: true
   timeout: 1m
 ---
@@ -16,13 +15,12 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: sonarr-flux
-  namespace: flux-system
 spec:
-  interval: 10m
+  interval: 30m
   sourceRef:
     kind: GitRepository
     name: homelab-repository
-  path: "./arrs/sonarr"
+  path: "./overlays/arrs/sonarr"
   prune: true
   timeout: 1m
 ---
@@ -30,13 +28,12 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: radarr-flux
-  namespace: flux-system
 spec:
-  interval: 10m
+  interval: 30m
   sourceRef:
     kind: GitRepository
     name: homelab-repository
-  path: "./arrs/radarr"
+  path: "./overlays/arrs/radarr"
   prune: true
   timeout: 1m
 ---
@@ -44,13 +41,12 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: readarr-flux
-  namespace: flux-system
 spec:
-  interval: 10m
+  interval: 30m
   sourceRef:
     kind: GitRepository
     name: homelab-repository
-  path: "./arrs/readarr"
+  path: "./overlays/arrs/readarr"
   prune: true
   timeout: 1m
 ---
@@ -58,13 +54,12 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: prowlarr-flux
-  namespace: flux-system
 spec:
-  interval: 10m
+  interval: 30m
   sourceRef:
     kind: GitRepository
     name: homelab-repository
-  path: "./arrs/prowlarr"
+  path: "./overlays/arrs/prowlarr"
   prune: true
   timeout: 1m
 ---
@@ -72,13 +67,12 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: flaresolverr-flux
-  namespace: flux-system
 spec:
-  interval: 10m
+  interval: 30m
   sourceRef:
     kind: GitRepository
     name: homelab-repository
-  path: "./arrs/flaresolverr"
+  path: "./overlays/arrs/flaresolverr"
   prune: true
   timeout: 1m
 ---
@@ -86,13 +80,12 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: transmission-flux
-  namespace: flux-system
 spec:
-  interval: 10m
+  interval: 30m
   sourceRef:
     kind: GitRepository
     name: homelab-repository
-  path: "./arrs/transmission"
+  path: "./overlays/arrs/transmission"
   prune: true
   timeout: 1m
 ---
@@ -100,12 +93,11 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: arrs-ingress-flux
-  namespace: flux-system
 spec:
-  interval: 10m
+  interval: 30m
   sourceRef:
     kind: GitRepository
     name: homelab-repository
-  path: "./arrs/ingress"
+  path: "./overlays/arrs/ingress"
   prune: true
   timeout: 1m

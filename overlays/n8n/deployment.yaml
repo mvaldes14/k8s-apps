@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: n8n-deploy
-  namespace: n8n
 spec:
   replicas: 1
   selector:

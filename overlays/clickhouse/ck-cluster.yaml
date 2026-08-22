@@ -2,7 +2,6 @@ apiVersion: clickhouse.com/v1alpha1
 kind: ClickHouseCluster
 metadata:
   name: ck-cluster
-  namespace: clickhouse
 spec:
   replicas: 1
   shards: 1
@@ -45,7 +44,6 @@ apiVersion: clickhouse.com/v1alpha1
 kind: KeeperCluster
 metadata:
   name: ck-keeper
-  namespace: clickhouse
 spec:
   replicas: 1
   podTemplate:

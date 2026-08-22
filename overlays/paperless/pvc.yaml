@@ -2,7 +2,6 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: paperless-media-pvc
-  namespace: paperless
 spec:
   storageClassName: nfs-k8s-keep
   accessModes:
@@ -15,7 +14,6 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: paperless-data-pvc
-  namespace: paperless
 spec:
   storageClassName: nfs-k8s-keep
   accessModes:

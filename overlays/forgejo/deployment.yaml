@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: forgejo-deploy
-  namespace: forgejo
   labels:
     app: forgejo
 spec:
@@ -56,7 +55,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: forgejo-runner
-  namespace: forgejo
   labels: { app: forgejo-runner, role: forgejo-runner }
 spec:
   replicas: 1

@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: blog
-  namespace: blog
   labels:
     app: blog
 spec:
@@ -42,7 +41,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: about
-  namespace: blog
   labels:
     app: about
 spec:

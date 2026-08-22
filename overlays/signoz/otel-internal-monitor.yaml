@@ -2,7 +2,6 @@ apiVersion: opentelemetry.io/v1beta1
 kind: OpenTelemetryCollector
 metadata:
   name: otel-internal-monitor
-  namespace: signoz
   labels:
     app: otel-internal-monitor
 spec:

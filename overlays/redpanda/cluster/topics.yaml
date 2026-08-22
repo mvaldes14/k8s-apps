@@ -2,7 +2,6 @@ apiVersion: cluster.redpanda.com/v1alpha2
 kind: Topic
 metadata:
   name: events
-  namespace: redpanda
 spec:
   cluster:
     clusterRef:
@@ -17,7 +16,6 @@ apiVersion: cluster.redpanda.com/v1alpha2
 kind: Topic
 metadata:
   name: github
-  namespace: redpanda
 spec:
   cluster:
     clusterRef:
@@ -32,7 +30,6 @@ apiVersion: cluster.redpanda.com/v1alpha2
 kind: Topic
 metadata:
   name: logs
-  namespace: redpanda
 spec:
   cluster:
     clusterRef:
@@ -48,7 +45,6 @@ apiVersion: cluster.redpanda.com/v1alpha2
 kind: Topic
 metadata:
   name: traces
-  namespace: redpanda
 spec:
   cluster:
     clusterRef:
@@ -64,7 +60,6 @@ apiVersion: cluster.redpanda.com/v1alpha2
 kind: Topic
 metadata:
   name: metrics
-  namespace: redpanda
 spec:
   cluster:
     clusterRef:

@@ -2,7 +2,6 @@ apiVersion: image.toolkit.fluxcd.io/v1beta2
 kind: ImageUpdateAutomation
 metadata:
   name: bot-automation
-  namespace: flux-system
 spec:
   git:
     checkout:
@@ -26,7 +25,6 @@ apiVersion: image.toolkit.fluxcd.io/v1beta2
 kind: ImageUpdateAutomation
 metadata:
   name: blog-automation
-  namespace: flux-system
 spec:
   git:
     checkout:
@@ -50,7 +48,6 @@ apiVersion: image.toolkit.fluxcd.io/v1beta2
 kind: ImageUpdateAutomation
 metadata:
   name: td-automation
-  namespace: flux-system
 spec:
   git:
     checkout:

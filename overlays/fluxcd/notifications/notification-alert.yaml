@@ -2,7 +2,6 @@ apiVersion: notification.toolkit.fluxcd.io/v1beta2
 kind: Alert
 metadata:
   name: gotify
-  namespace: flux-system
 spec:
   providerRef:
     name: gotify

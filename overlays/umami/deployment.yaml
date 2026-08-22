@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: umami-deploy
-  namespace: umami
   labels:
     app: umami
 spec:

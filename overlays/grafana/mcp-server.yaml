@@ -2,7 +2,6 @@ apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
   name: grafana-mcp-secrets
-  namespace: grafana
 spec:
   secretStoreRef:
     kind: ClusterSecretStore
@@ -21,7 +20,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: grafana-mcp-server
-  namespace: grafana
   labels:
     app: grafana-mcp-server
 spec:
@@ -60,7 +58,6 @@ apiVersion: v1
 kind: Service
 metadata:
   name: grafana-mcp-server
-  namespace: grafana
 spec:
   selector:
     app: grafana-mcp-server
@@ -73,7 +70,6 @@ apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
   name: grafana-mcp-server
-  namespace: grafana
 spec:
   entryPoints:
     - websecure

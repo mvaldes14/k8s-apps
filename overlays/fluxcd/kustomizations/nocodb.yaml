@@ -2,12 +2,11 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: nocodb-flux
-  namespace: flux-system
 spec:
-  interval: 10m
+  interval: 30m
   sourceRef:
     kind: GitRepository
     name: homelab-repository
-  path: "./nocodb"
+  path: "./overlays/nocodb"
   prune: true
   timeout: 5m

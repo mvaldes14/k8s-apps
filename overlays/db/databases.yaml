@@ -5,7 +5,6 @@ apiVersion: postgresql.cnpg.io/v1
 kind: Database
 metadata:
   name: git-db
-  namespace: db
 spec:
   name: git
   owner: admin

@@ -2,13 +2,12 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: umami-flux
-  namespace: flux-system
 spec:
-  interval: 10m
+  interval: 30m
   sourceRef:
     kind: GitRepository
     name: homelab-repository
-  path: "./umami"
+  path: "./overlays/umami"
   prune: true
   timeout: 1m
   decryption:

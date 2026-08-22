@@ -2,12 +2,11 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: clickhouse-flux
-  namespace: flux-system
 spec:
-  interval: 10m
+  interval: 30m
   sourceRef:
     kind: GitRepository
     name: homelab-repository
-  path: "./clickhouse"
+  path: "./overlays/clickhouse"
   prune: true
   timeout: 10m

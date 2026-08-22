@@ -7,7 +7,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: td-deploy
-  namespace: td
 spec:
   replicas: 1
   selector:
@@ -86,7 +85,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: td-deploy-mcp
-  namespace: td
 spec:
   replicas: 1
   selector:

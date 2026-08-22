@@ -3,7 +3,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: gotify-deploy
-  namespace: gotify
   labels:
     app: gotify-deploy
 spec:

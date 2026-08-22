@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: garage-deploy
-  namespace: garage
   labels:
     app: garage-deploy
 spec:
@@ -51,7 +50,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: garage-ui
-  namespace: garage
   labels:
     app: garage-ui
 spec:
