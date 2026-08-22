@@ -504,12 +504,11 @@ CRDs are the weak spot:
 
 - A large **raw CRD bundle** sits at `crds/external-secrets.yaml` (~1.4 MB), with
   an elastic bundle (~0.5 MB) in the same shape.
-- `crds-flux` points at `path: "./crds"`. That directory exists now, and since
-  Flux generates a `kustomization.yaml` when one is absent it will apply — but
-  `timeout: 1m` is tight for a bundle this size, and if the external-secrets chart
-  is set to install its own CRDs you end up with two owners for the same objects.
-  This path was dangling for a long time, which is why CRDs ended up installed by
-  hand in the first place.
+- `crds/` is deliberately **not** reconciled by Flux — there is no `crds-flux`
+  Kustomization. CRD bundles are a one-time `kubectl apply`, applied out of band
+  when they change. This keeps Flux from fighting a chart over ownership when a
+  controller (external-secrets, cert-manager) is set to install its own CRDs, and
+  avoids putting a ~1.4 MB bundle on a 10m reconcile loop.
 - Traefik's CRDs (`IngressRoute`, used by 7 apps) aren't in the repo at all —
   they came in with the cluster/Traefik install, so they're not reproducible
   either.
@@ -556,9 +555,8 @@ Guidelines:
 - **Let charts own their CRDs where they can.** `cert-manager` (`crds:` in its
   values) and the `external-secrets` chart can both install their own CRDs. If
   you enable that, the giant `base/crds/external-secrets.yaml` bundle becomes
-  redundant and can be deleted — only keep raw bundles under
-  `infrastructure/crds/` for CRDs **no chart installs** (e.g. Traefik, ECK/
-  elastic if nothing manages them).
+  redundant and can be deleted — only keep raw bundles under `crds/` for CRDs
+  **no chart installs** (e.g. Traefik, ECK/elastic if nothing manages them).
 - **One operator per directory**, moved out of the workload dirs. Per-app
   workloads that *use* an operator (the `ExternalSecret`s) stay in `apps/` /
   `base/`; the controller install *and* its cluster-scoped config (the
@@ -566,13 +564,13 @@ Guidelines:
 
 ### Ordering with Flux `dependsOn`
 
-Replace the dangling `crds-flux` with a proper dependency chain so a fresh
-cluster converges in the right order without manual steps:
+CRDs are applied once by hand (see above), so they sit outside this chain — it
+starts at the controllers. Everything downstream still needs explicit ordering so
+a fresh cluster converges without manual steps:
 
 ```yaml
-# crds must exist before controllers reconcile
-# infrastructure-crds (path ./infrastructure/crds)
-#        ▼ dependsOn
+# crds/ applied out of band: kubectl apply -k crds/
+#        (prerequisite, not a Flux Kustomization)
 # infrastructure-controllers (path ./infrastructure/controllers)
 #        ▼ dependsOn
 # infrastructure-config (./infrastructure/storage, ./infrastructure/secretstores)
@@ -587,8 +585,6 @@ metadata:
   name: infrastructure-controllers
   namespace: flux-system
 spec:
-  dependsOn:
-    - name: infrastructure-crds     # <-- wait for CRDs first
   interval: 10m
   sourceRef: { kind: GitRepository, name: homelab-repository }
   path: "./infrastructure/controllers"
@@ -645,16 +641,15 @@ with `kustomize build` before merging.
 
 **Platform layer first (fixes the manual-install problem):**
 
-1. **Create `infrastructure/crds/`** and move the raw bundles into it
-   (`external-secrets/`, `elastic/`), add `traefik/` CRDs, and give it an explicit
-   `kustomization.yaml` rather than relying on Flux's generated one. Repoint
-   `crds-flux` at `./infrastructure/crds`, rename it to `infrastructure-crds`, and
-   raise `timeout` above `1m` for the large bundles.
+1. **Keep the raw bundles in `crds/`** (`external-secrets/`, `elastic/`), add
+   `traefik/` CRDs, and give it an explicit `kustomization.yaml` so the one-time
+   apply is a single `kubectl apply -k crds/`. This stays out of Flux by design —
+   it is a bootstrap step, run once on a fresh cluster and again only when a
+   bundle is bumped.
 2. **Create `infrastructure/controllers/`** and move each operator's
    `HelmRepository`+`HelmRelease` there (`external-secrets`, `cert-manager`,
-   `cilium`, `vault`, …). Add `dependsOn: [infrastructure-crds]` and
-   `dependsOn: [infrastructure-controllers]` on the app Kustomizations so a
-   fresh cluster orders itself.
+   `cilium`, `vault`, …). Add `dependsOn: [infrastructure-controllers]` on the
+   app Kustomizations so a fresh cluster orders itself.
 3. Where a chart can install its own CRDs (cert-manager, external-secrets),
    enable that and delete the corresponding raw bundle — in the same commit, so
    you never have both.
