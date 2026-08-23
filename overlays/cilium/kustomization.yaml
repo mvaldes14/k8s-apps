@@ -3,3 +3,4 @@ kind: Kustomization
 namespace: kube-system
 resources:
   - cilium.yaml
+  - lb-pool.yaml

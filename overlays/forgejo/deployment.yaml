@@ -39,9 +39,22 @@ spec:
                 secretKeyRef:
                   name: forgejo-secrets
                   key: DB_PASSWD
+            # environment-to-ini rewrites app.ini on start. Without these the
+            # clone box advertises git@localhost. Web is served through the
+            # cloudflare tunnel; SSH goes direct to the LAN VIP.
+            - name: FORGEJO__server__DOMAIN
+              value: git.mvaldes.dev
+            - name: FORGEJO__server__SSH_DOMAIN
+              value: git.int.mvaldes.dev
+            - name: FORGEJO__server__SSH_PORT
+              value: "22"
+            - name: FORGEJO__server__SSH_LISTEN_PORT
+              value: "22"
           ports:
             - containerPort: 3000
               name: http
+            - containerPort: 22
+              name: ssh
           volumeMounts:
             - name: data
               mountPath: /data
