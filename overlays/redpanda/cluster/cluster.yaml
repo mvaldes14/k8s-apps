@@ -23,6 +23,12 @@ spec:
           - group
           - partition
           - consumer_lag
+        # Community Edition: both of these are enterprise-gated and default to
+        # the licensed values, which blocks the logical-version upgrade gate on
+        # broker restart (feature_manager "Verifying enterprise license").
+        # Meaningless on a single-node cluster anyway.
+        partition_autobalancing_mode: node_add
+        core_balancing_continuous: false
     # Single-node dev cluster: plaintext, no external access, no console.
     tls:
       enabled: false
