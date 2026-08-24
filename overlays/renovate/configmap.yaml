@@ -41,10 +41,16 @@ data:
           "enabled": false
         },
         {
-          "description": "Group non-major container image bumps into one PR",
+          "description": "CRD apiVersions follow the controller upgrade, not a Renovate PR",
+          "matchDatasources": ["kubernetes-api"],
+          "enabled": false
+        },
+        {
+          "description": "Group non-major image bumps per overlay directory",
           "matchManagers": ["kubernetes"],
+          "matchDatasources": ["docker"],
           "matchUpdateTypes": ["minor", "patch"],
-          "groupName": "container images (non-major)"
+          "groupName": "{{parentDir}} images"
         },
         {
           "description": "Helm charts get their own PR each; these are the risky ones",
