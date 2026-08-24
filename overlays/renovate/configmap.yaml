@@ -10,10 +10,10 @@ data:
       "gitAuthor": "Renovate Bot <renovate@mvaldes.dev>",
       "onboarding": false,
       "requireConfig": "optional",
-      "repositories": [
-        "mvaldes14/k8s-apps"
-      ],
+      "autodiscover": true,
+      "autodiscoverFilter": ["mvaldes14/*"],
       "dependencyDashboard": true,
+      "dependencyDashboardApproval": true,
       "dependencyDashboardTitle": "Renovate Dependency Dashboard",
       "prConcurrentLimit": 5,
       "prHourlyLimit": 0,
@@ -32,6 +32,11 @@ data:
         ]
       },
       "packageRules": [
+        {
+          "description": "k8s-apps is the repo being actively maintained; PRs there need no approval",
+          "matchRepositories": ["mvaldes14/k8s-apps"],
+          "dependencyDashboardApproval": false
+        },
         {
           "description": "Flux image-automation owns these tags; Renovate must not fight it",
           "matchPackageNames": [
