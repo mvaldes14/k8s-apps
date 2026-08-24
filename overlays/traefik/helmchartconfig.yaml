@@ -1,0 +1,26 @@
+apiVersion: helm.cattle.io/v1
+kind: HelmChartConfig
+metadata:
+  name: traefik
+spec:
+  valuesContent: |-
+    # Add an `ssh` entrypoint on port 22 so git-over-SSH can be routed through
+    # Traefik (IngressRouteTCP) instead of a dedicated LoadBalancer. `web` (80)
+    # and `websecure` (443) keep the chart defaults.
+    ports:
+      ssh:
+        port: 22
+        expose:
+          default: true
+        exposedPort: 22
+        protocol: TCP
+    logs:
+      access:
+        enabled: true
+        format: json
+    providers:
+      kubernetesCRD:
+        allowCrossNamespace: true
+    additionalArguments:
+      - "--api.dashboard=true"
+      - "--api.insecure=true"
