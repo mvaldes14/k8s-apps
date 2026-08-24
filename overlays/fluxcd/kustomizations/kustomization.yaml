@@ -27,6 +27,7 @@ resources:
   - nocodb.yaml
   - paperless.yaml
   - redpanda.yaml
+  - renovate.yaml
   - searxng.yaml
   - signoz.yaml
   - td.yaml
