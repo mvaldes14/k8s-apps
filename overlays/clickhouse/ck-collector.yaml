@@ -4,7 +4,7 @@ metadata:
   name: ck-collector
 spec:
   mode: daemonset
-  image: otel/opentelemetry-collector-contrib:0.154.0
+  image: otel/opentelemetry-collector-contrib:0.159.0
   # Run as root so /var/log/auth.log, kern.log, etc. (root:adm) are readable.
   securityContext:
     runAsUser: 0

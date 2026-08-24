@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: garage-deploy
-          image: dxflrs/garage:v2.1.0
+          image: dxflrs/garage:v2.3.0
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3900

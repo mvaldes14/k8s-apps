@@ -6,7 +6,7 @@ metadata:
     app: otel-internal-monitor
 spec:
   mode: deployment
-  image: signoz/signoz-otel-collector:v0.144.5
+  image: signoz/signoz-otel-collector:v0.144.8
   serviceAccount: signoz-signoz-helm-otel-collector
   config:
     receivers:
