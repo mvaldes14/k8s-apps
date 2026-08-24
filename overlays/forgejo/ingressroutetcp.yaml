@@ -11,5 +11,5 @@ spec:
   routes:
     - match: HostSNI(`*`)
       services:
-        - name: forgejo-ssh-svc
+        - name: forgejo-svc
           port: 22
