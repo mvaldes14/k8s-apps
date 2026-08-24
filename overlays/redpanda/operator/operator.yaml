@@ -24,7 +24,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: redpanda-helm
-      version: 26.1.9
+      version: 26.2.2
   interval: 1m0s
   values:
     # Install the stable CRDs (Redpanda, Topic, User, Schema).
