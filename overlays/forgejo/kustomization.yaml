@@ -6,3 +6,4 @@ resources:
   - external-secrets.yaml
   - pvc.yaml
   - service.yaml
+  - ingressroutetcp.yaml

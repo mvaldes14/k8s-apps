@@ -11,24 +11,9 @@ spec:
       protocol: TCP
       port: 80
       targetPort: 3000
----
-# SSH is a separate Service: the tunnel serves HTTP on forgejo-svc, while git
-# over SSH needs a routable LAN address (Cloudflare's edge won't carry raw TCP).
-# Reachable from the LAN and over the tailnet.
-apiVersion: v1
-kind: Service
-metadata:
-  name: forgejo-ssh-svc
-  annotations:
-    # Pinned so the git.int.mvaldes.dev record stays valid, and so this can't
-    # race Traefik for .230 (which *.int.mvaldes.dev resolves to).
-    lbipam.cilium.io/ips: "10.14.0.231"
-spec:
-  selector:
-    app: forgejo
-  type: LoadBalancer
-  externalTrafficPolicy: Local
-  ports:
+    # git-over-SSH is reached through Traefik's `ssh` entrypoint
+    # (IngressRouteTCP forgejo-ssh -> here:22). No dedicated LoadBalancer: the
+    # Traefik VIP (10.14.0.230, where git.int.mvaldes.dev resolves) carries 22.
     - name: ssh
       protocol: TCP
       port: 22

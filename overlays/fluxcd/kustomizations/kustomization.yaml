@@ -30,5 +30,6 @@ resources:
   - searxng.yaml
   - signoz.yaml
   - td.yaml
+  - traefik.yaml
   - umami.yaml
   - vault.yaml
