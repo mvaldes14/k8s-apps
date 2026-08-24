@@ -24,7 +24,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: atlantis-helm
-      version: 6.9.3
+      version: 6.15.0
   valuesFrom:
     - kind: ConfigMap
       name: atlantis-cm
