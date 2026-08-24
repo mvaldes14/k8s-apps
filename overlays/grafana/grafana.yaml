@@ -24,7 +24,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: grafana-helm
-      version: 12.8.0
+      version: 12.11.2
   interval: 1m0s
   valuesFrom:
     - kind: ConfigMap
