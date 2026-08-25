@@ -5,8 +5,6 @@ resources:
   - cluster.yaml
   - databases.yaml
   - external-secrets.yaml
-  - pvc.yaml
   - scheduledbackup.yaml
   - secrets.yaml
   - service.yaml
-  - statefulset.yaml

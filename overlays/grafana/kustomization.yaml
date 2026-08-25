@@ -6,4 +6,3 @@ resources:
   - grafana-cm.yaml
   - grafana.yaml
   - mcp-server.yaml
-  - pv.yaml

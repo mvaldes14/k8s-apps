@@ -6,7 +6,6 @@ resources:
   - ingress.yaml
   - mcp-server.yaml
   - otel-internal-monitor.yaml
-  - pvs.yaml
   - signoz-config.yaml
   - signoz-k8s-config.yaml
   - signoz.yaml
