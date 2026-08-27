@@ -9,3 +9,4 @@ resources:
   - signoz-config.yaml
   - signoz-k8s-config.yaml
   - signoz.yaml
+  - ./resources/provider.yaml
