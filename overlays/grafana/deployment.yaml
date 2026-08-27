@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grafana-mcp-server
+  labels:
+    app: grafana-mcp-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grafana-mcp-server
+  template:
+    metadata:
+      labels:
+        app: grafana-mcp-server
+    spec:
+      containers:
+        - name: grafana-mcp-server
+          image: grafana/mcp-grafana:latest
+          imagePullPolicy: Always
+          args:
+            - -t
+            - streamable-http
+            - --allowed-hosts
+            - grafana-mcp.int.mvaldes.dev,grafana-mcp.int.mvaldes.dev:443
+          env:
+            - name: GRAFANA_URL
+              value: http://grafana-grafana-release.grafana.svc.cluster.local
+            - name: GRAFANA_SERVICE_ACCOUNT_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: grafana-mcp-secrets
+                  key: GRAFANA_SERVICE_ACCOUNT_TOKEN
+          ports:
+            - name: http
+              containerPort: 8000
+      restartPolicy: Always

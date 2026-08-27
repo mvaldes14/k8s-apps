@@ -3,6 +3,6 @@ kind: Kustomization
 namespace: nocodb
 resources:
   - deployment.yaml
-  - external-secrets.yaml
+  - externalsecret.yaml
   - pvc.yaml
   - service.yaml

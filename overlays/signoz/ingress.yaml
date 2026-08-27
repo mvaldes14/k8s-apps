@@ -21,3 +21,18 @@ spec:
       services:
         - name: signoz-signoz-helm-otel-collector
           port: 4318
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: signoz-mcp-server
+spec:
+  entryPoints:
+    - websecure
+  tls: {}
+  routes:
+    - kind: Rule
+      match: Host(`signoz-mcp.int.mvaldes.dev`)
+      services:
+        - name: signoz-mcp-server
+          port: 8000

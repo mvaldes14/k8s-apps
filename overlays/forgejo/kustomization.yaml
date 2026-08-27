@@ -3,7 +3,7 @@ kind: Kustomization
 namespace: forgejo
 resources:
   - deployment.yaml
-  - external-secrets.yaml
+  - externalsecret.yaml
+  - ingressroutetcp.yaml
   - pvc.yaml
   - service.yaml
-  - ingressroutetcp.yaml

@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: signoz-mcp-server
+  labels:
+    app: signoz-mcp-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: signoz-mcp-server
+  template:
+    metadata:
+      labels:
+        app: signoz-mcp-server
+    spec:
+      containers:
+        - name: signoz-mcp-server
+          image: signoz/signoz-mcp-server:latest
+          imagePullPolicy: Always
+          envFrom:
+            - secretRef:
+                name: signoz-mcp-secrets
+          env:
+            - name: TRANSPORT_MODE
+              value: "http"
+            - name: MCP_SERVER_PORT
+              value: "8000"
+          ports:
+            - containerPort: 8000
+      restartPolicy: Always

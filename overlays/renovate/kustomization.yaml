@@ -3,6 +3,6 @@ kind: Kustomization
 namespace: renovate
 resources:
   - namespace.yaml
-  - external-secrets.yaml
   - configmap.yaml
   - cronjob.yaml
+  - externalsecret.yaml

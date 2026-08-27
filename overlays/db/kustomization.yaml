@@ -3,8 +3,8 @@ kind: Kustomization
 namespace: db
 resources:
   - cluster.yaml
-  - databases.yaml
-  - external-secrets.yaml
+  - database.yaml
+  - externalsecret.yaml
   - scheduledbackup.yaml
-  - secrets.yaml
+  - secret.yaml
   - service.yaml

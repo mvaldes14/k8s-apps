@@ -1,0 +1,12 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: vault-kubernetes-secrets-manager-binding
+subjects:
+  - kind: ServiceAccount
+    name: vault-vault-release # This MUST match the service account name exactly
+    namespace: vault # This MUST match the namespace where Vault is deployed
+roleRef:
+  kind: ClusterRole
+  name: vault-kubernetes-secrets-manager # This MUST match the ClusterRole name
+  apiGroup: rbac.authorization.k8s.io

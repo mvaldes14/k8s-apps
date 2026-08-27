@@ -3,6 +3,6 @@ kind: Kustomization
 namespace: bots
 resources:
   - deployment.yaml
-  - external-secrets.yaml
-  - secrets.yaml
+  - externalsecret.yaml
+  - secret.yaml
   - service.yaml

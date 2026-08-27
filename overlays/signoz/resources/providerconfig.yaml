@@ -1,0 +1,14 @@
+apiVersion: resources.signoz.io/v1alpha1
+kind: ProviderConfig
+metadata:
+  name: homelab
+  namespace: signoz
+spec:
+  endpoint:
+    value: https://signoz.mvaldes.dev
+  auth:
+    header:
+      valueFrom:
+        secretKeyRef:
+          name: signoz-mcp-secrets
+          key: SIGNOZ_API_KEY

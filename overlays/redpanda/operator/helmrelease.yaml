@@ -1,0 +1,27 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: redpanda-operator
+spec:
+  targetNamespace: redpanda
+  chart:
+    spec:
+      chart: operator
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        name: redpanda-helm
+      version: 26.2.2
+  interval: 1m0s
+  values:
+    # Install the stable CRDs (Redpanda, Topic, User, Schema).
+    # Default is false; a pre-install job runs `redpanda-operator crd`.
+    crds:
+      enabled: true
+    logLevel: info
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        memory: 256Mi

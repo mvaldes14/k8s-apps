@@ -1,0 +1,11 @@
+# Template: databases are seeded via the bootstrap import in cluster.yaml.
+# Use this CRD to declaratively manage/add databases going forward.
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: git-db
+spec:
+  name: git
+  owner: admin
+  cluster:
+    name: homelab-db

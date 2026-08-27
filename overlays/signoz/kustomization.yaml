@@ -2,11 +2,14 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: signoz
 resources:
-  - clickhouse-pv.yaml
+  - namespace.yaml
+  - configmap.yaml
+  - deployment.yaml
+  - externalsecret.yaml
+  - helmrelease.yaml
+  - helmrepository.yaml
   - ingress.yaml
-  - mcp-server.yaml
-  - otel-internal-monitor.yaml
-  - signoz-config.yaml
-  - signoz-k8s-config.yaml
-  - signoz.yaml
-  - ./resources/provider.yaml
+  - pv.yaml
+  - pvc.yaml
+  - service.yaml
+  - ./monitor

@@ -1,0 +1,13 @@
+apiVersion: clickhouse.com/v1alpha1
+kind: KeeperCluster
+metadata:
+  name: ck-keeper
+spec:
+  replicas: 1
+  podTemplate:
+    nodeHostnameKey: kubernetes.io/hostname
+  dataVolumeClaimSpec:
+    storageClassName: nfs-k8s-keep
+    resources:
+      requests:
+        storage: 1Gi
