@@ -68,7 +68,9 @@ spec:
             method: GET
           - endpoint: https://readarr.int.mvaldes.dev
             method: GET
-          - endpoint: https://authentik.int.mvaldes.dev
+          - endpoint: https://auth.mvaldes.dev
+            method: GET
+          - endpoint: https://argo.mvaldes.dev
             method: GET
           - endpoint: https://s3ui.int.mvaldes.dev
             method: GET
@@ -102,6 +104,18 @@ spec:
                   regex: ([^:]+)(?::\d+)?;(\d+)
                   replacement: $1:$2
                   target_label: __address__
+                - source_labels: [__meta_kubernetes_pod_name]
+                  action: replace
+                  target_label: job
+                - source_labels: [__meta_kubernetes_pod_label_app]
+                  action: replace
+                  regex: (.+)
+                  target_label: job
+                - source_labels:
+                    [__meta_kubernetes_pod_label_app_kubernetes_io_name]
+                  action: replace
+                  regex: (.+)
+                  target_label: job
 
             # Scrape Hubble metrics (9965) — same pod as cilium-agent, so the
             # single prometheus.io/port annotation can't cover it. Target the
@@ -140,17 +154,35 @@ spec:
                   regex: ([^:]+)(?::\d+)?;(\d+)
                   replacement: $1:$2
                   target_label: __address__
+                - source_labels: [__meta_kubernetes_pod_name]
+                  action: replace
+                  target_label: job
+                - source_labels: [__meta_kubernetes_pod_label_app]
+                  action: replace
+                  regex: (.+)
+                  target_label: job
+                - source_labels:
+                    [__meta_kubernetes_pod_label_app_kubernetes_io_name]
+                  action: replace
+                  regex: (.+)
+                  target_label: job
 
     processors:
       batch:
         timeout: 10s
-        send_batch_size: 100
+        send_batch_size: 5000
 
-      resource:
+      resource/site-monitoring:
         attributes:
           - key: service.name
             value: site-monitoring
+            action: upsert
+          - key: deployment.environment
+            value: homelab
             action: insert
+
+      resource/common:
+        attributes:
           - key: deployment.environment
             value: homelab
             action: insert
@@ -163,17 +195,25 @@ spec:
 
     service:
       pipelines:
-        metrics:
-          receivers: [httpcheck, prometheus, kafka/metrics]
-          processors: [resource, batch]
+        metrics/site-monitoring:
+          receivers: [httpcheck]
+          processors: [resource/site-monitoring, batch]
+          exporters: [otlp]
+        metrics/scrape:
+          receivers: [prometheus]
+          processors: [resource/common, batch]
+          exporters: [otlp]
+        metrics/kafka:
+          receivers: [kafka/metrics]
+          processors: [resource/common, batch]
           exporters: [otlp]
         logs:
           receivers: [kafka/logs]
-          processors: [resource, batch]
+          processors: [resource/common, batch]
           exporters: [otlp]
         traces:
           receivers: [kafka/traces]
-          processors: [resource, batch]
+          processors: [resource/common, batch]
           exporters: [otlp]
       telemetry:
         logs:
