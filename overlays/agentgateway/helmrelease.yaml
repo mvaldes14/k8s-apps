@@ -8,10 +8,6 @@ spec:
   chartRef:
     kind: OCIRepository
     name: agentgateway-crds
-  upgrade:
-    strategy:
-      name: RetryOnFailure
-      retryInterval: 5m
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
@@ -25,10 +21,6 @@ spec:
   chartRef:
     kind: OCIRepository
     name: agentgateway
-  upgrade:
-    strategy:
-      name: RetryOnFailure
-      retryInterval: 5m
   values:
     controller:
       image:

@@ -2,6 +2,7 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: agentgateway-flux
+  namespace: flux-system
 spec:
   interval: 30m
   sourceRef:
