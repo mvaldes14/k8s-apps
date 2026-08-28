@@ -1,0 +1,54 @@
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayBackend
+metadata:
+  name: openai
+  namespace: agentgateway
+spec:
+  ai:
+    provider:
+      openai:
+        model: "gpt-5-mini"
+  policies:
+    auth:
+      secretRef:
+        name: agentgateway-secrets
+        key: OPENAI_KEY
+---
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayBackend
+metadata:
+  name: anthropic
+  namespace: agentgateway-system
+spec:
+  ai:
+    provider:
+      anthropic:
+        model: "claude-opus-5"
+  policies:
+    auth:
+      secretRef:
+        name: agentgateway-secrets
+        key: CLAUDE_KEY
+---
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayBackend
+metadata:
+  name: openrouter
+  namespace: agentgateway
+spec:
+  ai:
+    provider:
+      openai:
+        model: openrouter/auto
+      host: openrouter.ai
+      port: 443
+      path: /api/v1/chat/completions
+  policies:
+    auth:
+      secretRef:
+        name: agentgateway-secrets
+        key: OPENROUTER_KEY
+    tls:
+      sni: openrouter.ai
+
+

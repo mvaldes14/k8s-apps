@@ -6,3 +6,6 @@ resources:
   - ocirepository.yaml
   - helmrelease.yaml
   - gateway.yaml
+  - externalsecret.yaml
+  - agentgatewaybackend.yaml
+  - httproute.yaml
