@@ -2,7 +2,6 @@ apiVersion: agentgateway.dev/v1alpha1
 kind: AgentgatewayBackend
 metadata:
   name: openai
-  namespace: agentgateway
 spec:
   ai:
     provider:
@@ -18,7 +17,6 @@ apiVersion: agentgateway.dev/v1alpha1
 kind: AgentgatewayBackend
 metadata:
   name: anthropic
-  namespace: agentgateway-system
 spec:
   ai:
     provider:
@@ -34,7 +32,6 @@ apiVersion: agentgateway.dev/v1alpha1
 kind: AgentgatewayBackend
 metadata:
   name: openrouter
-  namespace: agentgateway
 spec:
   ai:
     provider:
