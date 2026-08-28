@@ -698,6 +698,13 @@ data:
           telemetry:
             logs:
               encoding: json
+            metrics:
+              readers:
+                - pull:
+                    exporter:
+                      prometheus:
+                        host: 0.0.0.0
+                        port: 8888
           extensions: [health_check, pprof]
           pipelines:
             traces:
