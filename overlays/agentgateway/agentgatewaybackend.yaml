@@ -5,8 +5,7 @@ metadata:
 spec:
   ai:
     provider:
-      openai:
-        model: {}
+      openai: {}
   policies:
     auth:
       secretRef:
@@ -38,8 +37,7 @@ metadata:
 spec:
   ai:
     provider:
-      openai:
-        model: {}
+      openai: {}
       host: openrouter.ai
       port: 443
       path: /api/v1/chat/completions
