@@ -15,7 +15,7 @@ spec:
       urlRewrite:
         path:
           type: ReplacePrefixMatch
-          replacePrefixMatch: /v1/chat/completions
+          replacePrefixMatch: /
     backendRefs:
     - name: openai
       group: agentgateway.dev
@@ -29,7 +29,7 @@ spec:
       urlRewrite:
         path:
           type: ReplacePrefixMatch
-          replacePrefixMatch: /v1/chat/completions
+          replacePrefixMatch: /
     backendRefs:
     - name: anthropic
       group: agentgateway.dev
@@ -39,12 +39,6 @@ spec:
     - path:
         type: PathPrefix
         value: /
-    filters:
-    - type: URLRewrite
-      urlRewrite:
-        path:
-          type: ReplacePrefixMatch
-          replacePrefixMatch: /
     backendRefs:
     - name: openrouter
       group: agentgateway.dev
