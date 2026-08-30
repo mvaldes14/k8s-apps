@@ -6,7 +6,7 @@ spec:
   ai:
     provider:
       openai:
-        model: "gpt-5-mini"
+        model: {}
   policies:
     auth:
       secretRef:
@@ -18,21 +18,18 @@ kind: AgentgatewayBackend
 metadata:
   name: anthropic
 spec:
-  # static passthrough: agentgateway's ai backend re-marshals the request body
-  # and rejects native Anthropic clients that send tools ("missing field `type`").
-  # forward as-is to api.anthropic.com, just injecting the key.
-  static:
-    host: api.anthropic.com
-    port: 443
+  ai:
+    provider:
+      anthropic: {}
   policies:
-    tls: {}
+    ai:
+      routes:
+        '/v1/messages': Messages
+        '*': Passthrough
     auth:
       secretRef:
         name: agentgateway-secrets
         key: CLAUDE_KEY
-      location:
-        header:
-          name: x-api-key
 ---
 apiVersion: agentgateway.dev/v1alpha1
 kind: AgentgatewayBackend
@@ -42,7 +39,7 @@ spec:
   ai:
     provider:
       openai:
-        model: openrouter/auto
+        model: {}
       host: openrouter.ai
       port: 443
       path: /api/v1/chat/completions
