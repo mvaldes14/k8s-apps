@@ -18,15 +18,21 @@ kind: AgentgatewayBackend
 metadata:
   name: anthropic
 spec:
-  ai:
-    provider:
-      anthropic:
-        model: "claude-opus-5"
+  # static passthrough: agentgateway's ai backend re-marshals the request body
+  # and rejects native Anthropic clients that send tools ("missing field `type`").
+  # forward as-is to api.anthropic.com, just injecting the key.
+  static:
+    host: api.anthropic.com
+    port: 443
   policies:
+    tls: {}
     auth:
       secretRef:
         name: agentgateway-secrets
         key: CLAUDE_KEY
+      location:
+        header:
+          name: x-api-key
 ---
 apiVersion: agentgateway.dev/v1alpha1
 kind: AgentgatewayBackend
