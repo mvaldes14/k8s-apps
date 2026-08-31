@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: nocodb-deploy
-          image: nocodb/nocodb:2026.08.0
+          image: nocodb/nocodb:2026.08.1
           imagePullPolicy: IfNotPresent
           env:
             - name: NC_ALLOW_LOCAL_EXTERNAL_DBS
