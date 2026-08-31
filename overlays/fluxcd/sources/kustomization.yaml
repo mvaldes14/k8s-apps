@@ -3,5 +3,4 @@ kind: Kustomization
 namespace: flux-system
 resources:
   - gitrepository.yaml
-  - ocirepository.yaml
-  - secret.yaml
+  - externalsecret.yaml
