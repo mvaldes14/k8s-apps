@@ -22,7 +22,7 @@ spec:
             - -t
             - streamable-http
             - --allowed-hosts
-            - grafana-mcp.int.mvaldes.dev,grafana-mcp.int.mvaldes.dev:443
+            - grafana-mcp.int.mvaldes.dev,grafana-mcp.int.mvaldes.dev:443,grafana-mcp-server.grafana.svc.cluster.local,grafana-mcp-server.grafana.svc.cluster.local:8000
           env:
             - name: GRAFANA_URL
               value: http://grafana-grafana-release.grafana.svc.cluster.local

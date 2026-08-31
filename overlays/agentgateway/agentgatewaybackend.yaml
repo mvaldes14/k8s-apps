@@ -50,3 +50,31 @@ spec:
       sni: openrouter.ai
 
 
+---
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayBackend
+metadata:
+  name: mcp
+spec:
+  mcp:
+    failureMode: FailOpen
+    prefixMode: Conditional
+    targets:
+      - name: signoz
+        static:
+          host: signoz-mcp-server.signoz.svc.cluster.local
+          port: 8000
+          path: /mcp
+          protocol: StreamableHTTP
+      - name: grafana
+        static:
+          host: grafana-mcp-server.grafana.svc.cluster.local
+          port: 8000
+          path: /mcp
+          protocol: StreamableHTTP
+      - name: doit
+        static:
+          host: td-svc-mcp.td.svc.cluster.local
+          port: 80
+          path: /mcp
+          protocol: StreamableHTTP

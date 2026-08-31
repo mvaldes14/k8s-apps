@@ -38,6 +38,14 @@ spec:
   - matches:
     - path:
         type: PathPrefix
+        value: /mcp
+    backendRefs:
+    - name: mcp
+      group: agentgateway.dev
+      kind: AgentgatewayBackend
+  - matches:
+    - path:
+        type: PathPrefix
         value: /
     backendRefs:
     - name: openrouter
