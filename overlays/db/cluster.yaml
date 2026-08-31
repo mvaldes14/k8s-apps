@@ -17,15 +17,10 @@ spec:
       owner: admin
       secret:
         name: db-secret
-  # TODO: object-storage backups. Fill in endpoint/bucket and create the
-  # `pg-backup-creds` secret (keys: ACCESS_KEY_ID, ACCESS_SECRET_KEY) via
-  # SOPS or ExternalSecrets before enabling. Paired ScheduledBackup lives in
-  # db/scheduledbackup.yaml.
   backup:
     retentionPolicy: "30d"
     barmanObjectStore:
-      destinationPath: s3://CHANGEME-bucket/homelab-db   # TODO: real bucket/path
-      endpointURL: https://CHANGEME-endpoint             # TODO: MinIO/S3/GCS endpoint
+      destinationPath: s3://mvaldes-pg-backup/homelab-db
       s3Credentials:
         accessKeyId:
           name: pg-backup-creds
@@ -33,6 +28,9 @@ spec:
         secretAccessKey:
           name: pg-backup-creds
           key: ACCESS_SECRET_KEY
+        region:
+          name: pg-backup-creds
+          key: REGION
       wal:
         compression: gzip
       data:
