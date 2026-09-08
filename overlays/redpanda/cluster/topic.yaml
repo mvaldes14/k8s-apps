@@ -29,6 +29,20 @@ spec:
 apiVersion: cluster.redpanda.com/v1alpha2
 kind: Topic
 metadata:
+  name: aws
+spec:
+  cluster:
+    clusterRef:
+      name: redpanda
+  partitions: 3
+  replicationFactor: 1
+  additionalConfig:
+    retention.ms: "86400000"
+    cleanup.policy: delete
+---
+apiVersion: cluster.redpanda.com/v1alpha2
+kind: Topic
+metadata:
   name: logs
 spec:
   cluster:
