@@ -24,3 +24,12 @@ spec:
   image: ghcr.io/mvaldes14/task-manager
   interval: 30m
   provider: generic
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageRepository
+metadata:
+  name: td-mcp-repository
+spec:
+  image: ghcr.io/mvaldes14/task-manager-mcp
+  interval: 30m
+  provider: generic
