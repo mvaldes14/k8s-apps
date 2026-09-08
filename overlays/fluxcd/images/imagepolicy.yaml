@@ -34,7 +34,7 @@ spec:
     pattern: '^[0-9]{8}-[0-9]{6}$'
   policy:
     alphabetical:
-      order: desc
+      order: asc
 ---
 apiVersion: image.toolkit.fluxcd.io/v1beta2
 kind: ImagePolicy
@@ -48,4 +48,4 @@ spec:
     pattern: '^[0-9]{8}-[0-9]{6}$'
   policy:
     alphabetical:
-      order: desc
+      order: asc
