@@ -92,7 +92,7 @@ spec:
     spec:
       containers:
         - name: td
-          image: ghcr.io/mvaldes14/task-manager-mcp:20260422-190615@sha256:8b235eb6bba7f98b376bb3f6cef4a86287c55b200b55d20512438cd02bdf6cad # {"$imagepolicy": "flux-system:td-mcp-policy"}
+          image: ghcr.io/mvaldes14/task-manager-mcp:20260818-191450@sha256:82917f4766adc91e1b279efcf12afb1805c40e3c3bfdde77d895351a572ea786 # {"$imagepolicy": "flux-system:td-mcp-policy"}
           ports:
             - name: td-port-mcp
               containerPort: 8080
