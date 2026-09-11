@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: otel-isp-monitor
+  namespace: signoz
+  labels:
+    app: otel-isp-monitor
+spec:
+  selector:
+    matchLabels:
+      app: otel-isp-monitor
+  replicas: 1
+  template:
+    metadata:
+      annotations:
+      labels:
+        app: otel-isp-monitor
+    spec:
+      containers:
+      - name: otel-isp-monitor
+        image: ghcr.io/veerendra2/speedtest_exporter:latest
+        resources:
+          requests:
+            cpu: 500m
+            memory: 128Mi
+          limits:
+            cpu: 2
+        ports:
+        - containerPort: 8080
+          name: http
+      restartPolicy: Always
+

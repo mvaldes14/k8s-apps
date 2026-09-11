@@ -81,6 +81,12 @@ spec:
       prometheus:
         config:
           scrape_configs:
+            # ISP Monitor
+            - job_name: otel-isp-monitor
+              scrape_interval: 30m
+              scrape_timeout: 90s
+              static_configs:
+                - targets: ["otel-isp-monitor-svc:8080"]
             # Scrape pods with prometheus.io/* annotations (standard)
             - job_name: k8s-pods-prometheus
               kubernetes_sd_configs:
@@ -116,7 +122,6 @@ spec:
                   action: replace
                   regex: (.+)
                   target_label: job
-
             # Scrape Hubble metrics (9965) — same pod as cilium-agent, so the
             # single prometheus.io/port annotation can't cover it. Target the
             # hubble-metrics headless service endpoints directly instead.
@@ -130,7 +135,6 @@ spec:
                     - __meta_kubernetes_endpoint_port_name
                   action: keep
                   regex: kube-system;hubble-metrics;hubble-metrics
-
             # Scrape pods with signoz.io/* annotations (SigNoz components)
             - job_name: k8s-pods-signoz
               kubernetes_sd_configs:
