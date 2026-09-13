@@ -31,7 +31,7 @@ spec:
             path: /mnt/nas/Movies
         - name: downloads 
           hostPath:
-            path: /mnt/downloads
+            path: /mnt/nas/Downloads
         - name: config
           hostPath:
             path: /opt/mediaservices/radarr

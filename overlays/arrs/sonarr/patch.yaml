@@ -39,4 +39,4 @@ spec:
             path: /mnt/nas/Anime
         - name: downloads 
           hostPath:
-            path: /mnt/downloads
+            path: /mnt/nas/Downloads
