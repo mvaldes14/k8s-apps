@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: forgejo-pod
-          image: codeberg.org/forgejo/forgejo:16
+          image: codeberg.org/forgejo/forgejo:16.0.5
           imagePullPolicy: IfNotPresent
           env:
             - name: USER_UID
