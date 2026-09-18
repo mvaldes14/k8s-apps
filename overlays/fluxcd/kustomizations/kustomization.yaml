@@ -15,6 +15,7 @@ resources:
   - cloudflared.yaml
   - cronjobs.yaml
   - db.yaml
+  - degoog.yaml
   - event-bus.yaml
   - excalidraw.yaml
   - external-secrets.yaml

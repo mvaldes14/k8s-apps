@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: degoog-deploy
+spec:
+  selector:
+    matchLabels:
+      app: degoog-deploy
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: degoog-deploy
+    spec:
+      containers:
+        - name: degoog-deploy
+          image: ghcr.io/degoog-org/degoog:latest
+          imagePullPolicy: Always
+          livenessProbe:
+            tcpSocket:
+              port: 4444
+            initialDelaySeconds: 5
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+            periodSeconds: 10
+          env:
+            # When "true", every admin and store action stays behind the
+            # password below even on a local network.
+            - name: DEGOOG_PUBLIC_INSTANCE
+              value: "false"
+            - name: DEGOOG_VALKEY_URL
+              value: redis://redis-svc.db:6379
+            - name: DEGOOG_SETTINGS_PASSWORDS
+              valueFrom:
+                secretKeyRef:
+                  name: degoog-secret
+                  key: settings_password
+          ports:
+            - containerPort: 4444
+          volumeMounts:
+            - name: degoog-pvc
+              mountPath: /app/data
+      volumes:
+        - name: degoog-pvc
+          persistentVolumeClaim:
+            claimName: degoog-pvc
+      restartPolicy: Always
