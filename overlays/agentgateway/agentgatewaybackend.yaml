@@ -78,3 +78,16 @@ spec:
           port: 80
           path: /mcp
           protocol: StreamableHTTP
+      - name: umami
+        static:
+          host: umami.mvaldes.dev
+          port: 443
+          path: /mcp
+          protocol: StreamableHTTP
+          policies:
+            auth:
+              secretRef:
+                name: agentgateway-secrets
+                key: UMAMI_MCP_TOKEN
+            tls:
+              sni: umami.mvaldes.dev
