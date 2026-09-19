@@ -31,6 +31,8 @@ spec:
                 secretKeyRef:
                   name: umami-secrets
                   key: APP_SECRET
+            - name: MCP_ENABLED
+              value: "1"
           ports:
             - containerPort: 3000
       restartPolicy: Always
