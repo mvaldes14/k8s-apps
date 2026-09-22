@@ -10,7 +10,10 @@ spec:
     storageClass: nfs-k8s-keep
   walStorage:
     size: 1Gi
-    storageClass: nfs-k8s
+    # Must be a Retain class: reclaiming this volume drops pg_wal, which
+    # turns a cluster delete into a pg_resetwal recovery even though PGDATA
+    # survives on nfs-k8s-keep.
+    storageClass: nfs-k8s-keep
   bootstrap:
     initdb:
       database: personal
