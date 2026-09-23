@@ -36,8 +36,6 @@ data:
       service: http://paperless-svc.paperless
 
     - hostname: search.mvaldes.dev
-      # Testing degoog as a searxng replacement (swap back to
-      # http://search-svc.search to revert).
       service: http://degoog-svc.search
 
     - hostname: automate.mvaldes.dev

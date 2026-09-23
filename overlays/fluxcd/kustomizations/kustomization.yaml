@@ -29,7 +29,6 @@ resources:
   - paperless.yaml
   - redpanda.yaml
   - renovate.yaml
-  - searxng.yaml
   - signoz.yaml
   - td.yaml
   - traefik.yaml

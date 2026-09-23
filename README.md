@@ -108,7 +108,7 @@ Only CRD *definitions* live here. Cilium's `CiliumLoadBalancerIPPool` and
 - **home-assistant** — home automation (`hoa-flux`)
 - **n8n** — workflow automation
 - **nocodb** — no-code database
-- **searxng** — metasearch
+- **degoog** — metasearch
 - **td** — task manager
 - **umami** — web analytics
 
