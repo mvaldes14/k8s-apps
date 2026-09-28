@@ -455,11 +455,6 @@ data:
       enabled: true
     otelCollector:
       name: "otel-collector"
-      image:
-        registry: docker.io
-        repository: signoz/signoz-otel-collector
-        pullPolicy: IfNotPresent
-        tag: v0.144.11
       initContainers:
         init:
           enabled: false
