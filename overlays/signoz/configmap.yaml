@@ -459,7 +459,7 @@ data:
         registry: docker.io
         repository: signoz/signoz-otel-collector
         pullPolicy: IfNotPresent
-        tag: v0.144.5
+        tag: v0.144.11
       initContainers:
         init:
           enabled: false
