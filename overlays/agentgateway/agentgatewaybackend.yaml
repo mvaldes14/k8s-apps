@@ -91,3 +91,16 @@ spec:
                 key: UMAMI_MCP_TOKEN
             tls:
               sni: umami.mvaldes.dev
+      - name: n8n
+        static:
+          host: automate.mvaldes.dev
+          port: 443
+          path: /mcp-server/http
+          protocol: StreamableHTTP
+          policies:
+            auth:
+              secretRef:
+                name: agentgateway-secrets
+                key: N8N_MCP_TOKEN
+            tls:
+              sni: automate.mvaldes.dev
