@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: td
-          image: ghcr.io/mvaldes14/task-manager:20260929-203432@sha256:12971eae90ee9d9521fd9cb84fb599448fb8ebedf1540fa6daf3bcc4e8d0377c # {"$imagepolicy": "flux-system:td-policy"}
+          image: ghcr.io/mvaldes14/task-manager:20260929-234605@sha256:767b59f6743a9b01f3f6741e4b8e7098ac09a2f15273697e3be63e25a2fb09bc # {"$imagepolicy": "flux-system:td-policy"}
           ports:
             - name: td-port
               containerPort: 3000
