@@ -76,6 +76,8 @@ spec:
             method: GET
           - endpoint: https://hoa.int.mvaldes.dev
             method: GET
+          - endpoint: https://search.mvaldes.dev
+            method: GET
         collection_interval: 30s
 
       prometheus:
