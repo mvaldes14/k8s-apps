@@ -780,6 +780,9 @@ data:
         enabled: false
       logsCollection:
         enabled: true
+        # Collect container logs locally on each surviving agent.
+        include:
+          - /var/log/pods/*/*/*.log
       hostMetrics:
         enabled: true
       kubeletMetrics:
@@ -931,6 +934,11 @@ data:
         exporters:
           otlphttp:
             endpoint: http://signoz-signoz-helm-otel-collector.signoz.svc.cluster.local:4318
+          # The operator-generated Service is ck-collector-collector.
+          otlp/clickhouse:
+            endpoint: ck-collector-collector.clickhouse.svc.cluster.local:4317
+            tls:
+              insecure: true
         service:
           telemetry:
             logs:
@@ -939,8 +947,8 @@ data:
             traces:
               exporters: [otlphttp]
             metrics:
-              exporters: [otlphttp]
+              exporters: [otlphttp, otlp/clickhouse]
             logs:
-              exporters: [otlphttp]
+              exporters: [otlphttp, otlp/clickhouse]
     otelDeployment:
       enabled: false
