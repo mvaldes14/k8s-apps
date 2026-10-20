@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: blog
-        image: docker.io/rorix/blog:20261013-180358@sha256:9b653df22b2575fc306eebb3dd18686c144c140b1fe1e899ac2a082358ab279c # {"$imagepolicy" : "flux-system:blog-policy"}
+        image: docker.io/rorix/blog:20261020-185303@sha256:5c144229135b88c937dbf1405bcff9cd3205e040c5fe6411281fc544f069814c # {"$imagepolicy" : "flux-system:blog-policy"}
         imagePullPolicy:
         resources:
           requests:
