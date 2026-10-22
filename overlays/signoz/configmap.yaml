@@ -669,6 +669,11 @@ data:
                 - service.version
                 - service.instance.id
               otel_annotations: true
+          resource/cluster:
+            attributes:
+              - key: k8s.cluster.name
+                value: homelab
+                action: insert
         extensions:
           health_check:
             endpoint: 0.0.0.0:13133
@@ -721,15 +726,15 @@ data:
           pipelines:
             traces:
               receivers: [otlp]
-              processors: [signozspanmetrics/delta, signozspanmapper, signozllmpricing, k8sattributes, batch]
+              processors: [signozspanmetrics/delta, signozspanmapper, signozllmpricing, k8sattributes, resource/cluster, batch]
               exporters: [clickhousetraces, metadataexporter, signozmeter]
             metrics:
               receivers: [otlp, k8s_cluster]
-              processors: [k8sattributes, batch]
+              processors: [k8sattributes, resource/cluster, batch]
               exporters: [metadataexporter, signozclickhousemetrics, signozmeter]
             logs:
               receivers: [otlp]
-              processors: [k8sattributes, batch]
+              processors: [k8sattributes, resource/cluster, batch]
               exporters: [clickhouselogsexporter, metadataexporter, signozmeter]
             metrics/meter:
               receivers: [signozmeter]
