@@ -834,7 +834,7 @@ data:
         rules:
           # k8sattributes processor requires these permissions
           - apiGroups: [""]
-            resources: ["pods", "namespaces", "nodes", "persistentvolumeclaims"]
+            resources: ["pods", "namespaces", "nodes", "persistentvolumeclaims", "persistentvolumes"]
             verbs: ["get", "list", "watch"]
           - apiGroups: ["apps"]
             resources: ["replicasets"]
