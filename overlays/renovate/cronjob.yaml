@@ -18,7 +18,7 @@ spec:
             runAsUser: 12021
           containers:
             - name: renovate
-              image: ghcr.io/renovatebot/renovate:44.167.7
+              image: ghcr.io/renovatebot/renovate:44.182.2
               env:
                 - name: RENOVATE_CONFIG_FILE
                   value: /etc/renovate/config.json
