@@ -1,0 +1,117 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: ck-log-collector
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: clickhouse-ck-log-collector
+rules:
+  - apiGroups: [""]
+    resources: ["namespaces", "nodes", "pods"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["apps"]
+    resources: ["replicasets"]
+    verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: clickhouse-ck-log-collector
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: clickhouse-ck-log-collector
+subjects:
+  - kind: ServiceAccount
+    name: ck-log-collector
+    namespace: clickhouse
+---
+apiVersion: opentelemetry.io/v1beta1
+kind: OpenTelemetryCollector
+metadata:
+  name: ck-log-collector
+spec:
+  mode: daemonset
+  serviceAccount: ck-log-collector
+  image: otel/opentelemetry-collector-contrib:0.154.0
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: "1"
+      memory: 1Gi
+  env:
+    - name: K8S_NODE_NAME
+      valueFrom:
+        fieldRef:
+          fieldPath: spec.nodeName
+  tolerations:
+    - operator: Exists
+  volumeMounts:
+    - name: varlogpods
+      mountPath: /var/log/pods
+      readOnly: true
+  volumes:
+    - name: varlogpods
+      hostPath:
+        path: /var/log/pods
+        type: Directory
+  config:
+    receivers:
+      file_log/pods:
+        include:
+          - /var/log/pods/*/*/*.log
+        exclude:
+          - /var/log/pods/clickhouse_ck-log-collector-*/*/*.log
+        include_file_path: true
+        start_at: end
+        operators:
+          - id: container-parser
+            type: container
+    processors:
+      memory_limiter:
+        check_interval: 1s
+        limit_percentage: 80
+        spike_limit_percentage: 25
+      k8s_attributes:
+        auth_type: serviceAccount
+        filter:
+          node_from_env_var: K8S_NODE_NAME
+        extract:
+          metadata:
+            - k8s.namespace.name
+            - k8s.pod.name
+            - k8s.pod.uid
+            - k8s.deployment.name
+            - k8s.node.name
+            - k8s.container.name
+        pod_association:
+          - sources:
+              - from: resource_attribute
+                name: k8s.pod.uid
+      batch:
+        timeout: 1s
+        send_batch_size: 1000
+    exporters:
+      clickhouse/logs_map_v3:
+        endpoint: tcp://ck-cluster-clickhouse-headless:9000?dial_timeout=10s&compress=lz4
+        database: homelab
+        logs_table_name: log_map_v3
+        create_schema: false
+        async_insert: false
+      clickhouse/logs_json_v3:
+        endpoint: tcp://ck-cluster-clickhouse-headless:9000?dial_timeout=10s&compress=lz4
+        database: homelab
+        json: true
+        logs_table_name: log_json_v3
+        create_schema: false
+        async_insert: false
+    service:
+      pipelines:
+        logs:
+          receivers: [file_log/pods]
+          processors: [memory_limiter, k8s_attributes, batch]
+          exporters: [clickhouse/logs_map_v3, clickhouse/logs_json_v3]
