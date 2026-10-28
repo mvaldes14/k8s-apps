@@ -18,7 +18,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: signoz-helm
-      version: 0.146.0
+      version: 0.148.0
   interval: 1m0s
   valuesFrom:
     - kind: ConfigMap
