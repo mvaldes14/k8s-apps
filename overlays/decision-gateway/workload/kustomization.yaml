@@ -9,6 +9,8 @@ resources:
 configMapGenerator:
   - name: decision-gateway-lab-definitions
     files:
+      - alert-disposition.yaml=decisions/alert-disposition.yaml
+      - incident-triage.yaml=decisions/incident-triage.yaml
       - task-triage.yaml=decisions/task-triage.yaml
 
 patches:

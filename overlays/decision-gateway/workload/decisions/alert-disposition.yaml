@@ -1,0 +1,57 @@
+schemaVersion: v1alpha1
+metadata:
+  name: alert-disposition
+  version: v1
+spec:
+  description: Classify an alert and choose the appropriate response urgency
+  input:
+    type: object
+    additionalProperties: false
+    required: [alertName, summary, source, firingForMinutes, repeatedCount]
+    properties:
+      alertName:
+        type: string
+        minLength: 1
+        maxLength: 200
+      summary:
+        type: string
+        minLength: 1
+        maxLength: 2000
+      source:
+        type: string
+        enum: [prometheus, signoz, cloudwatch, kubernetes, other]
+      firingForMinutes:
+        type: integer
+        minimum: 0
+        maximum: 10080
+      repeatedCount:
+        type: integer
+        minimum: 1
+        maximum: 10000
+      hasRunbook:
+        type: boolean
+      recentRelatedIncident:
+        type: boolean
+  decisions:
+    disposition:
+      type: choice
+      instruction: Classify whether the alert represents useful and distinct operational work.
+      options:
+        actionable: Indicates a current condition that requires investigation or remediation
+        noisy: Fires too often or lacks enough signal to justify action
+        duplicate: Represents the same underlying condition as another alert or incident
+        informational: Useful context that does not require direct action
+    urgency:
+      type: choice
+      instruction: Select when an operator should respond based on likely impact and persistence.
+      options:
+        immediate: Respond now because impact is active or likely to escalate quickly
+        soon: Investigate during the current working session
+        backlog: Track for later tuning or non-urgent remediation
+        none: No operator response is needed
+  routing:
+    primary: laya
+    fallback: clef
+    timeout: 5s
+  review:
+    enabled: false

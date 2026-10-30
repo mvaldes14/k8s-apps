@@ -1,0 +1,51 @@
+schemaVersion: v1alpha1
+metadata:
+  name: incident-triage
+  version: v1
+spec:
+  description: Classify an operational incident and select its owning team
+  input:
+    type: object
+    additionalProperties: false
+    required: [service, summary, customerImpact]
+    properties:
+      service:
+        type: string
+        minLength: 1
+        maxLength: 100
+      summary:
+        type: string
+        minLength: 1
+        maxLength: 2000
+      customerImpact:
+        type: boolean
+      affectedRegions:
+        type: array
+        maxItems: 20
+        items:
+          type: string
+          minLength: 1
+          maxLength: 50
+  decisions:
+    severity:
+      type: choice
+      instruction: Select the incident severity from the impact and scope in the supplied state.
+      options:
+        sev1: Critical outage or severe widespread customer impact
+        sev2: Major degradation or substantial customer impact
+        sev3: Limited degradation with a workaround or narrow impact
+        sev4: Minor issue with little or no customer impact
+    owner:
+      type: choice
+      instruction: Select the team that should own initial incident response.
+      options:
+        platform: Kubernetes, networking, compute, or shared infrastructure
+        observability: Telemetry ingestion, storage, querying, or alerting
+        application: Product behavior, business logic, or application APIs
+        security: Authentication, authorization, secrets, or suspicious activity
+  routing:
+    primary: laya
+    fallback: clef
+    timeout: 5s
+  review:
+    enabled: false
