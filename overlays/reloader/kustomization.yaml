@@ -3,5 +3,6 @@ kind: Kustomization
 metadata:
   namespace: reloader
 resources:
+  - namespace.yaml
   - helmrelease.yaml
   - helmrepository.yaml
