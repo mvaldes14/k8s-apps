@@ -1,6 +1,22 @@
 apiVersion: agentgateway.dev/v1alpha1
 kind: AgentgatewayBackend
 metadata:
+  name: aws
+spec:
+  ai:
+    provider:
+      bedrock:
+        model: amazon.nova-micro-v1:0
+        region: us-east-1
+  policies:
+    auth:
+      secretRef:
+        name: agentgateway-secrets
+        key: BEDROCK_KEY
+---
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayBackend
+metadata:
   name: openai
 spec:
   ai:

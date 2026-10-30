@@ -9,6 +9,14 @@ spec:
   - matches:
     - path:
         type: PathPrefix
+        value: /
+    backendRefs:
+    - name: openrouter
+      group: agentgateway.dev
+      kind: AgentgatewayBackend
+  - matches:
+    - path:
+        type: PathPrefix
         value: /openai
     filters:
     - type: URLRewrite
@@ -36,18 +44,24 @@ spec:
       group: agentgateway.dev
       kind: AgentgatewayBackend
   - matches:
+      - path:
+          type: PathPrefix
+          value: /aws
+    filters:
+      - type: URLRewrite
+        urlRewrite:
+          path:
+            type: ReplacePrefixMatch
+            replacePrefixMatch: /
+    backendRefs:
+      - name: aws
+        group: agentgateway.dev
+        kind: AgentgatewayBackend
+  - matches:
     - path:
         type: PathPrefix
         value: /mcp
     backendRefs:
     - name: mcp
-      group: agentgateway.dev
-      kind: AgentgatewayBackend
-  - matches:
-    - path:
-        type: PathPrefix
-        value: /
-    backendRefs:
-    - name: openrouter
       group: agentgateway.dev
       kind: AgentgatewayBackend
