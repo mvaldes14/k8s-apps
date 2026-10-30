@@ -203,9 +203,9 @@ data:
               <policies>
                 <tiered>
                   <volumes>
-                    <hot>
+                    <default>
                       <disk>default</disk>
-                    </hot>
+                    </default>
                     <cold>
                       <disk>cold</disk>
                     </cold>
