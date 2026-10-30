@@ -1,5 +1,4 @@
-apiVersion: decisiongateway.dev/v1alpha1
-kind: Decision
+schemaVersion: v1alpha1
 metadata:
   name: task-triage
   version: v1
