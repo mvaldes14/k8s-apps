@@ -5,9 +5,9 @@ metadata:
 spec:
   project: homelab
   source:
-    repoURL: https://github.com/mvaldes14/decision-gateway.git
+    repoURL: https://github.com/mvaldes14/k8s-apps.git
     targetRevision: main
-    path: deploy/kubernetes
+    path: overlays/decision-gateway/workload
   destination:
     server: https://kubernetes.default.svc
     namespace: decision-gateway

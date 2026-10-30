@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: decision-gateway
+spec:
+  replicas: 1
+  template:
+    spec:
+      containers:
+        - name: decision-gateway
+          env:
+            - name: DG_LAYA_BASE_URL
+              $patch: delete
+            - name: DG_LAYA_API_KEY
+              $patch: delete
+            - name: DG_CLEF_BASE_URL
+              $patch: delete
+            - name: DG_CLEF_MODEL
+              $patch: delete
+            - name: DG_CLEF_API_KEY
+              $patch: delete
+          envFrom:
+            - secretRef:
+                name: decision-gateway-config
+      volumes:
+        - name: definitions
+          configMap:
+            name: decision-gateway-lab-definitions

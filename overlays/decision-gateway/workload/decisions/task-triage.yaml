@@ -1,0 +1,44 @@
+apiVersion: decisiongateway.dev/v1alpha1
+kind: Decision
+metadata:
+  name: task-triage
+  version: v1
+spec:
+  description: Classify example engineering tasks and estimate effort
+  input:
+    type: object
+    additionalProperties: false
+    required: [title, description]
+    properties:
+      title:
+        type: string
+        minLength: 1
+        maxLength: 300
+      description:
+        type: string
+        minLength: 1
+        maxLength: 10000
+  decisions:
+    project:
+      type: choice
+      instruction: Select the most appropriate example project for this task.
+      options:
+        platform: Kubernetes, networking, and shared infrastructure
+        observability: Metrics, logs, traces, and telemetry pipelines
+        application: Application and product functionality
+    effort:
+      type: choice
+      instruction: Estimate relative effort using this example story-point rubric.
+      options:
+        "1": Trivial, low risk
+        "2": Small, well understood
+        "3": Moderate, localized change
+        "5": Multi-step change with uncertainty
+        "8": Significant cross-component change
+        "13": Large or insufficiently decomposed task
+  routing:
+    primary: laya
+    fallback: clef
+    timeout: 5s
+  review:
+    enabled: false

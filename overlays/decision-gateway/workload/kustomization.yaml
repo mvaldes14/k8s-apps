@@ -1,0 +1,24 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: decision-gateway
+resources:
+  - https://github.com/mvaldes14/decision-gateway//deploy/kubernetes?ref=main
+  - externalsecret.yaml
+
+configMapGenerator:
+  - name: decision-gateway-lab-definitions
+    files:
+      - task-triage.yaml=decisions/task-triage.yaml
+
+patches:
+  - path: deployment.transformer.yaml
+  - target:
+      version: v1
+      kind: ConfigMap
+      name: decision-gateway-definitions
+    patch: |-
+      $patch: delete
+      apiVersion: v1
+      kind: ConfigMap
+      metadata:
+        name: decision-gateway-definitions
