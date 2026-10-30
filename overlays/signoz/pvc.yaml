@@ -12,3 +12,17 @@ spec:
   resources:
     requests:
       storage: 50Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: signoz-clickhouse-cold
+  labels:
+    app: signoz-clickhouse
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: nfs-k8s-keep
+  resources:
+    requests:
+      storage: 10Gi
