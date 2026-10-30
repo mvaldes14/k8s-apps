@@ -16,6 +16,7 @@ resources:
   - cronjobs.yaml
   - db.yaml
   - degoog.yaml
+  - decision-gateway.yaml
   - event-bus.yaml
   - excalidraw.yaml
   - external-secrets.yaml

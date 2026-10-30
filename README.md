@@ -41,9 +41,10 @@ changes to Flux's own wiring are applied with the command above; everything else
 reconciles itself from git.
 
 App Kustomizations follow one shape: `interval: 30m`, `prune: true`,
-`sourceRef: homelab-repository`, and a per-app `timeout` (1m–30m). Three use
+`sourceRef: homelab-repository`, and a per-app `timeout` (1m–30m). Four use
 `dependsOn`: `cert-manager-config-flux` → `cert-manager-flux`,
-`redpanda-cluster-flux` → `redpanda-operator-flux`, `event-bus-flux` → `argo-flux`.
+`redpanda-cluster-flux` → `redpanda-operator-flux`, and both
+`decision-gateway-flux` and `event-bus-flux` → `argo-flux`.
 
 ### Image automation
 
@@ -84,6 +85,7 @@ Only CRD *definitions* live here. Cilium's `CiliumLoadBalancerIPPool` and
 - **clickhouse** — ClickHouse cluster for SigNoz
 - **redpanda** — operator + cluster
 - **event-bus** — Argo `Application` pointing at the eventbus repo
+- **decision-gateway** — Argo `Application` pointing at the Decision Gateway Kubernetes manifests
 - **garage** — S3-compatible object storage
 
 ### Observability
