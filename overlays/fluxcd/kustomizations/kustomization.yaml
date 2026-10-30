@@ -30,6 +30,7 @@ resources:
   - paperless.yaml
   - redpanda.yaml
   - renovate.yaml
+  - reloader.yaml
   - signoz.yaml
   - td.yaml
   - traefik.yaml
