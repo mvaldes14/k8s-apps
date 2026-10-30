@@ -125,6 +125,13 @@ data:
         accessModes:
           - ReadWriteOnce
         size: 50Gi
+      additionalVolumes:
+        - name: cold-storage
+          persistentVolumeClaim:
+            claimName: signoz-clickhouse-cold
+      additionalVolumeMounts:
+        - name: cold-storage
+          mountPath: /var/lib/clickhouse-cold
       profiles: {}
       defaultProfiles:
         default/allow_experimental_window_functions: "1"
@@ -185,6 +192,29 @@ data:
       coldStorage:
         enabled: false
       files:
+        config.d/tiered.xml: |
+          <clickhouse>
+            <storage_configuration>
+              <disks>
+                <cold>
+                  <path>/var/lib/clickhouse-cold/</path>
+                </cold>
+              </disks>
+              <policies>
+                <tiered>
+                  <volumes>
+                    <hot>
+                      <disk>default</disk>
+                    </hot>
+                    <cold>
+                      <disk>cold</disk>
+                    </cold>
+                  </volumes>
+                  <move_factor>0</move_factor>
+                </tiered>
+              </policies>
+            </storage_configuration>
+          </clickhouse>
         config.d/formatting.xml: |
           <clickhouse>
             <logger>
