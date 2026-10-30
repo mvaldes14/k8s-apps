@@ -5,7 +5,9 @@ resources:
   - namespace.yaml
   - ocirepository.yaml
   - helmrelease.yaml
+  - parameters.yaml
   - gateway.yaml
   - externalsecret.yaml
   - agentgatewaybackend.yaml
   - httproute.yaml
+  - ingress.yaml
