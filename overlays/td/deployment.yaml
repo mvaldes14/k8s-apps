@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: td-deploy
+  annotations:
+    secret.reloader.stakater.com/reload: "td-secret"
 spec:
   replicas: 1
   selector:
@@ -80,6 +82,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: td-deploy-mcp
+  annotations:
+    secret.reloader.stakater.com/reload: "td-secret"
 spec:
   replicas: 1
   selector:

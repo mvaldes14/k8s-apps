@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: authentik-server-deploy
+  annotations:
+    secret.reloader.stakater.com/reload: "authentik-secret"
 spec:
   replicas: 1
   selector:
@@ -108,6 +110,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: authentik-worker-deploy
+  annotations:
+    secret.reloader.stakater.com/reload: "authentik-secret"
 spec:
   replicas: 1
   selector:

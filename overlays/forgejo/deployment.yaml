@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: forgejo-deploy
+  annotations:
+    secret.reloader.stakater.com/reload: "forgejo-secrets"
   labels:
     app: forgejo
 spec:
@@ -68,6 +70,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: forgejo-runner
+  annotations:
+    secret.reloader.stakater.com/reload: "forgejo-runner-secrets"
   labels: { app: forgejo-runner, role: forgejo-runner }
 spec:
   replicas: 1

@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: twitch-bot
+  annotations:
+    secret.reloader.stakater.com/reload: "bots-secrets"
 spec:
   selector:
     matchLabels:

@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: degoog-deploy
+  annotations:
+    secret.reloader.stakater.com/reload: "degoog-secret"
 spec:
   selector:
     matchLabels:
