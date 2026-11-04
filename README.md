@@ -132,10 +132,11 @@ Only CRD *definitions* live here. Cilium's `CiliumLoadBalancerIPPool` and
 
 ## Notes
 
-- `bases/` is scaffolding for the refactor described in
-  `docs/kustomize-layout.md`; no overlay references it yet. The StorageClass
-  definitions in `bases/nfs-pvc/storageclass.yaml` are live in the cluster but
-  applied by nothing — they still need a home.
+- `bases/external-secret` and `bases/traefik-route` are reusable patterns;
+  `overlays/atuin` is the first consumer. See
+  `docs/kustomize-common-patterns.md` for the current audit and ranked follow-up
+  candidates. The StorageClass definitions in `bases/nfs-pvc/storageclass.yaml`
+  are live in the cluster but applied by nothing — they still need a home.
 - `overlays/db` and `overlays/redis` have no Flux `Kustomization`; they are
   applied manually.
 - `overlays/fluxcd/kustomizations/kustomizations.yaml` is entirely commented-out

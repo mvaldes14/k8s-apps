@@ -2,9 +2,39 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: atuin
 resources:
+  - ../../bases/external-secret
+  - ../../bases/traefik-route
   - namespace.yaml
   - deployment.yaml
-  - externalsecret.yaml
-  - ingress.yaml
   - pvc.yaml
   - service.yaml
+patches:
+  - target:
+      kind: ExternalSecret
+      name: app-secret
+    patch: |-
+      - op: replace
+        path: /metadata/name
+        value: atuin-secrets
+      - op: replace
+        path: /spec/dataFrom/0/extract/key
+        value: apps/atuin
+      - op: replace
+        path: /spec/target/name
+        value: atuin-secrets
+  - target:
+      kind: IngressRoute
+      name: app-ingressroute
+    patch: |-
+      - op: replace
+        path: /metadata/name
+        value: atuin-ingressroute
+      - op: replace
+        path: /spec/routes/0/match
+        value: Host(`atuin.int.mvaldes.dev`)
+      - op: replace
+        path: /spec/routes/0/services/0/name
+        value: atuin-svc
+      - op: replace
+        path: /spec/routes/0/services/0/port
+        value: 80

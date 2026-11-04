@@ -4,9 +4,10 @@ A proposal for restructuring `k8s-apps` so that shared functionality is defined
 once in a **`base/`** folder and each app becomes a thin **overlay**, instead of
 copy-pasting the same manifests across ~35 app directories.
 
-> **Status:** proposal / design doc. No manifests are changed by this document.
-> Migration is meant to happen incrementally, app by app (see
-> [Migration path](#7-migration-path)).
+> **Status:** historical proposal / design doc. Counts and candidate lists may
+> be stale. See [the current common-pattern audit](kustomize-common-patterns.md)
+> for implemented reuse and ranked follow-up work. Migration remains
+> incremental, app by app (see [Migration path](#7-migration-path)).
 >
 > **Revised** after a first migration attempt. The `replacements` rule in 3.4 and
 > the overlay in section 4 were verified with `kustomize build` — the overlay
