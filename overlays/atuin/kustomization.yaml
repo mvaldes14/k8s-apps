@@ -9,32 +9,11 @@ resources:
   - pvc.yaml
   - service.yaml
 patches:
-  - target:
+  - path: externalsecret.patch.yaml
+    target:
       kind: ExternalSecret
       name: app-secret
-    patch: |-
-      - op: replace
-        path: /metadata/name
-        value: atuin-secrets
-      - op: replace
-        path: /spec/dataFrom/0/extract/key
-        value: apps/atuin
-      - op: replace
-        path: /spec/target/name
-        value: atuin-secrets
-  - target:
+  - path: ingressroute.patch.yaml
+    target:
       kind: IngressRoute
       name: app-ingressroute
-    patch: |-
-      - op: replace
-        path: /metadata/name
-        value: atuin-ingressroute
-      - op: replace
-        path: /spec/routes/0/match
-        value: Host(`atuin.int.mvaldes.dev`)
-      - op: replace
-        path: /spec/routes/0/services/0/name
-        value: atuin-svc
-      - op: replace
-        path: /spec/routes/0/services/0/port
-        value: 80
