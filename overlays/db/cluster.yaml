@@ -4,15 +4,13 @@ metadata:
   name: homelab-db
 spec:
   instances: 1
+  enablePDB: false
   imageName: ghcr.io/cloudnative-pg/postgresql:16.4
   storage:
     size: 2Gi
     storageClass: nfs-k8s-keep
   walStorage:
     size: 1Gi
-    # Must be a Retain class: reclaiming this volume drops pg_wal, which
-    # turns a cluster delete into a pg_resetwal recovery even though PGDATA
-    # survives on nfs-k8s-keep.
     storageClass: nfs-k8s-keep
   bootstrap:
     initdb:
