@@ -24,7 +24,7 @@ spec:
         runAsGroup: 1000
       containers:
         - name: atuin-server
-          image: ghcr.io/atuinsh/atuin:latest
+          image: ghcr.io/atuinsh/atuin@sha256:6adfe3b9d434542cb4addb64bb49414a9ebe815609c48bfd16fa8b2e26354aa9
           args:
             - start
           imagePullPolicy: IfNotPresent
