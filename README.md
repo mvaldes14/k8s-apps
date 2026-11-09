@@ -5,7 +5,7 @@ Kubernetes manifests for a k3s homelab cluster (`eva01`–`eva04`), deployed via
 ## Layout
 
 ```
-bases/            # shared kustomize bases (external-secret, traefik-route, nfs-pvc)
+bases/            # shared kustomize bases (external-secret, http-route, nfs-pvc)
 crds/             # raw CRD bundles + cluster-scoped extras, applied out of band
 overlays/         # one directory per app — the unit Flux reconciles
   fluxcd/         # Flux itself: sources, Kustomizations, notifications, image automation
@@ -119,8 +119,11 @@ Only CRD *definitions* live here. Cilium's `CiliumLoadBalancerIPPool` and
 - **Secrets** come from Vault via `ExternalSecret` — never committed. Most use
   the key `apps/<namespace>` against `vault-store-apps`; `db` uses `core/db`
   against `vault-store-core`.
-- **Ingress** is Traefik `IngressRoute` on the `websecure` entrypoint with
-  `tls: {}`, hosts under `*.int.mvaldes.dev`.
+- **HTTP routing** uses Gateway API `HTTPRoute`. Internal HTTPS routes attach to
+  `kube-system/traefik`, listener `websecure`, with hosts under
+  `*.int.mvaldes.dev`. Add app namespaces to the Gateway listener allowlist.
+  Atlantis uses the `web` listener; agentgateway's internal routes attach to its
+  own Gateway. Forgejo SSH remains a Traefik `IngressRouteTCP`.
 - **Ingress from the internet** is the cloudflared tunnel (HTTP only — the
   Cloudflare edge will not carry raw TCP). Anything needing a real port, like
   forgejo's SSH, takes a `LoadBalancer` on the cilium pool and is reached over
@@ -132,10 +135,10 @@ Only CRD *definitions* live here. Cilium's `CiliumLoadBalancerIPPool` and
 
 ## Notes
 
-- `bases/external-secret` and `bases/traefik-route` are reusable patterns;
+- `bases/external-secret` and `bases/http-route` are reusable patterns;
   `overlays/atuin` is the first consumer. See
-  `docs/kustomize-common-patterns.md` for the current audit and ranked follow-up
-  candidates. The StorageClass definitions in `bases/nfs-pvc/storageclass.yaml`
+  `docs/kustomize-common-patterns.md` for the earlier audit and ranked follow-up
+  candidates (its IngressRoute examples predate the Gateway API migration). The StorageClass definitions in `bases/nfs-pvc/storageclass.yaml`
   are live in the cluster but applied by nothing — they still need a home.
 - `overlays/db` and `overlays/redis` have no Flux `Kustomization`; they are
   applied manually.

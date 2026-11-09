@@ -4,7 +4,7 @@ namespace: decision-gateway
 resources:
   - https://github.com/mvaldes14/decision-gateway//deploy/kubernetes?ref=main
   - externalsecret.yaml
-  - ingress.yaml
+  - httproute.yaml
 
 configMapGenerator:
   - name: decision-gateway-lab-definitions

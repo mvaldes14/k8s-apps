@@ -1,0 +1,95 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: bazarr
+spec:
+  parentRefs:
+    - name: traefik
+      namespace: kube-system
+      sectionName: websecure
+  hostnames:
+    - bazarr.int.mvaldes.dev
+  rules:
+    - backendRefs:
+        - name: bazarr-svc
+          port: 80
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: sonarr
+spec:
+  parentRefs:
+    - name: traefik
+      namespace: kube-system
+      sectionName: websecure
+  hostnames:
+    - sonarr.int.mvaldes.dev
+  rules:
+    - backendRefs:
+        - name: sonarr-svc
+          port: 80
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: radarr
+spec:
+  parentRefs:
+    - name: traefik
+      namespace: kube-system
+      sectionName: websecure
+  hostnames:
+    - radarr.int.mvaldes.dev
+  rules:
+    - backendRefs:
+        - name: radarr-svc
+          port: 80
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: readarr
+spec:
+  parentRefs:
+    - name: traefik
+      namespace: kube-system
+      sectionName: websecure
+  hostnames:
+    - readarr.int.mvaldes.dev
+  rules:
+    - backendRefs:
+        - name: readarr-svc
+          port: 80
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: prowlarr
+spec:
+  parentRefs:
+    - name: traefik
+      namespace: kube-system
+      sectionName: websecure
+  hostnames:
+    - prowlarr.int.mvaldes.dev
+  rules:
+    - backendRefs:
+        - name: prowlarr-svc
+          port: 80
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: flaresolverr
+spec:
+  parentRefs:
+    - name: traefik
+      namespace: kube-system
+      sectionName: websecure
+  hostnames:
+    - flaresolverr.int.mvaldes.dev
+  rules:
+    - backendRefs:
+        - name: flaresolverr-svc
+          port: 80

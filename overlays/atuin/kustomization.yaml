@@ -3,7 +3,7 @@ kind: Kustomization
 namespace: atuin
 resources:
   - ../../bases/external-secret
-  - ../../bases/traefik-route
+  - ../../bases/http-route
   - namespace.yaml
   - deployment.yaml
   - pvc.yaml
@@ -13,7 +13,7 @@ patches:
     target:
       kind: ExternalSecret
       name: app-secret
-  - path: ingressroute.patch.yaml
+  - path: httproute.patch.yaml
     target:
-      kind: IngressRoute
-      name: app-ingressroute
+      kind: HTTPRoute
+      name: app-httproute

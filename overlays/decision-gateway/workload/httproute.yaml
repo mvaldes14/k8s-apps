@@ -1,0 +1,19 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: decision-gateway
+spec:
+  parentRefs:
+    - name: traefik
+      namespace: kube-system
+      sectionName: websecure
+  hostnames:
+    - decision-gateway.int.mvaldes.dev
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: decision-gateway
+          port: 8080

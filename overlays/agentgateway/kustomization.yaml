@@ -10,4 +10,4 @@ resources:
   - externalsecret.yaml
   - agentgatewaybackend.yaml
   - httproute.yaml
-  - ingress.yaml
+  - traefik-httproute.yaml

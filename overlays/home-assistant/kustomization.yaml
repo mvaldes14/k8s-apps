@@ -4,6 +4,6 @@ namespace: hoa
 resources:
   - namespace.yaml
   - deployment.yaml
-  - ingress.yaml
+  - httproute.yaml
   - pvc.yaml
   - service.yaml

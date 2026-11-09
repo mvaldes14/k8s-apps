@@ -1,0 +1,19 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: app-httproute
+spec:
+  parentRefs:
+    - name: traefik
+      namespace: kube-system
+      sectionName: websecure
+  hostnames:
+    - placeholder.int.mvaldes.dev
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: app-svc
+          port: 80

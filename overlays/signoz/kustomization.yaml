@@ -8,7 +8,7 @@ resources:
   - externalsecret.yaml
   - helmrelease.yaml
   - helmrepository.yaml
-  - ingress.yaml
+  - httproute.yaml
   - pv.yaml
   - pvc.yaml
   - service.yaml

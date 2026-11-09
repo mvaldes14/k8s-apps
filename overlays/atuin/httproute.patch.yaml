@@ -1,0 +1,9 @@
+- op: replace
+  path: /metadata/name
+  value: atuin
+- op: replace
+  path: /spec/hostnames/0
+  value: atuin.int.mvaldes.dev
+- op: replace
+  path: /spec/rules/0/backendRefs/0/name
+  value: atuin-svc

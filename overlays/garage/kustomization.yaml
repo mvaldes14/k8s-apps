@@ -3,7 +3,7 @@ kind: Kustomization
 namespace: garage
 resources:
   - externalsecret.yaml
-  - ingress.yaml
+  - httproute.yaml
   - deployment.yml
   - pvc.yml
   - service.yml
