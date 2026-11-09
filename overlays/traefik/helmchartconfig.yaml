@@ -20,7 +20,14 @@ spec:
       access:
         enabled: true
         format: json
+    # Gateway resources are managed explicitly by Kustomize.
+    gateway:
+      enabled: false
+    gatewayClass:
+      enabled: false
     providers:
+      kubernetesGateway:
+        enabled: true
       kubernetesCRD:
         allowCrossNamespace: true
     additionalArguments:

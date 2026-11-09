@@ -3,3 +3,4 @@ kind: Kustomization
 namespace: kube-system
 resources:
   - helmchartconfig.yaml
+  - gateway.yaml
