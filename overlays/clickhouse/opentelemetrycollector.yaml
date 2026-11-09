@@ -7,7 +7,7 @@ spec:
   # SigNoz k8s-infra agent and forwarded here over OTLP.
   mode: deployment
   replicas: 2
-  image: otel/opentelemetry-collector-contrib:0.154.0
+  image: otel/opentelemetry-collector-contrib:0.165.0
   resources:
     requests:
       cpu: 250m
