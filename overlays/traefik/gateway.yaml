@@ -37,7 +37,18 @@ spec:
         namespaces:
           from: Selector
           selector:
-            matchLabels:
-              kubernetes.io/metadata.name: grafana
+            matchExpressions:
+              - key: kubernetes.io/metadata.name
+                operator: In
+                values:
+                  - grafana
+                  - agentgateway
+                  - arr
+                  - atuin
+                  - decision-gateway
+                  - garage
+                  - hoa
+                  - signoz
+                  - td
         kinds:
           - kind: HTTPRoute
