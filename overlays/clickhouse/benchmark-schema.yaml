@@ -102,7 +102,7 @@ spec:
       restartPolicy: OnFailure
       containers:
         - name: schema
-          image: clickhouse/clickhouse-server:26.8
+          image: clickhouse/clickhouse-server:26.10
           command:
             - /bin/sh
             - -ec

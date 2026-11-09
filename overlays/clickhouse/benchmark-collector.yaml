@@ -35,7 +35,7 @@ metadata:
 spec:
   mode: daemonset
   serviceAccount: ck-log-collector
-  image: otel/opentelemetry-collector-contrib:0.154.0
+  image: otel/opentelemetry-collector-contrib:0.165.0
   resources:
     requests:
       cpu: 100m
