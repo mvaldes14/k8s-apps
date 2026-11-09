@@ -5,6 +5,8 @@ metadata:
 data:
   values.yaml: |
     orgAllowlist: github.com/mvaldes14/terraform
+    ingress:
+      enabled: false
     image:
       repository: ghcr.io/runatlantis/atlantis
       pullPolicy: Always
