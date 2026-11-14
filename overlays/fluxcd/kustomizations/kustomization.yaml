@@ -34,5 +34,6 @@ resources:
   - signoz.yaml
   - td.yaml
   - traefik.yaml
+  - trivy-operator.yaml
   - umami.yaml
   - vault.yaml
