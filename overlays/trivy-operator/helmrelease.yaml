@@ -16,10 +16,12 @@ spec:
     operator:
       scanJobTimeout: 10m
       scanJobsConcurrentLimit: 3
+      webhookBroadcastURL: http://n8n-svc.n8n.svc.cluster.local/webhook/trivy-operator-alerts
+      webhookBroadcastTimeout: 30s
     resources:
       requests:
         cpu: 50m
-        memory: 128Mi
+        memory: 256Mi
       limits:
         cpu: 500m
-        memory: 512Mi
+        memory: 2Gi
