@@ -8,5 +8,9 @@ resources:
   - externalsecret.yaml
   - helmrelease.yaml
   - helmrepository.yaml
+  - loki-helmrelease.yaml
+  - mimir-helmrelease.yaml
+  - mimir-helmrepository.yaml
+  - tempo-helmrelease.yaml
   - httproute.yaml
   - service.yaml
