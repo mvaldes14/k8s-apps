@@ -52,6 +52,6 @@ spec:
   routing:
     primary: laya
     fallback: clef
-    timeout: 5s
+    timeout: 15s
   review:
     enabled: false
