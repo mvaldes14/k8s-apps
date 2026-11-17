@@ -48,6 +48,7 @@ spec:
                   - decision-gateway
                   - garage
                   - hoa
+                  - nerv
                   - signoz
                   - td
         kinds:
