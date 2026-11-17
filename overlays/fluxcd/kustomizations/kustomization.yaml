@@ -25,6 +25,7 @@ resources:
   - gotify.yaml
   - grafana.yaml
   - hoa.yaml
+  - langfuse.yaml
   - n8n.yaml
   - nocodb.yaml
   - paperless.yaml

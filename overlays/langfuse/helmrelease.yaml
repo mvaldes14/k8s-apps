@@ -1,0 +1,119 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: langfuse
+spec:
+  interval: 30m
+  targetNamespace: langfuse
+  chart:
+    spec:
+      chart: langfuse
+      version: 2.2.4
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        name: langfuse-helm
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    remediation:
+      retries: 3
+  values:
+    langfuse:
+      features:
+        telemetryEnabled: false
+        signUpDisabled: false
+      salt:
+        secretKeyRef:
+          name: langfuse-secrets
+          key: salt
+      encryptionKey:
+        secretKeyRef:
+          name: langfuse-secrets
+          key: encryption-key
+      nextauth:
+        url: http://localhost:3000
+        secret:
+          secretKeyRef:
+            name: langfuse-secrets
+            key: nextauth-secret
+      web:
+        replicas: 1
+        resources:
+          requests:
+            cpu: 250m
+            memory: 512Mi
+          limits:
+            memory: 2Gi
+      worker:
+        replicas: 1
+        resources:
+          requests:
+            cpu: 250m
+            memory: 512Mi
+          limits:
+            memory: 2Gi
+
+    postgresql:
+      deploy: false
+      host: homelab-db-rw.db.svc.cluster.local
+      port: 5432
+      auth:
+        username: langfuse
+        database: langfuse
+        existingSecret: langfuse-secrets
+        secretKeys:
+          userPasswordKey: postgres-password
+      migration:
+        autoMigrate: true
+
+    redis:
+      deploy: false
+      host: redis-svc.db.svc.cluster.local
+      port: 6379
+      auth:
+        enabled: false
+        username: null
+        password: null
+        database: 1
+
+    clickhouse:
+      deploy: false
+      crdCheck: false
+      host: ck-cluster-clickhouse-headless.clickhouse.svc.cluster.local
+      httpPort: 8123
+      nativePort: 9000
+      database: langfuse
+      auth:
+        username: langfuse
+        existingSecret: langfuse-secrets
+        existingSecretKey: clickhouse-password
+      migration:
+        ssl: false
+        autoMigrate: true
+      cluster:
+        enabled: true
+
+    s3:
+      deploy: false
+      storageProvider: s3
+      bucket: langfuse
+      region: garage
+      endpoint: http://garage-svc.garage.svc.cluster.local:3900
+      forcePathStyle: true
+      accessKeyId:
+        secretKeyRef:
+          name: langfuse-secrets
+          key: s3-access-key-id
+      secretAccessKey:
+        secretKeyRef:
+          name: langfuse-secrets
+          key: s3-secret-access-key
+      eventUpload:
+        prefix: events/
+      batchExport:
+        enabled: true
+        prefix: exports/
+      mediaUpload:
+        enabled: false
