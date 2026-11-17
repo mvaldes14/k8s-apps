@@ -19,6 +19,7 @@ spec:
         replication_factor: 1
       storage:
         type: filesystem
+      useTestSchema: true
     singleBinary:
       replicas: 1
     read:
