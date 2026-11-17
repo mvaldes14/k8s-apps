@@ -1,0 +1,51 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: mimir
+spec:
+  interval: 10m
+  targetNamespace: grafana
+  chart:
+    spec:
+      chart: mimir-distributed
+      version: 6.2.2
+      sourceRef:
+        kind: HelmRepository
+        name: grafana-official
+  values:
+    # Development-sized distributed deployment. Not HA or production sized.
+    mimir:
+      structuredConfig:
+        multitenancy_enabled: false
+    alertmanager:
+      replicas: 1
+    compactor:
+      replicas: 1
+    distributor:
+      replicas: 1
+    ingester:
+      replicas: 1
+      zoneAwareReplication:
+        enabled: false
+    querier:
+      replicas: 1
+    query_frontend:
+      replicas: 1
+    query_scheduler:
+      replicas: 1
+    ruler:
+      replicas: 1
+    store_gateway:
+      replicas: 1
+      zoneAwareReplication:
+        enabled: false
+    overrides_exporter:
+      replicas: 1
+    gateway:
+      replicas: 1
+    rollout_operator:
+      enabled: false
+    minio:
+      enabled: true
+      persistence:
+        size: 5Gi
