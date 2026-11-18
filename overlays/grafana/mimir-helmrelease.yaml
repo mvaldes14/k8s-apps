@@ -44,7 +44,7 @@ spec:
     gateway:
       replicas: 1
     rollout_operator:
-      enabled: false
+      enabled: true
     minio:
       enabled: true
       persistence:

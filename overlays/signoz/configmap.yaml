@@ -741,6 +741,24 @@ data:
             timeout: 45s
             sending_queue:
               enabled: false
+          prometheusremotewrite/mimir:
+            endpoint: http://grafana-mimir-gateway.grafana.svc.cluster.local/api/v1/push
+            retry_on_failure:
+              enabled: true
+          otlphttp/loki:
+            endpoint: http://loki-gateway.grafana.svc.cluster.local/otlp
+            retry_on_failure:
+              enabled: true
+            sending_queue:
+              enabled: true
+          otlp/tempo:
+            endpoint: tempo.grafana.svc.cluster.local:4317
+            tls:
+              insecure: true
+            retry_on_failure:
+              enabled: true
+            sending_queue:
+              enabled: true
         service:
           telemetry:
             logs:
@@ -757,15 +775,15 @@ data:
             traces:
               receivers: [otlp]
               processors: [signozspanmetrics/delta, signozspanmapper, signozllmpricing, k8sattributes, resource/cluster, batch]
-              exporters: [clickhousetraces, metadataexporter, signozmeter]
+              exporters: [clickhousetraces, metadataexporter, signozmeter, otlp/tempo]
             metrics:
               receivers: [otlp, k8s_cluster]
               processors: [k8sattributes, resource/cluster, batch]
-              exporters: [metadataexporter, signozclickhousemetrics, signozmeter]
+              exporters: [metadataexporter, signozclickhousemetrics, signozmeter, prometheusremotewrite/mimir]
             logs:
               receivers: [otlp]
               processors: [k8sattributes, resource/cluster, batch]
-              exporters: [clickhouselogsexporter, metadataexporter, signozmeter]
+              exporters: [clickhouselogsexporter, metadataexporter, signozmeter, otlphttp/loki]
             metrics/meter:
               receivers: [signozmeter]
               processors: [batch/meter]
