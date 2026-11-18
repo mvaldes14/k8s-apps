@@ -43,8 +43,10 @@ spec:
       replicas: 1
     gateway:
       replicas: 1
+    # Disabled for this single-replica test deployment. The chart's
+    # admission webhooks are unnecessary and can block upgrades when stale.
     rollout_operator:
-      enabled: true
+      enabled: false
     minio:
       enabled: true
       persistence:
