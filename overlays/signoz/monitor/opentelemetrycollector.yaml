@@ -199,28 +199,51 @@ spec:
         tls:
           insecure: true
 
+      prometheusremotewrite/mimir:
+        endpoint: http://grafana-mimir-gateway.grafana.svc.cluster.local/api/v1/push
+        retry_on_failure:
+          enabled: true
+        sending_queue:
+          enabled: true
+
+      otlphttp/loki:
+        endpoint: http://loki-gateway.grafana.svc.cluster.local/otlp
+        retry_on_failure:
+          enabled: true
+        sending_queue:
+          enabled: true
+
+      otlp/tempo:
+        endpoint: tempo.grafana.svc.cluster.local:4317
+        tls:
+          insecure: true
+        retry_on_failure:
+          enabled: true
+        sending_queue:
+          enabled: true
+
     service:
       pipelines:
         metrics/site-monitoring:
           receivers: [httpcheck]
           processors: [resource/site-monitoring, batch]
-          exporters: [otlp]
+          exporters: [otlp, prometheusremotewrite/mimir]
         metrics/scrape:
           receivers: [prometheus]
           processors: [resource/common, batch]
-          exporters: [otlp]
+          exporters: [otlp, prometheusremotewrite/mimir]
         metrics/kafka:
           receivers: [kafka/metrics]
           processors: [resource/common, batch]
-          exporters: [otlp]
+          exporters: [otlp, prometheusremotewrite/mimir]
         logs:
           receivers: [kafka/logs]
           processors: [resource/common, batch]
-          exporters: [otlp]
+          exporters: [otlp, otlphttp/loki]
         traces:
           receivers: [kafka/traces]
           processors: [resource/common, batch]
-          exporters: [otlp]
+          exporters: [otlp, otlp/tempo]
       telemetry:
         logs:
           level: info
