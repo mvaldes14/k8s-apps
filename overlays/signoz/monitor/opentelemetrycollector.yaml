@@ -203,8 +203,6 @@ spec:
         endpoint: http://grafana-mimir-gateway.grafana.svc.cluster.local/api/v1/push
         retry_on_failure:
           enabled: true
-        sending_queue:
-          enabled: true
 
       otlphttp/loki:
         endpoint: http://loki-gateway.grafana.svc.cluster.local/otlp
