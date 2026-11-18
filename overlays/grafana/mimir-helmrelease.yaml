@@ -32,7 +32,7 @@ spec:
     query_frontend:
       replicas: 1
     query_scheduler:
-      replicas: 1
+      enabled: false
     ruler:
       replicas: 1
     store_gateway:
