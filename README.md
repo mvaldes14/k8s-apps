@@ -109,6 +109,7 @@ Only CRD *definitions* live here. Cilium's `CiliumLoadBalancerIPPool` and
 - **gotify** — push notifications (also Flux's alert sink)
 - **home-assistant** — home automation (`hoa-flux`)
 - **n8n** — workflow automation
+- **nerv** — private Kubernetes incident investigation agent
 - **nocodb** — no-code database
 - **degoog** — metasearch
 - **td** — task manager
