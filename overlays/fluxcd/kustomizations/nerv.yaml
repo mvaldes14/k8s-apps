@@ -1,0 +1,25 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: nerv-flux
+spec:
+  interval: 30m
+  sourceRef:
+    kind: GitRepository
+    name: homelab-repository
+  path: "./overlays/nerv"
+  prune: true
+  timeout: 5m
+  dependsOn:
+    - name: external-secrets-flux
+    - name: db-flux
+    - name: agentgateway-flux
+    - name: decision-gateway-flux
+    - name: gotify-flux
+    - name: signoz-flux
+    - name: traefik-flux
+  healthChecks:
+    - apiVersion: apps/v1
+      kind: Deployment
+      name: nerv
+      namespace: nerv

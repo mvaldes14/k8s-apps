@@ -6,6 +6,17 @@ spec:
   instances: 1
   enablePDB: false
   imageName: ghcr.io/cloudnative-pg/postgresql:16.4
+  managed:
+    roles:
+      - name: nerv
+        ensure: present
+        login: true
+        superuser: false
+        createdb: false
+        createrole: false
+        replication: false
+        passwordSecret:
+          name: nerv-db-credentials
   storage:
     size: 2Gi
     storageClass: nfs-k8s-keep

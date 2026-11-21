@@ -26,6 +26,7 @@ resources:
   - grafana.yaml
   - hoa.yaml
   - n8n.yaml
+  - nerv.yaml
   - nocodb.yaml
   - paperless.yaml
   - redpanda.yaml
