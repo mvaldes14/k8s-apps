@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nerv
+  labels:
+    app.kubernetes.io/name: nerv
+  annotations:
+    secret.reloader.stakater.com/reload: "nerv-secrets"
+    configmap.reloader.stakater.com/reload: "nerv-config"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: nerv
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: nerv
+    spec:
+      serviceAccountName: nerv
+      containers:
+        - name: nerv
+          image: ghcr.io/mvaldes14/nerv:sha-115da70
+          imagePullPolicy: IfNotPresent
+          args: ["serve", "--addr", ":8080"]
+          envFrom:
+            - configMapRef:
+                name: nerv-config
+            - secretRef:
+                name: nerv-secrets
+          ports:
+            - name: http
+              containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: http
+            initialDelaySeconds: 2
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop: ["ALL"]
+      securityContext:
+        runAsUser: 65532
+        runAsGroup: 65532
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault

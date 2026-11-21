@@ -9,3 +9,13 @@ spec:
   owner: admin
   cluster:
     name: homelab-db
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: nerv-db
+spec:
+  name: nerv
+  owner: nerv
+  cluster:
+    name: homelab-db
