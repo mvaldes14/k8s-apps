@@ -20,7 +20,7 @@ spec:
       serviceAccountName: nerv
       containers:
         - name: nerv
-          image: ghcr.io/mvaldes14/nerv:sha-115da70
+          image: ghcr.io/mvaldes14/nerv:sha-dfb993e
           imagePullPolicy: IfNotPresent
           args: ["serve", "--addr", ":8080"]
           envFrom:
