@@ -38,6 +38,5 @@ data:
   NERV_DETECTION_RESTART_WINDOW: "10m"
   NERV_DETECTION_NAMESPACES: "nerv"
   NERV_DETECTION_MAINTENANCE_ANNOTATION: "nerv.io/maintenance"
-  # Disabled until NERV's mixed OpenTelemetry schema URLs are aligned.
-  OTEL_EXPORTER_OTLP_ENDPOINT: ""
+  OTEL_EXPORTER_OTLP_ENDPOINT: "http://signoz-signoz-helm-otel-collector.signoz.svc.cluster.local:4317"
   OTEL_EXPORTER_OTLP_INSECURE: "true"
