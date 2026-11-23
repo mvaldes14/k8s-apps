@@ -10,6 +10,8 @@ data:
   NERV_LLM_MODEL: "openai/gpt-5-mini"
   NERV_LLM_FALLBACK_MODEL: ""
   NERV_AGENTGATEWAY_URL: "http://agentgateway-proxy.agentgateway.svc.cluster.local"
+  NERV_GITOPS_REPOSITORY: "mvaldes14/k8s-apps"
+  NERV_GITOPS_TARGETS_JSON: '[{"id":"nerv-deployment","path":"overlays/nerv/deployment.yaml","resource":{"api_version":"apps/v1","kind":"Deployment","namespace":"nerv","name":"nerv"}}]'
   NERV_AGENT_MAX_ROUNDS: "4"
   NERV_AGENT_MAX_TOOL_CALLS: "6"
   NERV_AGENT_TIMEOUT: "75s"
