@@ -126,7 +126,7 @@ spec:
         fsGroup: 1000
       containers:
         - name: authentik-worker
-          image: ghcr.io/goauthentik/server:2026.8.5
+          image: ghcr.io/goauthentik/server:2026.8.6
           args: ["worker"]
           env:
             - name: AUTHENTIK_POSTGRESQL__HOST
