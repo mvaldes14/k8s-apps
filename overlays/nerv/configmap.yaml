@@ -12,6 +12,8 @@ data:
   NERV_AGENTGATEWAY_URL: "http://agentgateway-proxy.agentgateway.svc.cluster.local"
   NERV_GITOPS_REPOSITORY: "mvaldes14/k8s-apps"
   NERV_GITOPS_TARGETS_JSON: '[{"id":"nerv-deployment","path":"overlays/nerv/deployment.yaml","resource":{"api_version":"apps/v1","kind":"Deployment","namespace":"nerv","name":"nerv"}}]'
+  NERV_GITHUB_BASE_BRANCH: "main"
+  NERV_GITHUB_API_URL: "https://api.github.com"
   NERV_AGENT_MAX_ROUNDS: "4"
   NERV_AGENT_MAX_TOOL_CALLS: "6"
   NERV_AGENT_TIMEOUT: "75s"
