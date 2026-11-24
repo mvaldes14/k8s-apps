@@ -26,6 +26,8 @@ spec:
         discovery:
           instrument:
             - k8s_namespace: td
+            - k8s_namespace: nocodb
+            - k8s_namespace: paperless
         routes:
           unmatched: heuristic
     # Application preset exports to node-local Collector hostPorts:
