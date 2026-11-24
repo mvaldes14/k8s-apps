@@ -28,10 +28,8 @@ spec:
             - k8s_namespace: td
         routes:
           unmatched: heuristic
-    # Send OBI traces and metrics to the in-cluster Collector.
-    env:
-      OTEL_EXPORTER_OTLP_ENDPOINT: http://signoz-otel-collector.signoz:4317
-      OTEL_EXPORTER_OTLP_PROTOCOL: grpc
+    # Application preset exports to node-local Collector hostPorts:
+    # traces via OTLP/gRPC :4317, metrics via OTLP/HTTP :4318.
     # Avoid one full-cluster Kubernetes watch per OBI pod.
     # Most useful once testing expands beyond a small cluster.
     k8sCache:
