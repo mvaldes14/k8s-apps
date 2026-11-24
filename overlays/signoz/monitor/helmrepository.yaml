@@ -1,0 +1,6 @@
+kind: HelmRepository
+metadata:
+  name: cncf-helm
+spec:
+  interval: 1m0s
+  url: https://open-telemetry.github.io/opentelemetry-helm-charts

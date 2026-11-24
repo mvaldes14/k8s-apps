@@ -1,0 +1,38 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: ebpf-helm
+spec:
+  targetNamespace: signoz
+  timeout: 10m
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    remediation:
+      retries: 3
+  chart:
+    spec:
+      chart: opentelemetry-ebpf-instrumentation
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        name: cncf-helm
+      version: 0.16.5
+  interval: 1m0s
+  values:
+    config:
+      data:
+        discovery:
+          instrument:
+            - k8s_namespace: td
+        routes:
+          unmatched: heuristic
+    # Send OBI traces and metrics to the in-cluster Collector.
+    env:
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://signoz-otel-collector.signoz:4317
+      OTEL_EXPORTER_OTLP_PROTOCOL: grpc
+    # Avoid one full-cluster Kubernetes watch per OBI pod.
+    # Most useful once testing expands beyond a small cluster.
+    k8sCache:
+      replicas: 1
