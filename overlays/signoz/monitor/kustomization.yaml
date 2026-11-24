@@ -6,3 +6,5 @@ resources:
   - opentelemetrycollector.yaml
   - deployment.yaml
   - service.yaml
+  - helmrepository.yaml
+  - helmrelease.yaml
