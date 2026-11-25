@@ -5,6 +5,11 @@ metadata:
 spec:
   instances: 1
   enablePDB: false
+  inheritedMetadata:
+    annotations:
+      prometheus.io/scrape: "true"
+      prometheus.io/path: /metrics
+      prometheus.io/port: "9187"
   imageName: ghcr.io/cloudnative-pg/postgresql:16.4
   managed:
     roles:
