@@ -25,14 +25,9 @@ data:
       service:
         enabled: true
       dataStorage:
-        enabled: false
-      volumes:
-        - name: data
-          persistentVolumeClaim:
-            claimName: vault-pvc
-      volumeMounts:
-        - name: data
-          mountPath: /vault/data
+        enabled: true
+        size: 5Gi
+        storageClass: nfs-k8s-keep
     ui:
      enabled: true
      serviceType: ClusterIP
