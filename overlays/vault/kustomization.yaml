@@ -8,6 +8,4 @@ resources:
   - configmap.yaml
   - helmrelease.yaml
   - helmrepository.yaml
-  - pv.yaml
-  - pvc.yaml
   - serviceaccount.yaml
